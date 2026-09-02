@@ -1,0 +1,144 @@
+  <?php
+    $user_list = $this->user_list;
+    $record = $this->paginator; 
+    $totalrec = $this->totalrec;
+?>  
+<style type="text/css"> 
+#scroll-id {
+    width: 600px;
+    overflow-x: scroll;
+}
+</style>
+      <div class="table-responsive mt-1" id="expense-list">
+      <?php $user = new Application_Model_User();  ?>
+
+              <div id="leftpag">
+                <?php if($totalrec > $this->perPage) { 
+                  echo $this->paginationControl($this->paginator, 'Sliding', 'expense-pagination.phtml'); 
+                    } ?>  
+                     </div>
+
+                   <table class="table table-bordered table2excel" id="scroll-id">
+                                         <thead>
+                                            <tr>
+                                                <th style=" white-space:nowrap;">
+                                                # <a href="javascript:void(0)" 
+        onclick="getPage('<?php echo $this->totalnum; ?>',
+        '<?php if($this->id_order){ echo $this->id_order; }else{ echo 'desc';} ?>','id')" >
+      <?php if($this->id_order == 'desc' && $this->params['type'] == 'id'){ ?>
+      <img src="/img/asc.png" style="height:20px;" /><?php }
+      elseif($this->id_order == 'asc' && $this->params['type'] == 'id'){ ?>
+      <img src="/img/desc.png" style="height:20px;" /><?php }
+        else{?><img src="/img/desc.png" style="height:20px;" /><?php }?>
+      </a></th>
+                                                <th style=" white-space:nowrap;">PO</th>
+                                                <!--<th style=" white-space:nowrap;">Description</th>-->
+                                                <th style=" white-space:nowrap;">Order Date</th>
+                                                <th style=" white-space:nowrap;">Amount</th>
+                                                <th style=" white-space:nowrap;">Inclusive Tax</th>
+                                                <th style=" white-space:nowrap;">Exclusive Tax</th>
+                                                <th style=" white-space:nowrap;">Tax Amount</th>
+                                                <th style=" white-space:nowrap;">Change Request Status</th>
+                                                <th style=" white-space:nowrap;">Status</th>
+                                                
+                                                <th style=" white-space:nowrap;">Site ID</th>
+                                                <th style=" white-space:nowrap;">Last Fund Transferred Date</th>
+                                                <th style=" white-space:nowrap;">Expenses</th>
+                                                <th style=" white-space:nowrap;">Assigned To</th>
+                                                <th style=" white-space:nowrap;">Invoice No.</th>
+                                                <th style=" white-space:nowrap;">Invoice Value</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <?php 
+                                            if($totalrec){ 
+                                            $totalnum = $this->totalnum?$this->totalnum:1;
+                                            $istart = ($totalnum-1) * 10;
+                                            $i=$istart;
+                                            foreach($record as $expense){ ?>
+                                            <tr>
+                                            <td style=" white-space:nowrap;"><?php echo $i+1;?>.</td>
+                                            <td style=" white-space:nowrap;"><?php echo $expense['po_number']; ?></td>
+                                            <!--<td style=" min-width:220px;"><?php echo $expense['description']; ?></td>-->
+                                            <td style=" white-space:nowrap;"><?php echo $expense['order_date']; ?></td> 
+                                            <td style=" white-space:nowrap;"><?php echo $expense['amount']; ?></td>
+                                            <td style=" white-space:nowrap;"><?php echo $expense['inclusive_tax']; ?></td>
+                                            <td style=" white-space:nowrap;"><?php echo $expense['exclusive_tax']; ?></td>
+                                            <td style=" white-space:nowrap;"><?php echo $expense['tax_amount']; ?></td>
+                                            <td style=" white-space:nowrap;"><?php echo $expense['change_request_status']; ?></td>
+                                            <td style=" min-width:110px;"><?php echo $expense['status']; ?></td>
+
+                                            <td style=" white-space:nowrap;">
+                                            <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                                            <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;"> 
+                                            <?php echo $value; ?>
+                                            </div>
+                                            <?php } ?>
+                                            </td>
+
+                                            <td style=" white-space:nowrap;">
+                                            <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                                            <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;"> 
+                                            <?php if($user->getLastFundDate($expense['po_number'],$value) != ''){ ?>
+                                            <?php echo date('d/m/Y', strtotime( $user->getLastFundDate($expense['po_number'],$value) ) ); ?>
+                                            <?php }else { echo "-"; } ?>
+                                            </div>
+                                            <?php } ?>
+                                            </td>
+
+                                            <td style=" white-space:nowrap;">
+                                            <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                                            <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;">
+                                            <?php if( $user->getExpensesByPoSite($expense['po_number'],$value) !='' ){ ?>
+                                            <a href="javascript:void(0)" id="<php echo $i+1; ?>" 
+                                            onClick="showDetailedExpenseList('<?php echo $expense['po_number']; ?>','<?php echo $value; ?>')">
+                                            <?php echo $user->getExpensesByPoSite($expense['po_number'],$value); ?>
+                                            </a>
+                                            <?php }else echo "-"; ?> 
+                                            </div>
+                                            <?php } ?>
+                                            </td>
+
+                                            <td style=" white-space:nowrap;">
+                                            <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                                            <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;">
+                                            <?php if( $user->assignedTo($expense['po_number'],$value) !='' ){ ?>
+                                            <?php echo $user->assignedTo($expense['po_number'],$value); ?>
+                                            <?php }else echo "-"; ?> 
+                                            </div>
+                                            <?php } ?>
+                                            </td>
+
+                                            <td style=" white-space:nowrap;">
+                                            <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                                            <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;"> 
+                                            <?php echo "-"; ?>
+                                            </div>
+                                            <?php } ?>
+                                            </td>
+
+                                            <td style=" white-space:nowrap;">
+                                            <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                                            <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;">
+                                            <?php echo "-"; ?> 
+                                            </div>
+                                            <?php } ?>
+                                            </td>
+                                              
+                                            </tr>
+                                            <?php  $i++;} } else{  ?>
+                                            <tr><td colspan="7">
+                                            <p style="color:red; font-size:16px;">No Record Found !</p></td></tr>
+                                            <?php } ?>
+                                            </tbody>
+                                      </table>
+
+                      <div id="leftpag">
+                        <?php if($totalrec > $this->perPage) { 
+                          echo $this->paginationControl($this->paginator, 'Sliding', 'expense-pagination.phtml'); 
+                           } ?>  
+                            </div>
+
+
+                                  </div>

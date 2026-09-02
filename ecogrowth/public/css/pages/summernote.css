@@ -1,0 +1,110 @@
+.note-color .dropdown-menu li .btn-group{
+    margin-bottom: 20px !important;
+}
+.note-popover {
+    display: none;
+}
+
+.panel-heading.note-toolbar .dropdown-menu {
+    min-width: 130px;
+}
+
+.summer_note .btn-group, .wysihtml5-toolbar .btn-group, .note-color .btn-group {
+    display: inline-block;
+}
+
+.note-popover .popover-content, .panel-heading.note-toolbar {
+    border-bottom: 1px solid #ccc;
+    background-color: #eee;
+}
+
+.note-editing-area ul {
+    padding-left: 40px;
+}
+
+.click2edit ul {
+    padding-left: 40px;
+}
+.panel-heading.note-toolbar {
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+}
+.note-style li {
+    padding-left: 10px
+}
+[data-original-title="Font Family"] {
+    width: 115px;
+    font-size: 12px;
+}
+.modal-header{
+    display: flex;
+    flex-direction: row-reverse;
+}
+.note-editable ul li img,.modal-footer .text-center{
+    width: 100% !important;
+}
+.note-editor.fullscreen i{
+    margin: 0;
+    line-height: 0;
+}
+blockquote{
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 18px;
+    border-left: 5px solid #eeeeee;
+}
+pre{
+    display: block;
+    margin: 10px 10px 0 0;
+    padding: 5px 10px;
+    margin-bottom: 1rem;
+    color: #292b2c;
+    line-height: 1.428571429;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.note-check li{
+    padding: 0 10px;
+}
+.note-icon-caret{
+    display: none;
+}
+.note-editor.note-frame.fullscreen
+{
+    z-index: 999999999;
+}
+/*=============================note color================================*/
+@media (max-width: 346px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 144px;
+    }
+}
+@media (min-width: 347px) and (max-width: 424px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 165px;
+        margin-left: 0;
+    }
+}
+@media (min-width: 417px) and (max-width: 670px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 190px;
+        margin-left: -105px;
+    }
+}
+/*========================================end of note color==========================*/
+
+@media (min-width: 440px) and (max-width: 860px) {
+    .note-popover .popover-content .note-para .dropdown-menu, .panel-heading.note-toolbar .note-para .dropdown-menu {
+        left: -90px;
+    }
+}
+.modal{
+    top:0 !important;
+    z-index: 999999999;
+}
+.modal-backdrop{
+    z-index: 99999999;
+}

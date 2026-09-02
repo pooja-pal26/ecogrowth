@@ -1,0 +1,112 @@
+<?php
+$getNatureOfWorkById =$this->getNatureOfWorkById;
+?>
+
+<script type="text/javascript">
+	function validateUser(){ 
+		if(document.getElementById("type").value==""){
+			swal("Please Enter Asset Type");
+			document.getElementById("type").focus();
+			return false;
+		}
+	}
+</script>
+
+<div class=" view-port-height">
+	<!-- Content Header (Page header) -->
+	<div class="content-header container-fluid bg-white">
+		<div class="row">
+			<div class="col-sm-4">
+				<h4><i class="ti-user"></i> Edit Asset  </h4>
+			</div>
+		</div>
+	</div>
+	<!-- Main content -->
+	<div class="content">
+		<?php if ($this->messages): ?>
+			<div class="alert alert-success alert-dismissable">
+				<?php foreach ($this->messages as $message): ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php echo $message ?>
+				<?php endforeach ?>
+			</div>
+		<?php endif ?>
+		<?php if($this->errorMessage) { ?>
+			<br clear="all">
+			<div class="alert alert-danger alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php  echo $this->errorMessage;   ?>                                             
+			</div>
+		<?php } ?>
+		<div class="row">
+			<div class="col-12">
+				<div class="card  profile2_aboutme">
+					<div class="card-header card-info text-white">
+
+						<p style="float: left; margin: 0px;"></p> <a href="/assets/asset/"  style="float: right; margin: 0px;" class="btn btn-success btn_width m-t-10 m-r-10">View All Asset </a>
+
+					</div>
+
+					<div class="card-block ">
+						<div class="row m-t-10">
+							<div class="col-lg-12">
+								<form name="my_form" method="post" 
+								action="" enctype="multipart/form-data" onsubmit="return validateUser();">
+
+								<input type="hidden" value="<?php echo $this->getAssetById['id']; ?>" name="id" >
+
+								<div class="form-group row">
+									<div class="col-lg-2">
+										<label for="type" class="col-form-label">
+											Select Type*
+										</label>
+										<div class="input-group">
+											<select name="type" id="type" value="" style="width:100%;" class="form-control">
+												<option value="">---Select Type---</option>
+
+												<?php  foreach ($this->res_asset_type AS $asset_type) {   ?>
+													<option value="<?php echo   $asset_type['id']; ?>"<?php if ($asset_type['id'] == $this->getAssetById['asset_type_id']){ echo'selected="selected"'; }?>><?php echo   $asset_type['type']; ?></option>
+
+												<?php  }  ?>	
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-2">
+										<label for="code" class="col-form-label">
+											Code*
+										</label>
+										<div class="input-group">
+											<input type="text" name="code" id="code"
+											placeholder="Enter Asset Type" class="form-control" 
+											value="<?php echo $this->getAssetById['code']; ?>"/>
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<label for="caddress" class="col-form-label">
+											Name*
+										</label>
+										<div class="input-group">
+											<input type="text" name="name" id="name"
+											placeholder="Enter Asset Type" class="form-control" 
+											value="<?php echo $this->getAssetById['name']; ?>"/>
+										</div>
+									</div>
+									<label for="caddress" class="col-form-label">
+										Warranty Date*
+									</label>
+									<div class="col-lg-2 m-t-10">
+										<input type="text" name="date" id="date" value="<?php echo date('d/m/Y',strtotime($this->getAssetById['warranty_date']));?>" placeholder="DueDate" data-date-format="dd/mm/yyyy" name="date" class="form-control  datepick" >
+									</div> 
+									<div class="col-lg-3" style="margin-top: 40px">
+										<button type="submit" name="submit" class="btn btn-responsive layout_btn_prevent btn-info">Save</button>
+									</div>
+								</div>                                      
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.content -->
+</div>
+</div>

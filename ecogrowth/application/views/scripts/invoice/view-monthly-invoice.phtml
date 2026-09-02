@@ -1,0 +1,42 @@
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title">Vendors Details</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">	
+						<div class="table table-responsive">
+							<table class="table table-bordered" border="1px" width="100%">
+								<thead>
+									<tr>
+										<th>Vendor Name</th>
+										<th>Vendor Invoice Amount</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php foreach ($this->vendor_list as $vendor_list): ?>
+										<tr>
+
+											<td><?php echo $vendor_list['vendor_name']; ?></td>
+											<td><?php echo $vendor_list['vendor_amount']; ?></td>
+										</tr>
+									<?php endforeach ?>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td colspan="2" style="font-weight:bold;text-align: center;">Total : <?php echo $this->total ?></td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

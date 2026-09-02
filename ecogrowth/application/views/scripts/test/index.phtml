@@ -1,0 +1,255 @@
+<?php 
+
+?>
+
+<style type="text/css">
+.wrapper {
+	display: block;
+}
+
+#sidebar {
+	min-width: 250px;
+	max-width: 250px;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	/* top layer */
+	z-index: 9999;
+}
+
+.overlay {
+	display: none;
+	position: fixed;
+	/* full screen */
+	width: 100vw;
+	height: 100vh;
+	/* transparent black */
+	background: rgba(0, 0, 0, 0.7);
+	/* middle layer, i.e. appears below the sidebar */
+	z-index: 998;
+	opacity: 0;
+	/* animate the transition */
+	transition: all 0.5s ease-in-out;
+}
+/* display .overlay when it has the .active class */
+.overlay.active {
+	display: block;
+	opacity: 1;
+}
+
+#dismiss {
+	width: 35px;
+	height: 35px;
+	position: absolute;
+	/* top right corner of the sidebar */
+	top: 10px;
+	right: 10px;
+}
+</style>
+<div class="wrapper">
+	<!-- Sidebar -->
+	<nav id="sidebar">
+
+		<div id="dismiss">
+			<i class="fas fa-arrow-left"></i>
+		</div>
+
+		<div class="sidebar-header">
+			<h3>Bootstrap Sidebar</h3>
+		</div>
+
+		<ul class="navigation">
+
+			<li <?php if($controller == 'home'){?>class="menu active"<?php }?>>
+				<a href="/home">
+					<i class="menu_icon ti-home text-primary"></i> Dashboard
+				</a>
+			</li>
+
+			<?php if($this->role_type=='1'){ ?>  
+				<li <?php if($controller == 'expense' && $action == 'expense-dashboard'){?>class="menu active"<?php }?>>
+					<a href="/expense/expense-dashboard/">
+						<i class="fa fa-line-chart"></i> Expense Dashboard
+					</a>
+				</li>
+
+				<li class="menu-dropdown <?php if($controller == 'expense' && $action == 'index' || $controller == 'expense' && $action == 'create-new-expense' || $controller == 'expense' && $action == 'import-expense' || $controller == 'expense' && $action == 'office-expenses'){?>active<?php }?>">
+					<a href="#" class="dropdown_head">
+						<i class="menu_icon ti-list text-primary"></i>
+						<span>Expense Module</span>
+						<span class="ti-angle-up"></span>
+					</a>
+					<ul class="sub_menu sub-submenu <?php if($controller == 'expense' && $action == 'index' || $controller == 'expense' && $action == 'create-new-expense' || $controller == 'expense' && $action == 'import-expense'){?>active<?php }?>">
+
+						<li <?php if($controller == 'expense' && $action == 'import-expense'){?> class="menu active"<?php }?>>
+							<a href="/expense/import-expense/">
+								<i class="fa fa-stack-overflow"></i>  &nbsp;&nbsp; Import PO
+							</a>
+						</li>
+
+
+						<li <?php if($controller == 'expense' && $action == 'create-new-expense'){?> class="menu active"<?php }?>>
+							<a href="/expense/create-new-expense/">
+								<i class="menu_icon fa fa-money"></i>  Create New Expense
+							</a>
+						</li>
+
+						<li <?php if($controller == 'expense' && $action == 'index'){?> class="menu active"<?php }?>>
+							<a href="/expense">
+								<i class="menu_icon fa fa-bar-chart"></i> Site Expense Report
+							</a>
+						</li>
+
+						<li <?php if($controller == 'expense' && $action == 'office-expenses'){?> class="menu active"<?php }?>>
+							<a href="/expense/office-expenses">
+								<i class="menu_icon fa fa-bar-chart"></i> Office Expense Report
+							</a>
+						</li>
+
+					</ul>
+				</li>  
+
+			<?php } ?>
+
+
+
+			<li class="menu-dropdown <?php if($controller == 'user' && $action == 'index' || $controller == 'user' && $action == 'role-mapping'){?>active<?php }?>">
+				<a href="#" class="dropdown_head">
+					<i class="menu_icon ti-user text-primary"></i>
+					<span>Manage Users</span>
+					<span class="ti-angle-up"></span>
+				</a>
+				<ul class="sub_menu sub-submenu <?php if($controller == 'user' && $action == 'index' || $controller == 'user' && $action == 'role-mapping'){?>active<?php }?>">
+					<li <?php if($controller == 'user' && $action == 'index'){?>class="menu active"<?php }?>>
+						<a href="/user">
+							<i class="menu_icon ti-list text-primary"></i>  User Listing
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li class="menu-dropdown <?php if($controller == 'vendor' && $action == 'index' || $controller == 'vendor' && $action == 'role-mapping'){?>active<?php }?>">
+				<a href="#" class="dropdown_head">
+					<i class="menu_icon ti-user text-primary"></i>
+					<span>Manage Vendor</span>
+					<span class="ti-angle-up"></span>
+				</a>
+				<ul class="sub_menu sub-submenu <?php if($controller == 'vendor' && $action == 'index' || $controller == 'vendor' && $action == 'role-mapping'){?>active<?php }?>">
+					<li <?php if($controller == 'vendor' && $action == 'index'){?>class="menu active"<?php }?>>
+						<a href="/vendor">
+							<i class="menu_icon ti-list text-primary"></i>  Vendor Listing
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li <?php if($controller == 'import'){?> class="menu active"<?php }?>>
+				<a href="/import">
+					<i class="menu_icon ti-list text-primary"></i> Site Importation
+				</a>
+			</li>
+			<li <?php if($controller == 'siteallocation'){?> class="menu active"<?php }?>>
+				<a href="/siteallocation">
+					<i class="menu_icon ti-list text-primary"></i> Site Allocation
+				</a>
+			</li>
+
+			<li <?php if($controller == 'gmap'){?> class="menu active"<?php }?>>
+				<a href="/gmap/track">
+					<i class="menu_icon ti-location-pin text-primary"></i> Track User
+				</a>
+			</li>  
+			<li class="menu-dropdown <?php if($controller == 'report' && $action == 'attendance-report' || $controller == 'report' && $action == 'task-report'){?>active<?php }?>">
+				<a href="#" class="dropdown_head">
+					<i class="menu_icon ti-files text-primary"></i>
+					<span>Reports</span>
+					<span class="ti-angle-up"></span>
+				</a>
+				<ul class="sub_menu sub-submenu <?php if($controller == 'report' && $action == 'attendance-report' || $controller == 'report' && $action == 'task-report'){?>active<?php }?>">
+					<li <?php if($controller == 'report' && $action == 'attendance-report'){?> class="menu active"<?php }?>>
+						<a href="/report/attendance-report">
+							<i class="menu_icon ti-files text-primary"></i>Attendance Report
+						</a>
+					</li>
+					<li <?php if($controller == 'report' && $action == 'task-report'){?> class="menu active"<?php }?>>
+						<a href="/report/task-report">
+							<i class="menu_icon ti-files text-primary"></i> Assigned Site Report
+						</a>
+					</li>
+				</ul>
+			</li> 
+                    <!-- <li <?php if($controller == 'master'){?> class="menu active"<?php }?>>
+                        <a href="/master">
+                        <i class="menu_icon ti-list text-primary"></i>Nature Of Work
+                        </a>
+                    </li>  -->
+                    <li class="menu-dropdown <?php if($controller == 'master' && $action == 'index' || $controller == 'master' && $action == 'role-mapping' || $controller == 'master' && $action == 'transfer-for' || $controller == 'master' && $action == 'state-for'){?>active<?php }?>">
+                    	<a href="#" class="dropdown_head">
+                    		<i class="menu_icon ti-list text-primary"></i>
+                    		<span>Masters</span>
+                    		<span class="ti-angle-up"></span>
+                    	</a>
+                    	<ul class="sub_menu sub-submenu <?php if($controller == 'master' && $action == 'index' || $controller == 'master' && $action == 'role-mapping' || $controller == 'master' && $action == 'transfer-for' || $controller == 'master' && $action == 'state-for'){?>active<?php }?>">
+                    		<li <?php if($controller == 'master' && $action == 'index'){?> class="menu active"<?php }?>>
+                    			<a href="/master">
+                    				<i class="menu_icon ti-list text-primary"></i>  Nature Of Work
+                    			</a>
+                    		</li>
+
+                    		<li <?php if($controller == 'master' && $action == 'transfer-for'){?> class="menu active"<?php }?>>
+                    			<a href="/master/transfer-for/">
+                    				<i class="menu_icon ti-list text-primary"></i>  Transfer For
+                    			</a>
+                    		</li>
+
+                    		<li <?php if($controller == 'master' && $action == 'state-for'){?> class="menu active"<?php }?>>
+                    			<a href="/master/state-for/">
+                    				<i class="menu_icon ti-list text-primary"></i>  State For
+                    			</a>
+                    		</li>
+
+                    	</ul>
+                    </li>  
+
+                </ul>
+            </nav>
+
+            <!-- Page Content -->
+            <div id="content">
+
+            	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+            		<div class="container-fluid">
+
+            			<button type="button" id="sidebarCollapse" class="btn btn-info">
+            				<i class="fas fa-align-left"></i>
+            				<span>Toggle Sidebar</span>
+            			</button>
+            		</div>
+            	</nav>
+            </div>
+            <!-- Dark Overlay element -->
+            <div class="overlay"></div>
+        </div>
+
+        <script type="text/javascript">
+        	$(document).ready(function () {
+        		$("#sidebar").mCustomScrollbar({
+        			theme: "minimal"
+        		});
+
+        		$('#dismiss, .overlay').on('click', function () {
+            // hide sidebar
+            $('#sidebar').removeClass('active');
+            // hide overlay
+            $('.overlay').removeClass('active');
+        });
+
+        		$('#sidebarCollapse').on('click', function () {
+            // open sidebar
+            $('#sidebar').addClass('active');
+            // fade in the overlay
+            $('.overlay').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+        	});
+        </script>

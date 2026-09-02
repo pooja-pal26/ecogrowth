@@ -1,0 +1,25 @@
+<div class="modal-dialog modal-sm">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Edit State Name</h4>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <form action="/master/edit-state-name/state-id/<?php echo md5($this->stateNameDetails['id']); ?>" method="POST" role="form">
+          <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <label for="state_name">State Name :</label>
+            <input type="text" class="form-control" name="state_name" id="state_name" placeholder="Enter State Name" value="<?php echo $this->stateNameDetails['state_name']; ?>" oninput="this.value = this.value.replace(/[^a-z A-Z]/g,'')">
+          </div>
+          <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <label for="state_code">State Code :</label>
+            <input type="text" class="form-control" name="state_code" id="state_code" placeholder="Enter State Code" value="<?php echo $this->stateNameDetails['state_code']; ?>" oninput="this.value = this.value.replace(/[^0-9]/g,'')">
+          </div>
+          <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <input type="submit" class="btn btn-primary pull-right" value="Update">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

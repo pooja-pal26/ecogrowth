@@ -1,0 +1,94 @@
+.info_icon {
+    font-size: 25px;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    z-index: 10;
+}
+
+.info_icon.bg-primary {
+    border: 1px dotted #004d94;
+}
+
+.info_icon.bg-warning {
+    border: 1px dotted #a87502;
+}
+
+.info_icon.bg-danger {
+    border: 1px dotted #a70b08;
+}
+
+.info_icon.bg-success {
+    border: 1px dotted #2a844a;
+}
+
+/*chart css*/
+.chart_label {
+    height: 30px;
+    padding: .3em;
+    background: rgba(0, 0, 0, .2);
+    position: absolute;
+    display: none;
+    color: #333;
+}
+
+/*chartist css*/
+.ct-series-a .ct-bar, .ct-series-a .ct-line, .ct-series-a .ct-point, .ct-series-a .ct-slice-donut{
+    stroke: #5aca82;
+}
+.ct-series-b .ct-bar, .ct-series-b .ct-line, .ct-series-b .ct-point, .ct-series-b .ct-slice-donut{
+    stroke: #937eff;
+}
+.ct-series-c .ct-bar, .ct-series-c .ct-line, .ct-series-c .ct-point, .ct-series-c .ct-slice-donut{
+    stroke:#fcb410;
+}
+.ct-series-d .ct-bar, .ct-series-d .ct-line, .ct-series-d .ct-point, .ct-series-d .ct-slice-donut{
+    stroke: #31d0d6;
+}
+.height_450{
+    height:450px;
+}
+
+/*to do list*/
+.check_total .custom-control-indicator{
+    margin-top: 10px;
+}
+.to_do_checkbox_section .custom-control-indicator{
+    margin-left: 3px;
+}
+
+/*swiper section*/
+.swiper_img_height{
+    height: 187px;
+}
+
+/*=========================user profile====================================*/
+.profile_img{
+    width: 100px;
+    height: 100px;
+}
+.font_16{
+    font-size: 16px;
+}
+.profile_img2{
+    width: 60px;
+    height:60px;
+}
+/*=================================End of user profile===============*/
+#world_population{
+    height: 380px;
+}
+/*===============Weather section=====================================*/
+.p-r-25{
+    padding-right: 20px;
+}
+.weather_boarder{
+    margin-top: -5px;
+}
+.weather_img_icon{
+    width: 40px;
+}
+.weather_img_icon2{
+    width: 55px;
+}
+/*=====================End of weather section===============================*/

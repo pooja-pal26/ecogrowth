@@ -1,0 +1,76 @@
+
+<table  class="table table-striped">
+ <?php 
+    $record = $this->paginator; 
+    $totalrec = $this->totalrec;
+     ?>
+     <!-- START PAGINATION -->
+<?php 
+  $record = $this->paginator; 
+  $totalrec = $this->totalrec;
+  if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'attendence-pagination.phtml'); } ?> 
+  <thead>
+    <tr>
+        <strong>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap="" >#</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap="">User </th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap="">User Type</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap="" >Contact No.</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap="" >Start Day Datetime</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap="" >Start Day Latitude</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap=""  >Start Day  Longitude</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap=""  >End Day Datetime</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap=""  >End Day Latitude</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap=""  >End Day  Longitude</th>
+        <!-- <th style="text-align:center!important; font-weight: bold; color:#007bb8" nowrap=""  >status</th> -->
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap=""  >Created</th>
+        <th style="text-align:left!important; font-weight: bold; color:#007bb8" nowrap=""  >Working Hour</th>
+
+        </strong>
+    </tr>
+  </thead>
+  <tbody>
+
+      <?php 
+        if($totalrec){ 
+      $totalnum = $this->totalnum?$this->totalnum:1;
+      $istart = ($totalnum-1) * 10;
+      $i=$istart;
+        foreach ($record as  $user) 
+        { 
+        $diff = strtotime($user['end_day_datetime']) - strtotime($user['start_day_datetime']);
+          //$diff_in_hrs = $diff/3600;
+          $days    = floor($diff / 86400);
+          $hours   = floor(($diff - ($days * 86400)) / 3600);
+          $minutes = floor(($diff - ($days * 86400) - ($hours * 3600))/60);
+          //echo $hours.'h '.$minutes.'m '.$seconds.'s<br/>';
+
+           ?>
+    <tr>
+      <td style="text-align:left!important;" nowrap=""> <?php echo $user['id']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['user_id']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['user_type']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['contact_no']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['start_day_datetime']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['start_day_latitude']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['start_day_longitude']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['end_day_datetime']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['end_day_latitude']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['end_day_longitude']; ?></td>
+      <!-- <td style="text-align:center!important;" nowrap=""><?php //echo $user['status']; ?></td> -->
+      <td style="text-align:left!important;" nowrap=""><?php echo $user['created']; ?></td>
+      <td style="text-align:left!important;" nowrap=""><?php echo $hours.'h '.$minutes.'m '; ?></td>                                                                                            
+    </tr>
+
+    <?php  $i++;} } else{  ?>
+                <tr><td colspan="14"><p style="color:red; font-size:16px;">No Record Found !</p></td></tr>
+      <?php  } ?>
+  </tbody>
+</table>
+
+
+<!-- START PAGINATION -->
+<?php 
+  $record = $this->paginator; 
+  $totalrec = $this->totalrec;
+  if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'attendence-pagination.phtml'); } ?> 

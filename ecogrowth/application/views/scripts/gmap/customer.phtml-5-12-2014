@@ -1,0 +1,139 @@
+<?php 
+$customer_tower_code = array('Indus Towers Limited'=>'cust-i', 'Bharti Airtel Limited'=> 'cust-b' );
+$customer_call_type_code = array('BD'=>'call-b', 'PM'=>'call-p');
+$customer_product_type_code = array('AC'=>'product-a','PIU'=>'product-p');
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customer Map</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px	
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+var map;
+function initialize() {
+  // Create a simple map.
+  map = new google.maps.Map(document.getElementById('map-canvas'), {
+    zoom: 8,
+    center: {lat: <?php if($this->jobs[0]['slm_latitude']!=''){ echo $this->jobs[0]['slm_latitude']; }else{ echo $this->jobs[0]['site_latitude']; } ?>, lng: <?php if($this->jobs[0]['slm_longitude']!=''){ echo $this->jobs[0]['slm_longitude']; }else{ echo $this->jobs[0]['site_longitude']; } ?>}
+  });
+
+<?php foreach($this->jobs as $single_job){ 
+
+if($single_job['slm_latitude'] !='' && $single_job['slm_longitude'] !=''){ 
+?>
+var myLatlng = new google.maps.LatLng(<?php echo $single_job['slm_latitude']; ?>,<?php echo $single_job['slm_longitude']; ?>);
+
+var marker = new google.maps.Marker({
+    position: myLatlng,
+    title:"<?php echo $single_job['Customer_Name'].' ( '.$single_job['Site_ID'].':'.$single_job['job_id'].', '.$single_job['Call_Type_Code'].' '.$single_job['product_type'].')'; ?>",
+	<?php 
+	$image = '';
+	if(isset($customer_tower_code[$single_job['Customer_Name']]) && $customer_tower_code[$single_job['Customer_Name']]!=''){ $image .= $customer_tower_code[$single_job['Customer_Name']]; }else{ $image .= 'cust-o'; }
+	$image .= '-';
+	if(isset($customer_call_type_code[$single_job['Call_Type_Code']]) && $customer_call_type_code[$single_job['Call_Type_Code']]!=''){ $image .= $customer_call_type_code[$single_job['Call_Type_Code']]; }else{ $image .= 'call-o'; }
+	$image .= '-';
+	if(isset($customer_product_type_code[$single_job['product_type']]) && $customer_product_type_code[$single_job['product_type']]!=''){ $image .= $customer_product_type_code[$single_job['product_type']]; }else{ $image .= 'product-o'; }
+	$image .= '.gif';
+	?>
+	icon: 'http://apps.acme.in:9030/images/map-icons/<?php echo $image; ?>',
+	optimized: false
+});
+  google.maps.event.addListener(marker, 'click', function() {
+ infowindow = new google.maps.InfoWindow({
+    content: "<div><div><strong>Customer:</strong><?php echo $single_job['Customer_Name']; ?></div>"+
+	"<div><strong>Site Id:</strong><?php echo $single_job['Site_ID']; ?></div>"+
+	"<div><strong>Call Type:</strong><?php echo $single_job['Call_Type_Code']; ?></div>"+
+	"<div><strong>Product:</strong><?php echo $single_job['product_type']; ?></div>"+
+	"<div><strong>Call Log No:</strong><?php echo $single_job['Call_Log_No']; ?></div></div>"
+  });
+    infowindow.open(map, this);
+  });
+// To add the marker to the map, call setMap();
+marker.setMap(map);
+<?php }else if($single_job['site_latitude'] !='' && $single_job['site_longitude'] !=''){ 
+?>
+var myLatlng = new google.maps.LatLng(<?php echo $single_job['site_latitude']; ?>,<?php echo $single_job['site_longitude']; ?>);
+
+var marker = new google.maps.Marker({
+    position: myLatlng,
+    title:"<?php echo $single_job['Customer_Name'].' ( '.$single_job['Site_ID'].':'.$single_job['job_id'].', '.$single_job['Call_Type_Code'].' '.$single_job['product_type'].')'; ?>",
+	<?php 
+	$image = '';
+	if(isset($customer_tower_code[$single_job['Customer_Name']]) && $customer_tower_code[$single_job['Customer_Name']]!=''){ $image .= $customer_tower_code[$single_job['Customer_Name']]; }else{ $image .= 'cust-o'; }
+	$image .= '-';
+	if(isset($customer_call_type_code[$single_job['Call_Type_Code']]) && $customer_call_type_code[$single_job['Call_Type_Code']]!=''){ $image .= $customer_call_type_code[$single_job['Call_Type_Code']]; }else{ $image .= 'call-o'; }
+	$image .= '-';
+	if(isset($customer_product_type_code[$single_job['product_type']]) && $customer_product_type_code[$single_job['product_type']]!=''){ $image .= $customer_product_type_code[$single_job['product_type']]; }else{ $image .= 'product-o'; }
+	$image .= '.gif';
+	?>
+	icon: 'http://apps.acme.in:9030/images/map-icons/<?php echo $image; ?>',
+	optimized: false
+});
+
+  google.maps.event.addListener(marker, 'click', function() {
+ infowindow = new google.maps.InfoWindow({
+    content: "<div><div><strong>Customer:</strong><?php echo $single_job['Customer_Name']; ?></div>"+
+	"<div><strong>Site Id:</strong><?php echo $single_job['Site_ID']; ?></div>"+	
+	"<div><strong>Call Type:</strong><?php echo $single_job['Call_Type_Code']; ?></div>"+
+	"<div><strong>Product:</strong><?php echo $single_job['product_type']; ?></div>"+
+	"<div><strong>Call Log No:</strong><?php echo $single_job['Call_Log_No']; ?></div></div>"
+  });
+    infowindow.open(map, this);
+  });
+// To add the marker to the map, call setMap();
+marker.setMap(map);
+<?php } } ?>
+
+  // Load a GeoJSON from the same server as our demo.
+  //map.data.loadGeoJson('http://apps.acme.in:9030/gmap/load-geo-json?user=<?php //echo $this->user; ?>');
+/*  var featureStyle = {
+    strokeColor: 'green',
+    strokeWeight: 5
+  }
+
+  map.data.setStyle(featureStyle);
+*/
+<?php foreach($this->users as $single_job){ 
+if($single_job['current_latitude'] !='' && $single_job['current_longitude'] !=''){ 
+?>
+var myLatlng = new google.maps.LatLng(<?php echo $single_job['current_latitude']; ?>,<?php echo $single_job['current_longitude']; ?>);
+
+var marker = new google.maps.Marker({
+    position: myLatlng,
+    title:"<?php echo $single_job['StaffName'].' ('.$single_job['StaffCode'].')'; ?>",
+
+});
+  google.maps.event.addListener(marker, 'click', function() {
+	infowindow = new google.maps.InfoWindow({
+    content: "<div><div><strong>Staff Name:</strong><?php echo $single_job['StaffName']; ?></div>"+
+	"<div><strong>Staff Code:</strong><?php echo $single_job['StaffCode']; ?></div></div>"	
+	
+  });	  
+    infowindow.open(map, this);
+  });
+
+marker.setMap(map);
+<?php }} ?>
+
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+ 
+    <div id="map-canvas"></div>
+
+  </body>
+</html>
+

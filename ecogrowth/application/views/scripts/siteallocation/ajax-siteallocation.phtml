@@ -1,0 +1,77 @@
+ <?php
+    $record = $this->paginator; 
+    $totalrec = $this->totalrec;
+?>
+        <div id="leftpag" style="float: right !important;">
+        <!-- START PAGINATION -->
+        <?php if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'ajax-pagination.phtml'); } ?>  
+        <!-- END PAGINATION -->
+        </div>
+            <table  class="table table-striped">
+                    <thead>
+                    <tr>
+                        <strong>
+                        <th>#</th>
+                        <th>Action</th>
+                        <th style="text-align:left!important;" nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->po_no_order){ echo $this->po_no_order; }else{ echo 'DESC';} ?>', 'po_no')"> PO No. <?php if($this->po_no_order == 'DESC' && $this->params['key'] == 'po_no'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->po_no_order == 'ASC' && $this->params['key'] == 'po_no'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                        <th style="text-align:left!important;" nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->site_id_order){ echo $this->site_id_order; }else{ echo 'DESC';} ?>', 'site_id')">Site Id<?php if($this->site_id_order == 'DESC' && $this->params['key'] == 'site_id'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->site_id_order == 'ASC' && $this->params['key'] == 'site_id'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                         <th style="text-align:left!important;" nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->created_order){ echo $this->created_order; }else{ echo 'DESC';} ?>', 'created')">Assigned Date<?php if($this->created_order == 'DESC' && $this->params['key'] == 'created'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->created_order == 'ASC' && $this->params['key'] == 'created'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                        <th style="text-align:left!important;"><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->status_name_order){ echo $this->status_name_order; }else{ echo 'DESC';} ?>', 'status_name')">Status<?php if($this->status_name_order == 'DESC' && $this->params['key'] == 'status_name'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->status_name_order == 'ASC' && $this->params['key'] == 'status_name'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                       <!--  <th nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->infratel_id_order){ echo $this->infratel_id_order; }else{ echo 'DESC';} ?>', 'infratel_id')">Infratel Id<?php if($this->infratel_id_order == 'DESC' && $this->params['key'] == 'infratel_id'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->infratel_id_order == 'ASC' && $this->params['key'] == 'infratel_id'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th> -->
+                        
+                        <th style="text-align:left!important;" nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->zone_order){ echo $this->zone_order; }else{ echo 'DESC';} ?>', 'zone')">Zone<?php if($this->zone_order == 'DESC' && $this->params['key'] == 'zone'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->zone_order == 'ASC' && $this->params['key'] == 'zone'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                        <th style="text-align:left!important;" nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->cluster_order){ echo $this->cluster_order; }else{ echo 'DESC';} ?>', 'cluster')">Cluster<?php if($this->cluster_order == 'DESC' && $this->params['key'] == 'cluster'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->cluster_order == 'ASC' && $this->params['key'] == 'cluster'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                        <!-- <th nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->cluster_mobile_order){ echo $this->cluster_mobile_order; }else{ echo 'DESC';} ?>', 'cluster_mobile')">Cluster Incharge Mobile No.<?php if($this->cluster_mobile_order == 'DESC' && $this->params['key'] == 'cluster_mobile'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->cluster_mobile_order == 'ASC' && $this->params['key'] == 'cluster_mobile'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th> -->
+                        <th style="text-align:left!important;" nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->tech_name_order){ echo $this->tech_name_order; }else{ echo 'DESC';} ?>', 'tech_name')">Technician Name<?php if($this->tech_name_order == 'DESC' && $this->params['key'] == 'tech_name'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->tech_name_order == 'ASC' && $this->params['key'] == 'tech_name'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                        <th style="text-align:left!important;" nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->tech_mobile_order){ echo $this->tech_mobile_order; }else{ echo 'DESC';} ?>', 'tech_mobile')">Technician Mobile No.<?php if($this->tech_mobile_order == 'DESC' && $this->params['key'] == 'tech_mobile'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->tech_mobile_order == 'ASC' && $this->params['key'] == 'tech_mobile'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                        <th style="text-align:left!important;" nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->allocate_userid_order){ echo $this->allocate_userid_order; }else{ echo 'DESC';} ?>', 'allocate_userid')">Allocate User<?php if($this->allocate_userid_order == 'DESC' && $this->params['key'] == 'allocate_userid'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->allocate_userid_order == 'ASC' && $this->params['key'] == 'allocate_userid'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th>
+                        <!-- <th nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->supervisor_id_order){ echo $this->supervisor_id_order; }else{ echo 'DESC';} ?>', 'supervisor_id')">Supervisor<?php if($this->supervisor_id_order == 'DESC' && $this->params['key'] == 'supervisor_id'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->supervisor_id_order == 'ASC' && $this->params['key'] == 'supervisor_id'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th> -->
+                        <!-- <th nowrap><a href="javascript:void(0)" onclick="getPage('<?php echo $this->totalnum; ?>','<?php if($this->due_date_order){ echo $this->due_date_order; }else{ echo 'DESC';} ?>', 'due_date')">Due Date<?php if($this->due_date_order == 'DESC' && $this->params['key'] == 'due_date'){ ?><img src="/img/asc.png" style="height:15px;" /><?php }elseif($this->due_date_order == 'ASC' && $this->params['key'] == 'due_date'){ ?><img src="/img/desc.png" style="height:15px;" /><?php }else{?><img src="/img/desc.png" style="height:15px;" /><?php }?></a></th> -->
+                       
+                        </strong>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php 
+                    if($totalrec){ 
+                    $totalnum = $this->totalnum?$this->totalnum:1;
+                    $istart = ($totalnum-1) * 10;
+                    $i=$istart;
+                    foreach($record as $user)
+                    { ?>
+                    <tr>
+                        <td ><?php echo $i+1;?>.</td>
+                        <td style="text-align:left!important;"><a href="/siteallocation/view-site-data/allocation_id/<?php echo md5($user['id']); ?>" title="view"><img src="/img/view.png" /></a>
+                        <a href="/siteallocation/site-location/infratel_id/<?php echo md5($user['infratel_id']); ?>"  title="location"><img src="/img/location.png" /></a>
+                        </td>
+                        <td style="text-align:left!important;"><?php echo $user['po_no']; ?></td>
+                        <td style="text-align:left!important;"><?php echo $user['site_id']; ?></td>
+                        <td style="text-align:left!important;"><?php echo date('d/m/Y', strtotime($user['created'])); ?></td>
+                        <td style="text-align:left!important;"><?php echo $user['status_name']; ?></td>
+                        <!-- <td style="text-align:left!important;"><?php echo $user['infratel_id']; ?></td> -->
+                        <td style="text-align:left!important;"><?php echo $user['zone']; ?></td>
+                        <td style="text-align:left!important;"><?php echo $user['cluster']; ?></td>
+
+                        <!-- <td style="text-align:left!important;"><?php echo $user['cluster_mobile']; ?></td> -->
+                        <td style="text-align:left!important;"><?php echo $user['tech_name']; ?></td>
+                        <td style="text-align:left!important;"><?php echo $user['tech_mobile'];?></td>
+
+
+                         <td style="text-align:left!important;"><?php if($user['resource_allocator'] == 'Vendor') { echo $user['vendor']; }else{ echo $user['allocate_user'];}?></td> 
+
+                        <!-- <td style="text-align:left!important;"><?php echo $user['supervisor']; ?></td> -->
+
+                        <!--  <td style="text-align:left!important;"><?php echo date('d/m/Y', strtotime($user['due_date'])); ?></td> -->
+                        
+                        
+                    </tr>
+                    <?php  $i++;} } else{  ?>
+                                    <tr><td colspan="16"><p style="color:red; font-size:16px;">No Data Found !</p></td></tr>
+                        <?php  } ?>
+                    </tbody>
+                </table>
+                <div id="leftpag" style="float: right !important;">
+        <!-- START PAGINATION -->
+        <?php if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'ajax-pagination.phtml'); } ?>  
+        <!-- END PAGINATION -->
+        </div>

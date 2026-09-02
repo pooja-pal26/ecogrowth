@@ -1,0 +1,214 @@
+
+<link rel="stylesheet" href="/assets/css/select2.min.css">
+<script src="/assets/js/select2.min.js"></script>
+<style>
+    .select2.select2-container {
+        width: 100% !important;
+    }
+    .mainDiv {
+      background-color: #DCF2FE;
+      border-radius: 5px;
+  }
+  form {
+      padding: 5px;
+  }
+  #mandatory {
+      color: red;
+      font-size: 16px;
+  }
+  .table-bordered {
+    border: 2px solid #1b1a1a !important;
+}
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr, .table-bordered > tbody > tr > td {
+    border: 1px solid #1b1a1a !important;
+}
+</style>
+
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->params): ?>
+        <?php if ($this->params['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $this->params["error"]; ?>
+        </div>
+    <?php } ?>
+<?php endif ?>
+
+<div class="panel panel-primary">
+  <div class="panel panel-heading">
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <h3>Assign System</h3>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <a href="/assets/system" class="btn btn-success pull-right">View All System</a>
+    </div>
+</div>
+</div>
+<div class="panel panel-body">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mainDiv">
+        <form action="" method="POST" role="form" onsubmit="return validateInputData()">
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <span style="font-weight: bold; font-size: 16px; color: #D60019;">*&nbsp;Fields are mandatory.</span>
+            </div>
+        </div>
+
+        <br clear="all">
+        <div class="row" style="overflow: auto; padding: 8px 15px;">
+            <table class="table table-bordered" id="assetDetailsTable">
+                <thead>
+                    <th>Asset Type</th>
+                    <th>Asset</th>
+                    <th>Assigned To</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    <tr id="row_1">
+                        <td>
+                            <select name="asset_type[]" id="asset_type_1" class="form-control select2" onchange="showAssetList(1)">
+                                <option value="">Select Asset Type</option>
+                                <?php foreach ($this->assetTypeList as $assetType) { ?>
+                                    <option value="<?php echo $assetType['id']; ?>"><?php echo $assetType['type']; ?></option><?php }  ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="asset_id[]" id="asset_id_1" class="form-control select2">
+                                    <option value="">Select Asset </option>
+                                </select>
+                            </td>
+                            
+                            <td>
+                                <select name="assigned_to[]" id="assigned_to_1" class="form-control select2">
+                                    <option value="">Select User</option>
+                                    <?php foreach ($this->userDetails as $user) { ?>
+                                        <option value="<?php echo $user['id']; ?>"<?php echo $user['id'] == $this->params['assigned_to'] ? "selected":""; ?>><?php echo ucwords(strtolower($user['name'])); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <button type="button" name="addRow" class="btn btn-responsive layout_btn_prevent btn-success" onclick="addMoreRow();">Assign More Assets</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <button type="submit" class="btn btn-success pull-right">Save</button>
+              </div>
+          </div>
+      </form>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".select2").select2();
+        $(document).on('keyup', 'input[type="text"]', function(event) {
+            event.preventDefault();
+            $("input[type='text']").css('border', '');
+        });
+    }); 
+    function addMoreRow() {
+        var row_count = $('#assetDetailsTable tr').length;
+        var html_content = `<tr id="row_`+row_count+`">
+        <td>
+        <select name="asset_type[]" id="asset_type_`+row_count+`" class="form-control select2" onchange="showAssetList(`+row_count+`)">
+        <option value="">Select Asset Type</option>
+        <?php foreach ($this->assetTypeList as $assetType) { ?>
+            <option value="<?php echo $assetType['id']; ?>"><?php echo $assetType['type']; ?></option><?php }  ?>
+            </select>
+            </td>
+            <td>
+            <select name="asset_name[]" id="asset_id_`+row_count+`" class="form-control select2">
+            <option value="">Select Asset </option>
+            </select>
+            </td>
+            <td>
+            <select name="assigned_to[]" id="assigned_to_`+row_count+`" class="form-control select2">
+            <option value="">Select User</option>
+            <?php foreach ($this->userDetails as $user) { ?>
+                <option value="<?php echo $user['id']; ?>"<?php echo $user['id'] == $this->params['assigned_to'] ? "selected":""; ?>><?php echo ucwords(strtolower($user['name'])); ?></option>
+            <?php } ?>
+            </select>
+            </td>
+            <td><a href="javascript:void(0)" onclick="deleteRow(`+row_count+`)"><i class="fa fa-trash fa-2x" style="color:red;"></i></a></td>
+            </tr>`;
+            $("#assetDetailsTable").append(html_content);   
+            $(".select2").select2();   
+        } 
+
+        function deleteRow(count) {
+           $("#row_"+count).remove();
+       } 
+       function showAssetList(count) {
+           var assetTypeId = $("#asset_type_"+count).val();
+           if (assetTypeId == "") {
+            $("#asset_id_"+count).empty();
+            $("#asset_id_"+count).append('<option value="">Select Asset </option>');
+            $("#asset_id_"+count).val("");
+            $("#asset_code_"+count).empty();
+            $("#asset_code_"+count).append('<option value="">Select Asset Code </option>');
+            $("#asset_code_"+count).val("");
+        } else {
+            $.ajax({
+                url: '/assets/get-assets-by-asset-type/asset_type_id/'+assetTypeId,
+                type: 'POST',
+                success:function (data) {
+                    var data = JSON.parse(data);
+                    console.log(data);
+                    if (data.flag) {   
+                        $("#asset_id_"+count).empty();
+                        $("#asset_id_"+count).append(data.asset_name);
+                        $("#asset_code_"+count).empty();
+                        $("#asset_code_"+count).append(data.asset_code);
+                    } else {
+                        swal({
+                            title : "Error",
+                            text  : "Something went wrong. Please try again later.",
+                            icon  : "error"
+                        })
+                    }
+                }
+            });
+
+        }
+    }
+    function validateInputData() {
+       var row_count = $('#assetDetailsTable tr').length;
+       for (var i = 1; i <= row_count ; i++) {
+        if ($("#asset_type_"+i).val() == "") {
+            swal({
+                title : "Asset Type Missing !",
+                text  : "Please select asset type in row "+i+".",
+                icon  : "error"
+            });
+            return false;
+        } else if ($("#asset_id_"+i).val() == "") {
+            swal({
+                title : "Asset Missing !",
+                text  : "Please select asset name in row "+i+".",
+                icon  : "error"
+            });
+            return false;
+        } else if ($("#assigned_to_"+i).val() == "") {
+            swal({
+                title : "Asset Code Missing !",
+                text  : "Please select asset code in row "+i+".",
+                icon  : "error"
+            });
+            return false;
+        }
+    }
+
+} 
+</script>
+

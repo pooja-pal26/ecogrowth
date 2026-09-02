@@ -1,0 +1,101 @@
+
+.login_screen{
+    
+    background-size: cover;
+    background: url("http://logimetrixinfra.com/assets/images/slider/slide.jpg") no-repeat fixed;
+}
+.form-control,.input-group-addon{
+    background-color: transparent;
+    color:#fff;
+    border-radius: 0;
+    border:1px solid transparent;
+    border-bottom: 1px solid #fff;
+    border-left:0;
+}
+.form-control:focus{
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom: 1px solid #fff;
+    border-left:0;
+    color:#fff;
+}
+.input-group-addon{
+    padding: 0.5rem 0.20rem;
+}
+.custom-control-input:active ~ .custom-control-indicator,.custom-control-indicator{
+    background-color: transparent;
+    border:1px solid #fff;
+}
+.login_box{
+    /*box-shadow: 0 0 7px 0 #777;*/
+    background: rgba(21,12,12,0.4);
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+.login_horizontal_line{
+    border-bottom:1px solid #696060;
+}
+.login_box img{
+    width:120px;
+}
+.login_fb,.login_fb:hover,.login_fb:focus{
+    background-color: #4867AA;
+    color:#fff;
+}
+.login_google,.login_google:hover,.login_google:focus{
+    background-color: #EA4335;
+    color:#fff;
+}
+
+.login_google.btn-block{
+    margin-top: 10px;
+}
+
+.has-success .input-group-addon,.has-success .form-control{
+    color:#fff;
+    background-color: transparent;
+    border-color: transparent;
+    border-bottom: 1px solid #fff;
+
+}
+#tryitForm small{
+    color:#f86a67;
+}
+/*=======================forgot password============================*/
+.forgot_pwd{
+    margin-top: 30%;
+    margin-bottom: 25%;
+}
+.forgot_pwd{
+    background-color: rgba(3, 169, 244, 0.5);
+}
+/*=============================End of forgot password==================*/
+/*=============Register==============*/
+.register_form .custom-control-description{
+    color:#fff !important;
+}
+/*=============Register end==============*/
+
+/*loader*/
+.preloader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100000000;
+    backface-visibility: hidden;
+    background: #ffffff; }
+
+.preloader .preloader_img {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 46%;
+    top: 46%;
+    background-position: center;
+    z-index: 999999; }
+
+.pre_img {
+    width: 60px; }
+/*End of loader*/

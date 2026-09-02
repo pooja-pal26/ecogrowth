@@ -1,0 +1,42 @@
+.header{
+    background: #fff;
+    border-bottom: 2px solid #ccc;
+}
+.bar1, .bar2, .bar3
+{
+    background-color: #536973;
+}
+.content-header
+{
+    background-color: #eee;
+}
+.left_aside
+{
+    background: linear-gradient(90deg, #0e2f44, #1f4052);
+}
+#menu .navigation a
+{
+    color: #fff;
+}
+.navigation li.active > a.dropdown_head
+{
+    background: linear-gradient(90deg, #123e59, #264f64);
+}
+.sub_menu
+{
+    background: linear-gradient(90deg, #164d6e, #2d5e76);
+}
+.user_section {
+    height: 150px;
+    background: url(../../img/user_bg3.jpg);
+    padding: 35px 20px;
+}
+#menu .menu-dropdown > ul.sub_menu li#active > a {
+    color: #fff !important;
+}
+#menu .menu-dropdown > ul.sub_menu li#active{
+    background: linear-gradient(90deg, #123e59, #264f64) !important;
+}
+.navigation li.active > a, .navigation li#active > a {
+    color: #fff !important;
+}

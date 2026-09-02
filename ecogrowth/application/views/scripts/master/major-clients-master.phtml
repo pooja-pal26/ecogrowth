@@ -1,0 +1,95 @@
+
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Major Clients Master List
+          <div class="pull-right">
+            <a href="/master/add-major-clients-master" class="btn btn-success">Add Major Clients</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive" id="transfer-type-list">
+            <table class="display" width="100%" id="majorClientsMasterTable">
+             <thead>
+              <th>#</th>
+              <th>Major Clients Master Name</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+              <?php if($this->majorClientsMaster){
+                $i = 1;
+                foreach ($this->majorClientsMaster as $majorClients) { ?>
+                 <tr>
+                  <td><?php echo $i; ?></td>
+                  <td><?php echo $majorClients['major_clients']; ?></td>
+                  <td>
+                    <a href="/master/edit-major-clients-master/major-clients-master-id/<?php echo md5($majorClients['id']); ?>" title="Edit Major Clients"><i class="fa fa-pencil" style="color: #1DAA29;"></i></a>
+                    &nbsp;&nbsp;
+                    <a href="javascript:void(0)" title="Delete Major Clients" onclick="deletemajorClientsMaster(<?php echo $majorClients['id']; ?>)"><i class="fa fa-trash" style="color: red;"></i></a>
+                  </td>
+                </tr>
+                <?php $i++; } } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $("#majorClientsMasterTable").DataTable();
+    });
+
+    function deletemajorClientsMaster(id) {
+      swal({
+        title : "Are you sure?",
+        text  : "Do you want to delete selected major clients master?",
+        icon  : "warning",
+        buttons : [true, "Yes, Delete"],
+        dangerMode : true
+      }).then(function (isConfirm) {
+        if (!isConfirm) return;
+        $.ajax({
+          url: "/master/delete-major-clients-master/id/"+id,
+          context: document.body,
+          success: function (data) {
+            console.log(data);
+            var data = JSON.parse(data);
+            if (data.flag) {
+              swal({
+                title: "Deleted", 
+                text: data.message, 
+                icon: "success"
+              }).then(function() {
+                window.location.href="/master/major-clients-master";
+              });
+            } else {
+              swal({
+                title: "Failed !", 
+                text: data.message, 
+                icon: "error"
+              });
+            } 
+          }
+        });
+      });
+    }
+  </script>
+

@@ -1,0 +1,382 @@
+/*==============================primary color palette============================*/
+.color_cfe8ff{
+    background-color: #cfe8ff;
+}
+.color_a8d5ff{
+    background-color: #a8d5ff;
+}
+.color_80c2ff{
+    background-color: #80c2ff;
+}
+.color_6db8ff{
+    background-color: #6db8ff;
+}
+.color_59afff{
+    background-color: #59afff;
+}
+.color_46a5ff{
+    background-color: #46a5ff;
+}
+.color_329cff{
+    background-color: #329cff;
+}
+.color_1e93ff{
+    background-color: #1e93ff;
+}
+.color_0b89ff{
+    background-color: #0b89ff;
+}
+.color_007ff6{
+    background-color: #007ff6;
+}
+.color_0075e3{
+    background-color: #0075e3;
+}
+.color_0061bb{
+    background-color: #0061bb;
+}
+.color_004d94{
+    background-color: #004d94;
+}
+/*====================================End of primary color palette=========================*/
+/*==============================success color palette============================*/
+.color_e0f5e7{
+    background-color: #e0f5e7;
+}
+.color_c2ebd1{
+    background-color: #c2ebd1;
+}
+.color_a4e2ba{
+    background-color: #a4e2ba;
+}
+.color_87d8a4{
+    background-color: #87d8a4;
+}
+.color_78d498{
+    background-color: #78d498;
+}
+.color_69cf8d{
+    background-color: #69cf8d;
+}
+.color_5aca82{
+    background-color: #5aca82;
+}
+.color_4bc577{
+    background-color: #4bc577;
+}
+.color_3dbf6c{
+    background-color: #3dbf6c;
+}
+.color_39b063{
+    background-color: #39b063;
+}
+.color_34a25b{
+    background-color: #34a25b;
+}
+.color_2f9353{
+    background-color: #2f9353;
+}
+.color_2a844a{
+    background-color: #2a844a;
+}
+/*====================================End of success color palette=========================*/
+
+/*==============================Warning color palette============================*/
+.color_fff7e5{
+    background-color: #fff7e5;
+}
+.color_feebbe{
+    background-color: #feebbe;
+}
+.color_fdd884{
+    background-color: #fdd884;
+}
+.color_fdcc5d{
+    background-color: #fdcc5d;
+}
+.color_fcc037{
+    background-color: #fcc037;
+}
+.color_fcba23{
+    background-color: #fcba23;
+}
+.color_fcb410{
+    background-color: #fcb410;
+}
+.color_f5ab03{
+    background-color: #f5ab03;
+}
+.color_e29e03{
+    background-color: #e29e03;
+}
+.color_cf9003{
+    background-color: #cf9003;
+}
+.color_bb8302{
+    background-color: #bb8302;
+}
+.color_a87502{
+    background-color: #a87502;
+}
+.color_946802{
+    background-color: #946802;
+}
+/*====================================End of Warning color palette=========================*/
+
+/*==============================Danger color palette============================*/
+.color_fdd8d8{
+    background-color: #fdd8d8;
+}
+.color_fcc6c5{
+    background-color: #fcc6c5;
+}
+.color_fbb4b2{
+    background-color: #fbb4b2;
+}
+.color_fba19f{
+    background-color: #fba19f;
+}
+.color_fa8f8d{
+    background-color: #fa8f8d;
+}
+.color_f97c7a{
+    background-color: #f97c7a;
+}
+.color_f86a67{
+    background-color: #f86a67;
+}
+.color_f75854{
+    background-color: #f75854;
+}
+.color_f64541{
+    background-color: #f64541;
+}
+.color_f5332f{
+    background-color: #f5332f;
+}
+.color_f2100b{
+    background-color: #f2100b;
+}
+.color_df0f0a{
+    background-color: #df0f0a;
+}
+.color_cc0d09{
+    background-color: #cc0d09;
+}
+/*====================================End of Danger color palette=========================*/
+
+/*==============================Mint color palette============================*/
+.color_e5f9fa{
+    background-color: #e5f9fa;
+}
+.color_c4f2f3{
+    background-color: #c4f2f3;
+}
+.color_a4eaed{
+    background-color: #a4eaed;
+}
+.color_83e3e6{
+    background-color: #83e3e6;
+}
+.color_62dbe0{
+    background-color: #62dbe0;
+}
+.color_41d4d9{
+    background-color: #41d4d9;
+}
+.color_31d0d6{
+    background-color: #31d0d6;
+}
+.color_28c5cb{
+    background-color: #28c5cb;
+}
+.color_25b5bb{
+    background-color: #25b5bb;
+}
+.color_22a5aa{
+    background-color: #22a5aa;
+}
+.color_1f959a{
+    background-color: #1f959a;
+}
+.color_1b868a{
+    background-color: #1b868a;
+}
+.color_187679{
+    background-color: #187679;
+}
+/*====================================End of Mint color palette=========================*/
+
+/*==============================Purple color palette============================*/
+.color_e5e0ff{
+    background-color: #e5e0ff;
+}
+.color_d5ccff{
+    background-color: #d5ccff;
+}
+.color_c4b9ff{
+    background-color: #c4b9ff;
+}
+.color_b4a5ff{
+    background-color: #b4a5ff;
+}
+.color_c4b9ff{
+    background-color: #c4b9ff;
+}
+.color_b4a5ff{
+    background-color: #b4a5ff;
+}
+.color_a392ff{
+    background-color: #a392ff;
+}
+.color_937eff{
+    background-color: #937eff;
+}
+.color_836aff{
+    background-color: #836aff;
+}
+.color_7257ff{
+    background-color: #7257ff;
+}
+.color_6243ff{
+    background-color: #6243ff;
+}
+.color_5130ff{
+    background-color: #5130ff;
+}
+.color_411cff{
+    background-color: #411cff;
+}
+.color_3008ff{
+    background-color: #3008ff;
+}
+.color_2800f4{
+    background-color: #2800f4;
+}
+/*====================================End of Purple color palette=========================*/
+
+/*==============================Gray color palette============================*/
+.color_ececec{
+    background-color: #ececec;
+}
+.color_d8d8d8{
+    background-color: #d8d8d8;
+}
+.color_c5c5c5{
+    background-color: #c5c5c5;
+}
+.color_b1b1b1{
+    background-color: #b1b1b1;
+}
+.color_a7a7a7{
+    background-color: #a7a7a7;
+}
+.color_9d9d9d{
+    background-color: #9d9d9d;
+}
+.color_949494{
+    background-color: #949494;
+}
+.color_8a8a8a{
+    background-color: #8a8a8a;
+}
+.color_808080{
+    background-color: #808080;
+}
+.color_767676{
+    background-color: #767676;
+}
+.color_6c6c6c{
+    background-color: #6c6c6c;
+}
+.color_636363{
+    background-color: #636363;
+}
+.color_595959{
+    background-color: #595959;
+}
+/*====================================End of Gray color palette=========================*/
+
+/*==============================Pink color palette============================*/
+.color_ffd4db{
+    background-color: #ffd4db;
+}
+.color_ffacbb{
+    background-color: #ffacbb;
+}
+.color_ff859a{
+    background-color: #ff859a;
+}
+.color_ff728a{
+    background-color: #ff728a;
+}
+.color_ff5e7a{
+    background-color: #ff5e7a;
+}
+.color_ff4a6a{
+    background-color: #ff4a6a;
+}
+.color_ff375a{
+    background-color: #ff375a;
+}
+.color_ff0f39{
+    background-color: #ff0f39;
+}
+.color_fb002c{
+    background-color: #fb002c;
+}
+.color_e70028{
+    background-color: #e70028;
+}
+.color_d40025{
+    background-color: #d40025;
+}
+.color_c00022{
+    background-color: #c00022;
+}
+.color_ac001e{
+    background-color: #ac001e;
+}
+/*====================================End of Pink color palette=========================*/
+
+/*==============================Info color palette============================*/
+.color_91daff{
+    background-color: #91daff;
+}
+.color_6acdff{
+    background-color: #6acdff;
+}
+.color_42c0ff{
+    background-color: #42c0ff;
+}
+.color_2fbaff{
+    background-color: #2fbaff;
+}
+.color_1bb3ff{
+    background-color: #1bb3ff;
+}
+.color_07adff{
+    background-color: #07adff;
+}
+.color_00a2f3{
+    background-color: #00a2f3;
+}
+.color_0095df{
+    background-color: #0095df;
+}
+.color_0088cc{
+    background-color: #0088cc;
+}
+.color_007bb8{
+    background-color: #007bb8;
+}
+.color_006ea4{
+    background-color: #006ea4;
+}
+.color_006191{
+    background-color: #006191;
+}
+.color_00547d{
+    background-color: #00547d;
+}
+/*====================================End of Info color palette=========================*/

@@ -1,0 +1,264 @@
+<?php
+    $user_list = $this->user_list;
+    $record = $this->paginator; 
+    $totalrec = $this->totalrec;
+?>
+<script type="text/javascript">
+    function deleteMappedUserRole(mappedId) {
+    swal({
+        title: "Are you sure?",
+        text: "You want to Delete this ",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, Delete this role mapping!",
+        closeOnConfirm: false
+    }, function (isConfirm) {
+        if (!isConfirm) return;
+        $.ajax({
+            url: "/user/delete-role-mapping/id/"+mappedId,
+            context: document.body,
+            success: function () {
+              swal({
+                title: "Deleted", 
+                text: "Status has been successfully changed", 
+                type: "success"
+              },function() {
+                window.location.href="/user/role-mapping";
+              });
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Error "+status+"!", "Please try again", "error");
+            }
+        });
+    });
+};
+
+function getPage(page){
+      var url   = '/user/pagination/page/'+page;
+      var id    = 'my-role';
+      $("#"+id).html('<div class="loading">Loading&#8230;</div>');
+      $.ajax({
+          url: url,
+          context: document.body,
+          success: function(responseText) {
+              $("#"+id).html(responseText);
+              $("#"+id).find("script").each(function(i) {
+                  eval($(this).text());
+              });
+          }
+      });
+};
+
+$('.btn').on('click', function() {
+    var $this = $(this);
+  $this.button('loading');
+    setTimeout(function() {
+       $this.button('reset');
+   }, 8000);
+});
+</script>
+<div class="">
+<!-- Content Header (Page header) -->
+        <div class="content-header container-fluid bg-white">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4><i class="ti-user"></i>  Role & Permission Mapping</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="content">
+            <?php if ($this->messages): ?>
+                <div class="alert alert-success alert-dismissible fade show m-t-10" role="alert">
+                    <?php foreach ($this->messages as $message): ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="alert_data">
+                <?php echo $message ?>.
+                </div>
+                <?php endforeach ?>
+                </div>
+            <?php endif ?>
+             <?php if($this->errorMessage) { ?>
+                        <br clear="all">
+                        <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php  echo $this->errorMessage;   ?>                                             
+                        </div>
+                        <?php } ?>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card  profile2_aboutme">
+                   <div class="card-header card-info text-white">
+                         <p style="float: left; margin: 0px;">User Role & Permission Mapping</p> 
+                         
+                          </div>
+
+                        <div class="card-block">
+                          
+                            <form name="role-mapping" id="role-mapping" method="post" action="">
+                            <div class="row basic_tables">
+                                <div class="dotted p-12 col-12 m-t-20">
+                                    <div class="form-group row">
+                                    <div class="col-lg-2">
+                                            <label for="first_name1" class="col-form-label">
+                                                Users *
+                                            </label>
+                                            <div class="input-group">
+                                                <select id="chosen2" name="user_id" id="user_id" class="form-control chosen-select" tabindex="6">
+                                                <option value="">Select User</option>
+                                               <?php
+                                               foreach ($this->user_list as $user) {
+                                                   ?>
+                                                   <option value="<?php echo $user['id'];?>" <?php if($user['id'] == $this->params['user_id']){ echo 'selected';}?>><?php echo ucwords($user['name']);?></option>
+                                                   <?php
+                                               }
+                                               ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label for="first_name1" class="col-form-label">
+                                                Department 
+                                            </label>
+                                            <div class="input-group">
+                                                <select id="chosen2" name="department[]" id="department" class="form-control chosen-select" multiple tabindex="6">
+                                               <?php
+                                               foreach ($this->department as $depart) {
+                                                   ?>
+                                                   <option value="<?php echo "'".$depart['id']."'";?>" <?php if($depart['id'] == $this->params['department']){ echo 'selected';}?>><?php echo $depart['department'];?></option>
+                                                   <?php
+                                               }
+                                               ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                         <div class="col-lg-2">
+                                            <label for="first_name1" class="col-form-label">
+                                                SBU 
+                                            </label>
+                                            <div class="input-group">
+                                                <select id="chosen2" name="sbu[]" id="sbu" class="form-control chosen-select" multiple tabindex="6">
+                                                <?php
+                                                 foreach ($this->sbu as $sbu) {
+                                                     ?>
+                                                     <option value="<?php echo "'".$sbu['id']."'";?>" <?php if($sbu['id'] == $this->params['sbu']){ echo 'selected';}?>><?php echo $sbu['name'];?></option>
+                                                     <?php
+                                                 }
+                                               ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-lg-2">
+                                            <label for="first_name1" class="col-form-label">
+                                                Location *
+                                            </label>
+                                            <div class="input-group">
+                                                <select id="chosen2" name="location[]" id="location" class="form-control chosen-select" multiple tabindex="6">
+                                                <?php
+                                               foreach ($this->location as $loc) {
+                                                   ?>
+                                                   <option value="<?php echo "'".$loc['id']."'";?>"><?php echo $loc['location'];?></option>
+                                                   <?php
+                                               }
+                                               ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                         <div class="col-lg-2">
+                                            <label for="first_name1" class="col-form-label">
+                                                Task Type 
+                                            </label>
+                                            <div class="input-group">
+                                                <select id="chosen2" name="category[]" id="category" class="form-control chosen-select" multiple tabindex="6">
+                                                <?php
+                                               foreach ($this->task as $task) {
+                                                   ?>
+                                                   <option value="<?php echo "'".$task['id']."'";?>"><?php echo $task['task'];?></option>
+                                                   <?php
+                                               }
+                                               ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                         <div class="col-lg-2">
+                                            <div class="col-12 m-t-30" >
+                                            <button type="submit" style="float: right;" name="submit" class="btn btn-responsive layout_btn_prevent btn-primary" id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Create Mapping">Create Mapping</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+
+                             <div class="table-responsive mt-1" id="my-role">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>User</th>
+                                                <th>Department</th>
+                                                <th>SBU</th>
+                                                <th>Location</th>
+                                                <th>Task Type</th>
+                                                <!-- <th>Access</th> -->
+                                                <th>Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php 
+                                            if($totalrec){ 
+                                            $totalnum = $this->totalnum?$this->totalnum:1;
+                                            $istart = ($totalnum-1) * 10;
+                                            $row=$istart;
+                                            foreach($record as $task)
+                                            { ?>
+                                            <tr>
+                                                <td><?php echo $row+1;?>.</td>
+                                                <td><?php echo $task['user'];?></td>
+                                                <td><?php
+                                                $i = 1; 
+                                                foreach ($task['department'] as $key => $value) {
+                                                    echo '<span class="badge badge-primary">'.$value['department'].'</span>&nbsp;&nbsp;';
+                                                $i++; }
+                                                 ?></td>
+                                                <td><?php
+                                                $i = 1; 
+                                                foreach ($task['sbu'] as $key => $value) {
+                                                    echo '<span class="badge badge-primary">'.$value['name'].'</span>&nbsp;&nbsp;';
+                                                $i++; }
+                                                 ?></td>
+                                                <td><?php
+                                                $i = 1; 
+                                                foreach ($task['location'] as $key => $value) {
+                                                    echo '<span class="badge badge-success">'.$value['location'].'</span>&nbsp;&nbsp;';
+                                                $i++; }
+                                                 ?></td>
+                                                <td><?php
+                                                $i = 1; 
+                                                foreach ($task['category'] as $key => $value) {
+                                                    echo '<span class="badge badge-primary">'.$value['category'].'</span>&nbsp;&nbsp;';
+                                                $i++; }
+                                                 ?></td>
+                                                <!--  <td><?php echo $task['access']; ?></td> -->
+                                                <td><a href="javascript:void(0)" class="tododelete redcolor" onclick="deleteMappedUserRole('<?php echo $task['id'];?>')" title="delete"><span class="ti-trash"></span></a></td>
+                                            </tr>
+                                            <?php  $row++;} } else{  ?>
+                                                            <tr><td colspan="11"><p style="color:red; font-size:16px;">No User Role Found !</p></td></tr>
+                                                <?php  } ?>
+                                            </tbody>
+                                        </table>
+                                        <?php if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'task-pagination.phtml'); } ?>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.content -->
+    </div>
+</div>

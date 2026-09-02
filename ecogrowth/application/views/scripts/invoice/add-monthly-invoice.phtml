@@ -1,0 +1,257 @@
+<style type="text/css">
+    .form-group{
+        margin: 10px;
+    }
+    button {
+        margin: 10px;
+    }
+</style>
+<div class="row">
+    <form action="/invoice/add-monthly-invoice" method="POST" onsubmit="return Validate();">
+        <table id="attendenceTable">
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <label for="state_id">State For<span >*</span></label>
+                        <select class="form-control select2 mandatorySelect" name="state_id" id="state_id_0">
+                            <option value="">Select State</option>
+                            <?php foreach ($this->stateList as $state): ?>
+                                <option value="<?php echo $state['id']; ?>"><?php echo $state['state_name']; ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="client_id">Client Name<span >*</span></label>
+                        <select class="form-control select2 mandatorySelect" name="client_id" id="client_id_0">
+                            <option value="">Select Client</option>
+                            <?php foreach ($this->clientList as $client): ?>
+                                <option value="<?php echo $client['id']; ?>"<?php echo $this->params['client_id'] == $client['id'] ? "selected":""; ?>><?php echo $client['client_name']; ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="client_id">Vendor<span >*</span></label>
+                        <select class="form-control mandatorySelect select2" name="vendor_id[]" id="vendor_id_0"   style="width: 150px;" >
+                            <option value="">Select Vendor</option>
+                            <?php foreach ($this->vendorList as $client): ?>
+                                <option value="<?php echo $client['id']; ?>"<?php echo $this->params['id'] == $client['id'] ? "selected":""; ?>><?php echo $client['vendor_name']; ?></option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                </td>
+
+                <td>
+                    <div class="form-group">
+                        <label for="po_value">Vendor Invoice Amount<span id="mandatory">*</span> </label>
+                        <input  type="text" name="vendor_amount[]" class="form-control mandatoryFeild" id="vendor_amount_0">
+                    </dv>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="po_value">Po Value<span id="mandatory">*</span> </label>
+                        <input type="text" name="po_value" class="form-control mandatoryFeild" id="po_value_0">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="Invoice_amount">Actual Invoice<span id="mandatory">*</span></label>
+                        <input type="text" name="invoice_amount" class="form-control mandatoryFeild" id="invoice_amount_0">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="Invoice_amount">LTS Invoice %<span id="mandatory">*</span></label>
+                        <input type="text" name="lts_invoice_percent" class="form-control mandatoryFeild" id="invoice_amount_0">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="Invoice_amount">Profit<span id="mandatory">*</span> </label>
+                        <input type="text" name="profit" class="form-control mandatoryFeild" id="invoice_amount_0">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="Invoice_amount">LTS Invoice<span id="mandatory">*</span></label>
+                        <input type="text" name="lts_invoice_amount" class="form-control mandatoryFeild" id="invoice_amount_0">
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="month">Month<span >*</span> :</label>
+                        <select class="form-control mandatorySelect" name="month" id="month_0">
+                            <option value="01" >January</option>
+                            <option value="02" >February</option>
+                            <option value="03" >March</option>
+                            <option value="04" >April</option>
+                            <option value="05" >May</option>
+                            <option value="06" >June</option>
+                            <option value="07" >July </option>
+                            <option value="08" >August</option>
+                            <option value="09" >September</option>
+                            <option value="10" >October</option>
+                            <option value="11" >November</option>
+                            <option value="12" >December</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <label for="year">Year<span>*</span> :</label>
+                        <select class="form-control mandatorySelect" name="year" id="year_0">
+                            <?php $years = array_combine(range(date("Y"), 1910), range(date("Y"), 1910));
+                            foreach($years as $year) {  ?>
+                                <option value="<?php echo $year;?>" <?php echo $this->year == $year ?"selected":""; ?>><?php echo $year;?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <button type="button" name="addRow" class="btn btn-responsive layout_btn_prevent btn-success" onclick="addMoreRow();">Add More Vendors</button>
+            </div><br><br>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div class="input-group">
+                    <button class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+
+    function Validate(){
+        var error_count = 0;
+        var length = $('.mandatorySelect').length;
+        var length1 = $('.mandatorySelect').length;
+        $('.mandatorySelect').each(function(e){
+            if ($(this).val() == "") {
+                error_count += 1;
+            } 
+        });
+        $('.mandatoryFeild').each(function(e){
+            if ($(this).val() == "") {
+                error_count += 1;
+            } 
+        });
+        // if(error_count>0){
+        //     swal('Error','Please Fill the required Details','error');
+        //     return false;
+        // }else{
+        //     return true;
+        // }
+        return true;
+    }
+    function deleteRow(count) {
+        $("#row_"+count).remove();
+    }
+    function addMoreRow() {
+        var row_count = $('#attendenceTable tr').length;
+        var result1 , result_1,result_2,result_3; 
+        $.when(
+            // $.ajax({
+            //     url: '/invoice/get-state',
+            //     type: 'GET',
+            //     success:function(data){
+            //         var data = JSON.parse(data);
+            //         if (data.flag) {
+            //             result1 = data.userOption;
+            //         } else {
+            //             swal({
+            //                 title : data.title,
+            //                 text  : data.message,
+            //                 icon  : "error"
+            //             });
+            //         }
+            //     }
+            // }),
+            // $.ajax({
+            //     url: '/invoice/get-client',
+            //     type: 'GET',
+            //     success:function(data){
+            //         var data = JSON.parse(data);
+            //         if (data.flag) {
+            //             result_1 = data.option;
+            //         } else {
+            //             swal({
+            //                 title : data.title,
+            //                 text  : data.message,
+            //                 icon  : "error"
+            //             });
+            //         }
+            //     }
+            // }),
+            // $.ajax({
+            //     url: '/invoice/get-years',
+            //     type: 'GET',
+            //     success:function(data){
+            //         var data = JSON.parse(data);
+            //         if (data.flag) {
+            //             console.log(data);
+            //             result_2 = data.option;
+            //         } else {
+            //             swal({
+            //                 title : data.title,
+            //                 text  : data.message,
+            //                 icon  : "error"
+            //             });
+            //         }
+            //     }
+            // }),
+            $.ajax({
+                url: '/invoice/get-vendors',
+                type: 'GET',
+                success:function(data){
+                    var data = JSON.parse(data);
+                    if (data.flag) {
+                        console.log(data);
+                        result_3 = data.vendor;
+                    } else {
+                        swal({
+                            title : data.title,
+                            text  : data.message,
+                            icon  : "error"
+                        });
+                    }
+                }
+            })
+            ).then(function(){
+                // $("#state_id_"+row_count).html(result1);
+                // $("#client_id_"+row_count).html(result_1);
+                // $("#year_"+row_count).html(result_2);
+                $("#vendor_id_"+row_count).html(result_3);
+            });
+
+            var html_content=`<tr id="row_`+row_count+`">
+            <td>
+            <div class="form-group">
+            <label for="client_id">Vendor<span >*</span></label>
+            <select class="form-control mandatorySelect select2" name="vendor_id[]" id="vendor_id_`+row_count+`"  style="width: 150px;">
+            <option value="">Select Vendor</option>
+
+            </select>
+            </div>
+            </td> <td>
+            <div class="form-group">
+            <label for="po_value">Vendor Invoice Amount<span id="mandatory">*</span> </label>
+            <input type="text" name="vendor_amount[]" class="form-control mandatoryFeild" id="vendor_amount_`+row_count+`">
+            </dv>
+            </td>
+            <td style="padding-left:20px;"><a href="javascript:void(0)" onclick="deleteRow(`+row_count+`)"><i class="fa fa-trash-o"" style="color:red;font-size:30px;"></i></a>
+            </div>
+            </td>
+            </tr>`;
+            $("#attendenceTable").append(html_content);
+
+
+        } 
+        
+
+    </script>

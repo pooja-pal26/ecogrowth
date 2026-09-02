@@ -1,0 +1,159 @@
+
+<style>
+.select2.select2-container {
+  width: 100% !important;
+}
+.mainDiv {
+  background-color: #DCF2FE;
+  border-radius: 5px;
+}
+form {
+  padding: 5px;
+}
+#mandatory {
+  color: red;
+  font-size: 16px;
+}
+.formRow {
+  padding: 10px !important;
+}
+</style>
+
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <div class="row">
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <h3>Edit Supplier</h3>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <a href="/master/supplier-list" class="btn btn-success pull-right">View Supplier</a>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mainDiv">
+          <form action="/master/edit-supplier/datacode/<?php echo md5($this->supplierDetails['id']); ?>" method="POST" role="form" onsubmit="return validateInputData()">
+            <div class="row">
+              <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <span style="font-weight: bold; font-size: 16px; color: #D60019;">*&nbsp;Field is mandatory.</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <label for="supplier_name">Supplier Name <span id="mandatory">*</span></label>
+                <input type="text" class="form-control" name="supplier_name" id="supplier_name" placeholder="Enter Supplier Name" value="<?php echo $this->supplierDetails['name']; ?>">
+              </div>
+              <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <label for="mobile_no">Mobile Number <span id="mandatory">*</span></label>
+                <input type="text" class="form-control" name="mobile_no" id="mobile_no" placeholder="Enter Supplier Mobile Number" value="<?php echo $this->supplierDetails['contact_1']; ?>">
+              </div>
+              <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <label for="alternate_mobie">Alternate Mobile Number</label>
+                <input type="text" class="form-control" name="alternate_mobie" id="alternate_mobie" placeholder="Enter Alternate Mobile Number" value="<?php echo $this->supplierDetails['contact_2']; ?>">
+              </div>
+            </div>
+            <br clear="all">
+            <div class="row">
+              <div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <label for="gst_no">GST Number <span id="mandatory">*</span></label>
+                <input type="text" class="form-control" name="gst_no" id="gst_no" placeholder="Enter GST Number" value="<?php echo $this->supplierDetails['gst_number']; ?>">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <label for="address">Address <span id="mandatory">*</span></label>
+                <textarea type="text" class="form-control" name="address" id="address" placeholder="Enter Address"><?php echo $this->supplierDetails['address']; ?></textarea>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+                <button type="submit" class="btn btn-success">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function validateInputData(){
+    var supplierName    = $("#supplier_name").val();
+    var mobile_no       = $("#mobile_no").val();
+    var alternate_mobie = $("#alternate_mobie").val();
+    var gstNumber       = $("#gst_no").val();
+    var supplierAddress = $("#address").val();
+    if (supplierName == "") {
+      swal({
+        title : "Supplier Name Missing !",
+        text : "Please Supplier Name.",
+        icon : "error"
+      }).then(function(){
+        $("#supplier_name").focus();
+      });
+      return false;
+    } else if(mobile_no == ""){
+      swal({
+        title : "Mobile Number Missing !",
+        text : "Please Enter Supplier Mobile Number.",
+        icon : "error"
+      }).then(function(){
+        $("#mobile_no").focus();
+      });
+      return false;
+    } else if (mobile_no.length > 10 || mobile_no.length < 10) {
+      swal({
+        title:"Invalid Number !",
+        text:"Please Enter 10 Digit Mobile Number",
+        icon:"error"
+      }).then(function(){
+        $("#mobile_no").focus();
+      });
+      return false;
+    } else if (alternate_mobie && alternate_mobie.length > 10 || alternate_mobie && alternate_mobie.length < 10 ) {
+      swal({
+        title:"Invalid Alternate Number !",
+        text:"Please Enter 10 Digit Mobile Number",
+        icon:"error"
+      }).then(function(){
+        $("#alternate_mobile").focus();
+      });
+      return false;
+    } else if (gstNumber == "") {
+      swal({
+        title : "GST Number Missing !",
+        text : "Please Enter Supplier GST Number.",
+        icon : "error"
+      }).then(function(){
+        $("#gst_no").focus();
+      });
+      return false;
+    } else if (supplierAddress == "") {
+      swal({
+        title : "Address Missing !",
+        text : "Please Enter Supplier Address.",
+        icon : "error"
+      }).then(function(){
+        $("#address").focus();
+      });
+      return false;
+    }
+  }
+</script>
+

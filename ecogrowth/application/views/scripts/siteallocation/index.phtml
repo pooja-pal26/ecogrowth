@@ -1,0 +1,335 @@
+<style>
+  .fa {
+    font-size: 20px;
+  }
+</style>
+<script type="text/javascript">
+  function deleteMappedUserRole(userId) {
+    swal({
+      title: "Are you sure?",
+      text: "You want to Delete this ",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#DD6B55",
+      confirmButtonText: "Yes, Delete this role mapping!",
+      closeOnConfirm: false
+    }, function (isConfirm) {
+      if (!isConfirm) return;
+      $.ajax({
+        url: "/user/delete-user/id/"+userId,
+        context: document.body,
+        success: function () {
+          swal({
+            title: "Deleted", 
+            text: "Status has been successfully changed", 
+            type: "success"
+          },function() {
+            window.location.href="/user";
+          });
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          swal("Error "+status+"!", "Please try again", "error");
+        }
+      });
+    });
+  };
+  function getPage(page){
+    var url   = '/user/user-list/page/'+page;
+    var id    = 'user-list';
+    $("#"+id).html('<div class="loading">Loading&#8230;</div>');
+    $.ajax({
+      url: url,
+      context: document.body,
+      success: function(responseText) {
+        $("#"+id).html(responseText);
+        $("#"+id).find("script").each(function(i) {
+          eval($(this).text());
+        });
+      }
+    });
+  };
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('th').attr("nowrap","nowrap");
+    $('td').attr("nowrap","nowrap");
+  });
+</script>
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Allocated Site List
+          <div class="pull-right">
+            <a href="/siteallocation/allocate-site" class="btn btn-success">Allocate Site</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive" id="user-list">
+            <table class="display" width="100%" id="userListTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>PO Number</th>
+                  <th>PO Date</th>
+                  <th>Site ID</th>
+                  <th>Due Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php if($this->allocatedSites){ 
+                  $i = 1;
+                  foreach($this->allocatedSites as $allocatedSite) { ?>
+                    <tr>
+                      <td><?php echo $i;?>.</td>
+                      <td><?php echo $allocatedSite['po_no']; ?></td>
+                      <td><?php echo date('d/m/Y', strtotime($allocatedSite['po_date'])); ?></td>
+                      <td><?php echo $allocatedSite['site_id']; ?></td>
+                      <td><?php echo date("d/m/Y", strtotime($allocatedSite['due_date'])); ?></td>
+                      <td>
+                        <a href="javascript:void(0)" title="View Details" onclick="viewAllocatedSiteDetails('<?php echo md5($allocatedSite['id']); ?>')"><i class="fa fa-info-circle" style="color: #187CC9"></i></a>
+                        &nbsp;&nbsp;
+                        <?php if ($this->role_type == 1 || $this->role_type == 4){ ?>
+                          <a href="/siteallocation/edit-allocated-site/site-allocation-id/<?php echo md5($allocatedSite['id']);?>"title="Edit Allocation"><i class="fa fa-pencil" style="color: #1DAA29;"></i></a>
+                          &nbsp;&nbsp;
+                          <a href="javascript:void(0)" title="Delete Allocated Site" onclick="deleteAllocatedSite(<?php echo $allocatedSite['id']; ?>, <?php echo $allocatedSite['po_no'] ?>,'<?php echo $allocatedSite['site_id']; ?>')"><i class="fa fa-trash" style="color: red;"></i></a>
+                        <?php } else { ?>
+                          <a href="javascript:void(0)" title="Make Request" onclick="makeRequestTo()"><i class="fa fa-comments" aria-hidden="true"></i></a>
+                           
+                        <?php } ?>
+                        <button type="button" class="btn btn-primary" onclick="SetSiteCloseStatus('<?php echo ($allocatedSite['id']); ?>')" title="Set Site Close Status">Site Close</button></td>
+                      </tr>
+                      <?php  $i++; } } ?>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Bootstrap Modal: Allocated Site Details -->
+        <div class="modal fade" id="allocatedSiteDetailsModal">
+
+        </div>
+        <div class="modal fade" id="setSiteCloseStatusModal">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title">Site Close Status</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					    <form action="" method="POST" role="form" enctype="multipart/form-data" >
+						<input type="hidden" id="allocation_id" name="allocation_id">
+					<div class="form-group">
+							<label for="">Status :</label>
+							<select name="Site_close_status" id="Site_close_status" class="form-control">
+                                <option value="">--Select Status--</option>
+                                <option value="1">Close</option>
+                            </select>
+						</div>
+						<button type="button" class="btn btn-primary pull-right" id="submitStatus">Submit</button>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+        <script>
+          $(document).ready(function() {
+            $("#userListTable").DataTable();
+          });
+          function viewAllocatedSiteDetails(allocation_id) {
+            $.ajax({
+              url: '/siteallocation/view-allocated-site-details/allocation_id/'+allocation_id,
+              type: 'GET',
+              success:function(data){
+                $("#allocatedSiteDetailsModal").html(data);
+                $("#allocatedSiteDetailsModal").modal("toggle");
+              }
+            });
+          }
+          function deleteAllocatedSite(site_allocation_id, po_number, site_id) {
+            if (site_allocation_id == "") {
+              swal({
+                title : 'Something Went Wrong!',
+                text  : 'Please try again after refreshing the page.',
+                icon  : 'error'
+              });
+            } else {
+              swal({
+                title : 'Are you sure?',
+                text  : 'Do you wand to delete allocated site?',
+                icon  : 'warning',
+                buttons:[true,'Yes, Delete'],
+                dangerMode:true
+              }).then(function(isConfirm){
+                if (!isConfirm) {
+                  return false;
+                } else {
+                  $("#loading-bg").show();
+                  $.ajax({
+                    url: '/siteallocation/delete-allocated-site',
+                    type: 'POST',
+                    data: {allocated_site_id:site_allocation_id, po_number:po_number, site_id:site_id},
+                    success:function(data){
+                      $('#loading-bg').hide();
+                      var data = JSON.parse(data);
+                      console.log(data);
+                      if (data.flag) {
+                        swal({
+                          title : data.title,
+                          text  : data.message,
+                          icon  : 'success'
+                        }).then(function(){
+                          window.location.reload('/siteallocation');
+                        });
+                      } else {
+                        swal({
+                          title : data.title,
+                          text  : data.message,
+                          icon  : "error"
+                        });
+                      }
+                    }
+                  });
+                  
+                }
+              });
+            }
+          }
+          // function deactivateUserProfile(userId, name) {
+          //   if (userId == "") {
+          //     swal("User Missing !","User ID is missing. Please try again.","error");
+          //     return false;
+          //   }
+          //   swal({
+          //     title:"Are You Sure !",
+          //     text:"Do you want to deactivate "+name,
+          //     icon:"warning",
+          //     buttons:[true, "Yes, Deactivate"],
+          //     dangerMode:true
+          //   }).then(function(isConfirm){
+          //     if (!isConfirm) {
+          //       return false;
+          //     } else {
+          //       $.ajax({
+          //         url: '/user/deactivate-user-profile/user_id/'+userId+'/name/'+name,
+          //         type: 'GET',
+          //         success:function (data) {
+          //           var data = JSON.parse(data);
+          //           if (data.flag == true) {
+          //             swal({
+          //               title:"Deactivated Successfully",
+          //               text:data.message,
+          //               icon:"success"
+          //             }).then(function(){
+          //               window.location.reload();
+          //             });
+          //           } else {
+          //             swal("Something Went Wrong",data.message,"error");
+          //           }
+          //         }
+          //       });
+          //     }
+          //   });
+          // }
+
+          // function clearUserDeviceId(userId, name) {
+          //   if (userId == "") {
+          //     swal("User Missing !","User ID is missing. Please try again.","error");
+          //     return false;
+          //   }
+          //   swal({
+          //     title:"Are You Sure !",
+          //     text:"Do you want to clear "+name+"'s device ID.",
+          //     icon:"warning",
+          //     buttons:[true, "Yes, Clear"],
+          //     dangerMode:true
+          //   }).then(function(isConfirm){
+          //     if (!isConfirm) {
+          //       return false;
+          //     } else {
+          //       $.ajax({
+          //         url: '/user/clear-user-device-id/user_id/'+userId+'/name/'+name,
+          //         type: 'GET',
+          //         success:function (data) {
+          //           var data = JSON.parse(data);
+          //           if (data.flag == true) {
+          //             swal({
+          //               title:"Cleared Successfully",
+          //               text:data.message,
+          //               icon:"success"
+          //             }).then(function(){
+          //               window.location.reload();
+          //             });
+          //           } else {
+          //             swal("Something Went Wrong",data.message,"error");
+          //           }
+          //         }
+          //       });
+          //     }
+          //   });
+          // }
+         function SetSiteCloseStatus(allocation_id) {
+            //  alert(allocation_id);
+            $("#allocation_id").val(allocation_id);
+            $("#setSiteCloseStatusModal").modal('toggle');
+          }
+          	$(document).ready(function() {
+        	$("#submitStatus").click(function(event) {
+              event.preventDefault();
+              var allocation_id = $("#allocation_id").val();
+              var Site_close_status = $("#Site_close_status").val();
+                var remark = $("#remark").val();
+              $("#setSiteCloseStatusModal").modal('toggle');
+              $("#loading-bg").show();
+              $.ajax({
+                url: '/siteallocation/site-close-status',
+                type: 'POST',
+                data: {allocation_id:allocation_id,close_status:Site_close_status},
+                success: function(data) {
+                  var data = JSON.parse(data);
+                  $("#loading-bg").hide();
+                  console.log(data);
+                  if (data.flag) {
+                    swal({
+                      title: data.title,
+                      text: data.message,
+                      icon: "success"
+                    }).then(function() {
+                      window.location.reload();
+                    });
+                  } else {
+                    swal({
+                      title: data.title,
+                      text: data.message,
+                      icon: "error"
+                    }).then(function() {
+                      $("#setSiteCloseStatusModal").modal('toggle');
+                    });
+                  }
+                }
+              });
+            });
+          });
+        </script>

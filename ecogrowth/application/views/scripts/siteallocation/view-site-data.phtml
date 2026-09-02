@@ -1,0 +1,277 @@
+<?php
+    $user_list = $this->user_list;
+    $record = $this->paginator; 
+    $totalrec = $this->totalrec;
+    $site_data = $this->site_data;
+    $nature_work_data = $this->nature_work_data;
+    // echo "<pre>";
+    //         print_r($site_data);
+    //         echo "</pre>";exit;
+?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+   $('th').attr("nowrap","nowrap");
+   $('td').attr("nowrap","nowrap");
+   $('th').attr("class","text-center");
+   $('td').attr("class","text-center");
+    });
+
+function printProjectStructure() 
+{
+        var contents = $("#btnPrint").html();
+        var frame1 = $('<iframe />');
+        frame1[0].name = "frame1";
+        frame1.css({ "position": "absolute", "top": "-1000000px" });
+        $("body").append(frame1);
+        var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
+        frameDoc.document.open();
+        //Create a new HTML document.
+        frameDoc.document.write('<html><head><title>Site Allocation Details</title>');
+        frameDoc.document.write('</head><body>');
+        //Append the external CSS file.
+        frameDoc.document.write('<style>h5{ font-size:15px; font-weight:bolder; border-bottom:1px solid #eceeef;} .col-lg-4{ margin-right:55px;}</style>');
+        //Append the DIV contents.
+        frameDoc.document.write(contents);
+        frameDoc.document.write('</body></html>');
+        frameDoc.document.close();
+        setTimeout(function () {
+            window.frames["frame1"].focus();
+            window.frames["frame1"].print();
+            frame1.remove();
+        }, 500);
+    };
+</script>
+<style type="text/css">
+.table th, .table td{
+  padding:0.05rem!important;
+}
+</style>
+<div class="">
+<!-- Content Header (Page header) -->
+
+        <!-- <div class="content-header container-fluid bg-white">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4><i class="ti-user"></i> Site Allocation Site Data</h4>
+                </div>
+            </div>
+        </div> -->
+        <br clear="all">
+        <!-- Main content -->
+        <div class="content">
+            <?php if ($this->messages): ?>
+                <div class="alert alert-success alert-dismissible fade show m-t-10" role="alert">
+                    <?php foreach ($this->messages as $message): ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="alert_data">
+                <?php echo $message ?>.
+                </div>
+                <?php endforeach ?>
+                </div>
+            <?php endif ?>
+            <style>
+              .table-fix td{
+                text-align: left !important;
+              }
+            </style>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card  profile2_aboutme">
+                      <div class="card-header card-info text-white">
+                        <p style="float: left; margin: 0px;">Site Allocation Details
+                        </p>
+                        <a href="/siteallocation"  style="float: right; margin: 0px;" class="btn btn-success btn_width m-t-10 m-r-10">View All Site Allocation
+                        </a>
+                         <a class="btn btn-primary" onclick='printProjectStructure();' style="float:right; margin-right:15px;">Print</a>
+                      </div>
+                        <div id="btnPrint">            
+                        <div class="card-block" style="padding:1.75rem!important;">
+                              <div class="row">
+                                <div class="table-responsive col-12">
+                                  <table  class="table table-fix" >
+                                    <thead>
+                                    
+                                      <tr>
+                                          <td style="font-size: 16px;font-weight: bolder;">PO NO</td>
+                                          <td><?php echo $site_data['po_no']; ?></td>
+                                          <td style="font-size: 16px;font-weight: bolder;">Site Id</td>
+                                          <td><?php echo $site_data['site_id']; ?></td>
+                                     
+                                          <td style="font-size: 16px;font-weight: bolder;">InfraTel Id</td>
+                                          <td><?php echo $site_data['infratel_id']; ?></td>
+                                          <td style="font-size: 16px;font-weight: bolder;">District</td>
+                                          <td><?php echo $site_data['district']; ?></td>
+                                      </tr>
+                                      <tr>
+                                          <td style="font-size: 16px;font-weight: bolder;">Zone</td>
+                                          <td><?php echo $site_data['zone']; ?></td>
+                                          <td style="font-size: 16px;font-weight: bolder;">Cluster</td>
+                                          <td><?php echo $site_data['cluster']; ?></td>
+                                     
+                                          <td style="font-size: 16px;font-weight: bolder;">Cluster Incharge</td>
+                                          <td><?php echo $site_data['cluster_incharge']; ?></td>
+                                          <td style="font-size: 16px;font-weight: bolder;">Cluster Mobile</td>
+                                          <td><?php echo $site_data['cluster_mobile']; ?></td>
+                                     </tr>
+                                      <tr>
+                                          <td style="font-size: 16px;font-weight: bolder;">Technician Name</td>
+                                          <td><?php echo $site_data['tech_name']; ?></td>
+                                          <td style="font-size: 16px;font-weight: bolder;">Technician Phone</td>
+                                          <td><?php echo $site_data['tech_mobile']; ?></td>
+                                    
+                                          <td style="font-size: 16px;font-weight: bolder;">Lattitude</td>
+                                          <td><?php echo $site_data['latitude']; ?></td>
+                                          <td style="font-size: 16px;font-weight: bolder;">Longitude</td>
+                                          <td><?php echo $site_data['longitude']; ?></td>
+                                      </tr>
+                                      <tr>
+                                          <td style="font-size: 16px;font-weight: bolder;">Work Allocator To</td>
+                                          <td><?php echo $site_data['resource_allocator']; ?></td>
+                                     
+                                          <td style="font-size: 16px;font-weight: bolder;">Allocate User </td>
+                                          <td><?php if ($site_data['resource_allocator']=="Vendor") { echo $site_data['vendor']; }else{
+                                            echo $site_data['allocate_user'];
+                                            } ?></td>
+                                          <td style="font-size: 16px;font-weight: bolder;">Supervisor</td>
+                                          <td><?php echo $site_data['supervisor']; ?></td>
+                                       
+                                          <td style="font-size: 16px;font-weight: bolder;">Assigned Date</td>
+                                          <td><?php echo date('d/m/Y', strtotime($site_data['created'])); ?></td></tr>
+                                      <tr>
+                                          <td style="font-size: 16px;font-weight: bolder;">Due Date</td>
+                                          <td><?php echo date('d/m/Y', strtotime($site_data['due_date'])); ?></td>
+                                    
+                                          <td style="font-size: 16px;font-weight: bolder;">Status</td>
+                                          <td colspan="5"><?php echo $site_data['status_name']; ?></td>
+                                          
+                                      </tr>
+                                      <tr>
+                                        <td colspan="" style="font-size: 16px;font-weight: bolder;">Item Description</td>
+                                          <td colspan="3"><?php echo $site_data['item_desc']; ?></td>
+                                      </tr>
+                                    </thead>
+
+                                    <tbody>
+                                      <tr>
+                                        
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                            <div class="col-12" style="margin-bottom: 15px; padding: 0px;">
+                              <div class="card  profile2_aboutme">
+                                <h5 class="heading" style="padding:11px;">Nature Of Work</h5>       
+                                  <div class="card-block" style="padding:2px;">
+                                        <div class="row basic_tables">
+                                          <div class="col-12">
+                                            <table  class="table table-fix pull-left">
+                                              <thead>
+                                                <?php 
+                                                $i=1;
+                                                foreach ($nature_work_data as  $value) 
+                                                 {
+                                                   ?>
+                                                   <tr>
+                                                    <strong>
+                                                      
+                                                      <td>
+                                                        <li style="list-style:none;" ><?php echo $i.'. '.$value['nature_of_work'] ?></li>
+                                                     </td>
+                                                     <td>
+                                                        <li style="list-style:none;" ><input type="checkbox" disabled="" <?php if($value['status'] == 1){ echo 'checked';}?> name="<?php echo $value['nature_of_work'] ?>" /></li>
+                                                     </td>
+
+                                                    </strong>
+                                                   </tr>
+                                                   <?php
+                                                 $i++;} 
+                                                ?>
+                                              </thead>
+
+                                              <tbody>
+                                                <tr>
+                                                  
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                    </div>
+                                  </div>
+                              </div>
+
+                            <div class="col-6" style="margin-bottom: 15px; padding: 0px; border-right:1px solid #eceeef;">
+                            <div class="card" style="border:none;">
+                              <h5 class="heading" style="padding:11px;">Photo</h5>       
+                                <div class="card-block" style="padding:2px;">
+                                      <div class="row basic_tables" >
+                                        <?php if( $this->site_images['site_photograph_1']){?>
+                                              <div class="col-lg-4" style="float:left; ">
+                                              <a class="fancybox" data-fancybox-group="gallery"  href="/uploads/site_photograph/<?php echo $this->site_images['site_photograph_1'];?>"  title="photo">
+                                              <img src="/uploads/site_photograph/<?php echo $this->site_images['site_photograph_1'];?>" class="img-fluid" style="border:1px solid #eceeef;width: 200px;height: 128px;" alt="photo" />
+                                              </a>
+                                              </div>
+                                        <?php } if( $this->site_images['site_photograph_2']){?>       
+                                              <div class="col-lg-4" style="float:left; ">
+                                              <a class="fancybox" data-fancybox-group="gallery" href="/uploads/site_photograph/<?php echo $this->site_images['site_photograph_2'];?>"  title="photo">
+                                              <img src="/uploads/site_photograph/<?php echo $this->site_images['site_photograph_2'];?>" class="img-fluid" style="border:1px solid #eceeef;width: 200px;height: 128px;" alt="photo"/>
+                                              </a>
+                                              </div>
+                                        <?php } if( $this->site_images['site_photograph_3']){?>          
+                                              <div class="col-lg-4" style="float:left; ">
+                                              <a class="fancybox" data-fancybox-group="gallery" href="/uploads/site_photograph/<?php echo $this->site_images['site_photograph_3'];?>" title="photo">
+                                              <img src="/uploads/site_photograph/<?php echo $this->site_images['site_photograph_3'];?>" class="img-fluid" style="border:1px solid #eceeef;width: 200px;height: 128px;" alt="photo"/>
+                                              </a>
+                                              </div>
+                                         <?php }?>     
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+                            <br clear="all">
+                            <div class="col-6" style="margin-bottom: 15px; padding: 0px;">
+                            <div class="card" style="border:none;">
+                              <h5 class="heading" style="padding:11px;">Signature</h5>       
+                                <div class="card-block" style="padding:2px; margin-left:5px;">
+                                      <div class="row basic_tables">
+                                        <?php if( $this->site_images['signature_1']){?>
+                                              <div class="col-lg-4" style="float:left; ">
+                                              <a class="fancybox" data-fancybox-group="gallery"  href="/uploads/site_signature/<?php echo $this->site_images['signature_1'];?>"  title="signature">
+                                              <img src="/uploads/site_signature/<?php echo $this->site_images['signature_1'];?>" class="img-fluid" style="border:1px solid #eceeef;width: 200px;height: 128px;" alt="signature" />
+                                              </a>
+                                              </div>
+                                         <?php } if( $this->site_images['signature_2']){?>            
+                                              <div class="col-lg-4" style="float:left;">
+                                              <a class="fancybox" data-fancybox-group="gallery" href="/uploads/site_signature/<?php echo $this->site_images['signature_2'];?>"  title="signature">
+                                              <img src="/uploads/site_signature/<?php echo $this->site_images['signature_2'];?>" class="img-fluid" style="border:1px solid #eceeef;width: 200px;height: 128px;" alt="signature"/>
+                                              </a>
+                                              </div>
+                                          <?php }?>     
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+
+                              </div>
+                          </div>
+                          </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                 
+                </div>
+                
+            </div>
+        <!-- /.content -->
+    </div>
+</div>

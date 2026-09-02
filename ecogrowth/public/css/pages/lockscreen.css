@@ -1,0 +1,82 @@
+.btn-outline-white{
+    background-color: transparent;
+    border-color: #fff;
+    color: #fff;
+    background-image: none;
+}
+.lockscreen{
+    background: url("../../img/lockscreen.png") no-repeat fixed;
+    background-size: cover;
+}
+
+.login-container {
+    background-color: rgba(3, 169, 244, 0.5);
+    position: relative;
+    width: 280px;
+    margin: 33% auto;
+    padding: 20px 15px;
+    text-align: center;
+}
+#output {
+    position: absolute;
+    width: 280px;
+    top: -100px;
+    left: -15px;
+    color: #fff;
+}
+.avatar {
+    width: 100px;
+    height: 100px;
+    margin: 20px auto 20px;
+    margin-bottom: 10px;
+    border-radius: 100%;
+    border: 2px solid #fff;
+    background-size: cover;
+}
+.form-box input {
+    text-align: center;
+    height: 40px;
+    transition: 0.2s ease-in-out;
+}
+
+.animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.fadeInUp {
+    animation-name: fadeInUp;
+}
+.avatar {
+    background-image: url('../../img/admin.jpg');
+}
+.btn-primary, .btn-primary.active, .btn-primary.disabled, .btn-primary:active, .btn-primary[disabled] {
+    background-color: #2A9FD6;
+    border-color: #4190eb;
+    outline: none;
+}
+
+.lockscreen_content{
+    padding: 20px 40px 40px;
+
+}

@@ -1,0 +1,56 @@
+<?php
+   $params             = $this->params;
+   $farmer             = $this->getFarmerDetailById;  
+   //    print_r($farmer);
+   //    exit();
+   ?>
+<div class="modal-dialog" style="min-width:80%;">
+   <div class="modal-content" >
+      <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+         <h4 class="modal-title"><i class="md md-location-on"></i> Farmer Location</h4>
+      </div>
+      <div class="modal-body" style="padding: 0px;">
+         <div class="table-rep-plugin">
+            <div class="table-responsive" data-pattern="priority-columns">
+               <div style="height: 500px;">
+                  <!--- user filtor by role -->
+                  <div id="map" style="width: 100%; height: 100%; position: absolute !important;"></div>
+                  .
+                  <script type="text/javascript">
+                      var locations = [
+                       ['Farmer Name : <strong><?php echo ucwords($farmer['FarmerName']);?></strong><br/>Mobile No: <strong><?php echo $farmer['MobileNo'];?></strong><br/>Total Animal: <strong><?php echo $farmer['animalCount'];?></strong>', <?php echo $farmer['latitude'];?>, <?php echo $farmer['longitude'];?>, 4],       
+                       ];
+                     // Enable the visual refresh
+                      google.maps.visualRefresh = true;
+                      var map = new google.maps.Map(document.getElementById('map'), {
+                         zoom: 18,
+                         center: new google.maps.LatLng(<?php echo $farmer['latitude'];?>, <?php echo $farmer['longitude'];?>),
+                         mapTypeId: google.maps.MapTypeId.ROADMAP
+                      });
+                     
+                      var infowindow = new google.maps.InfoWindow();
+                      var marker, i;
+                     
+                      for (i = 0; i < locations.length; i++) { 
+                     //alert(locations[i][1]);
+                           //alert(locations[i][2]); 
+                         marker = new google.maps.Marker({
+                           position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                           map: map
+                         });
+                     
+                         google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                           return function() {
+                             infowindow.setContent(locations[i][0]);
+                             infowindow.open(map, marker);
+                           }
+                         })(marker, i));
+                      }
+                  </script>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

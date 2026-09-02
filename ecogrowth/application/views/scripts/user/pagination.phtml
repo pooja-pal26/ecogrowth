@@ -1,0 +1,57 @@
+<?php
+    $user_list = $this->user_list;
+    $record = $this->paginator; 
+    $totalrec = $this->totalrec;
+?>
+ <table class="table table-striped">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>User</th>
+        <th>Department</th>
+        <th>SBU</th>
+        <th>Location</th>
+        <th>Category</th>
+        <!-- <th>Access</th> -->
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php 
+    if($totalrec){ 
+    $totalnum = $this->totalnum?$this->totalnum:1;
+    $istart = ($totalnum-1) * 10;
+    $i=$istart;
+    foreach($record as $task)
+    { ?>
+    <tr>
+        <td><?php echo $i+1;?>.</td>
+        <td><?php echo $task['user'];?></td>
+        <td><?php
+        $i = 1; 
+        foreach ($task['department'] as $key => $value) {
+            echo '<span class="badge badge-primary">'.$value['department'].'</span>&nbsp;&nbsp;';
+        $i++; }
+         ?></td>
+        <td><?php echo $task['sbu']; ?></td>
+        <td><?php
+        $i = 1; 
+        foreach ($task['location'] as $key => $value) {
+            echo '<span class="badge badge-success">'.$value['location'].'</span>&nbsp;&nbsp;';
+        $i++; }
+         ?></td>
+        <td><?php
+        $i = 1; 
+        foreach ($task['category'] as $key => $value) {
+            echo '<span class="badge badge-primary">'.$value['category'].'</span>&nbsp;&nbsp;';
+        $i++; }
+         ?></td>
+        <!--  <td><?php echo $task['access']; ?></td> -->
+        <td><a href="javascript:void(0)" class="tododelete redcolor" onclick="deleteMappedUserRole('<?php echo $task['id'];?>')" title="delete"><span class="ti-trash"></span></a></td>
+    </tr>
+    <?php  $i++;} } else{  ?>
+                    <tr><td colspan="11"><p style="color:red; font-size:16px;">No User Role Found !</p></td></tr>
+        <?php  } ?>
+    </tbody>
+</table>
+<?php if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'task-pagination.phtml'); } ?>

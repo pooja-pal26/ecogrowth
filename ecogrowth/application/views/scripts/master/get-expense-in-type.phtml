@@ -1,0 +1,31 @@
+<div class="modal-dialog modal-sm">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3 class="modal-title">Edit Expense In Type</h3>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <form role="form">
+          <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <label for="updatedExpenseTypeId">Expense Type :</label>
+            <select name="updatedExpenseTypeId" id="updatedExpenseTypeId" class="form-control select2" style="width: 100% !important;">
+              <option value="">Please Select</option>
+              <?php foreach ($this->expenseTypeDetails as $expenseType): ?>
+                <option value="<?php echo $expenseType['id']; ?>"<?php echo $expenseType['id'] == $this->expenseInTypeDetails['expense_type_id'] ? "selected":""; ?>><?php echo $expenseType['expense_type']; ?></option>
+              <?php endforeach ?>
+            </select>
+          </div>
+          <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <label for="updatedExpenseInType">Expense In Type :</label>
+            <input type="text" class="form-control" name="updatedExpenseInType" id="updatedExpenseInType" placeholder="Enter Expense In Type" value="<?php echo $this->expenseInTypeDetails['expense_in_type']; ?>">
+          </div>
+          <div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <input type="button" class="btn btn-primary" value="Update" onclick="submitUpdateExpenseInTypeForm(<?php echo $this->expenseInTypeDetails['id']; ?>)">
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</div>

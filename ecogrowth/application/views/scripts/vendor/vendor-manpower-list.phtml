@@ -1,0 +1,164 @@
+<?php
+$user_list = $this->user_list;
+$record = $this->paginator; 
+$totalrec = $this->totalrec;
+$params = $this->params;
+$vendordata = $this->vendordata;
+
+   //print_r($params);exit;
+?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+     $('th').attr("nowrap","nowrap");
+   //$('td').attr("nowrap","nowrap");
+   // $('th').attr("class","text-center ");
+   // $('td').attr("class","text-center");
+});
+</script>
+<script type="text/javascript">
+    function deleteMappedvendor(man_p_Id) {
+        swal({
+            title: "Are you sure?",
+            text: "You want to Delete this ",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, Delete this role mapping!",
+            closeOnConfirm: false
+        }, function (isConfirm) {
+            if (!isConfirm) return;
+            $.ajax({
+                url: "/vendor/delete-vendor-manpower/m_id/"+man_p_Id,
+                context: document.body,
+                success: function () {
+                  swal({
+                    title: "Deleted", 
+                    text: "Status has been successfully changed", 
+                    type: "success"
+                },function() {
+                    window.location.href="/vendor/vendor-manpower-list/v_id/<?php echo $params['v_id'] ?>";
+                });
+              },
+              error: function (xhr, ajaxOptions, thrownError) {
+                swal("Error "+status+"!", "Please try again", "error");
+            }
+        });
+        });
+    };
+</script>
+<div class=" view-port-height">
+    <!-- Content Header (Page header) -->
+    <div class="content-header container-fluid bg-white">
+        <div class="row">
+            <div class="col-sm-4">
+                <h4><i class="ti-user"></i>  Vendor's Manpower List</h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+        <?php if ($this->messages): ?>
+            <div class="alert alert-success alert-dismissible fade show m-t-10" role="alert">
+                <?php foreach ($this->messages as $message): ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="alert_data">
+                        <?php echo $message ?>.
+                    </div>
+                <?php endforeach ?>
+            </div>
+        <?php endif ?>
+        <div class="row">
+            <div class="col-12">
+                <div class="card  profile2_aboutme">
+                 <div class="card-header card-info text-white">
+                     <p style="float: left; margin: 3px; color: #fff;">Vendor's ManPower Details</p> 
+                     <a href="/vendor" type="button" class="btn btn-success btn_lg_width m-t-10 m-r-10" style="float: right; margin-top: 0px;margin-left: 10px">
+                        <i class="ti-user"></i> View Vendor List
+                    </a>
+
+                    
+
+                </div>
+                <div class="card-block">
+                 
+                    <div class="row basic_tables">
+                        <div class="col-12 m-t-20">
+                            <div class="table-responsive mt-1" id="user-list">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <style>
+                                            .chng-color{
+                                                color:black;
+                                                font-family: initial;
+                                            }
+                                        </style>
+                                        <th>#</th>
+                                        <th class="chng-color">Manpower Name</th>
+                                        <th class="chng-color">Department</th>
+                                        <th class="chng-color">Experience</th>
+                                        <th class="chng-color">Date Of Joining</th>
+                                        <th>Vendor Name</th>
+                                        <th>Email</th>
+                                        <th>Mobile</th>
+                                        <th>Telephone</th>
+                                        <th>Constitution  Firm</th>
+                                        <th>Address</th>
+                                        <th>Vendor GST</th>
+                                        <th>Vendor Status</th>
+                                        <th>Company Nature</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    if($totalrec){ 
+                                        $totalnum = $this->totalnum?$this->totalnum:1;
+                                        $istart = ($totalnum-1) * 10;
+                                        $i=$istart;
+                                        foreach($record as $user)
+                                            { ?>
+                                                <tr>
+                                                    <td><?php echo $i+1;?>.</td>
+
+                                                    <td class="chng-color"><?php echo $user['name']; ?></td>
+                                                    <td class="chng-color"><?php echo $user['dname']; ?></td>
+                                                    <td class="chng-color"><?php echo $user['experience']; ?></td>
+                                                    <td class="chng-color"><?php echo $user['joining_date']; ?></td>
+                                                    <td><?php echo $vendordata['vendor_name']; ?></td>
+                                                    <td><?php echo $vendordata['email']; ?></td>
+                                                    <td><?php echo $vendordata['mobile']; ?></td>
+                                                    <td><?php echo $vendordata['telephone']; ?></td>
+                                                    <td><?php echo $vendordata['firm']; ?></td>
+                                                    <td><?php echo $vendordata['address']; ?></td>
+                                                    <td><?php echo $vendordata['vendor_gst']; ?></td>
+                                                    <td><?php echo $vendordata['vendor_status']; ?></td>
+                                                    <td><?php echo $vendordata['nature_company']; ?></td>
+
+                                                    <td><a href="/vendor/edit-vendor-manpower-info/m_id/<?php echo $user['id'];?>" class="todoedit" title="delete"><span class="ti-pencil-alt"></span></a>&nbsp&nbsp<a href="javascript:void(0)" class="tododelete redcolor" onclick="deleteMappedvendor('<?php echo $user['id'];?>')" title="delete"><span class="ti-trash"></span></a></td>
+                                                </tr>
+                                                <?php  $i++;} } else{  ?>
+                                                    <tr><td colspan="15"><p style="color:red; font-size:16px;">No Data Found !</p></td></tr>
+                                                <?php  } ?>
+                                            </tbody>
+                                        </table>
+                                        <div id="leftpag">
+                                            <!-- START PAGINATION -->
+                                            <?php if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml'); } ?>  
+                                            <!-- END PAGINATION -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.content -->
+    </div>
+</div>

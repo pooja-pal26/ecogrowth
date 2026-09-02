@@ -1,0 +1,38 @@
+
+#hamburger,
+.ad-wrapper
+{
+    display: none;
+}
+#check a,
+.buttons .font, a.btn,
+#features .cta h4,
+#features .cta a.btn,
+.wrapper.reversed h4,
+.wrapper.reversed h5,
+.wrapper.reversed h6,
+.wrapper.reversed a,
+.table thead
+{
+    color: #e34545;
+}
+#features .cta a.btn,
+.buttons a + a
+{
+    border-color: #e34545
+}
+body,
+#page
+{
+    background: #e34545;
+}
+#page
+{
+    padding-top: 900px;
+    padding-top: 115vh;
+    padding-top: calc( 100vh + 100px );
+}
+.mm-slideout {
+    width: 100% !important;
+    margin-left: 0 !important;
+}

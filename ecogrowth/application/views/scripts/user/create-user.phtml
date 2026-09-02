@@ -1,0 +1,409 @@
+<?php
+$getalldepartment = $this->getalldepartment;
+$getRoletype = $this->getRoletype;
+    //print_r($getalldepartment);
+$params = $this->params;
+$getUserRecord = $this->getUserRecord;
+?>
+<link rel="stylesheet" href="/assets/css/select2.min.css">
+<script src="/assets/js/select2.min.js"></script>
+<script src="/assets/js/Nitgen.js"></script>
+
+<style>
+.mainDiv {
+  background-color: #DCF2FE;
+  border-radius: 5px;
+}
+form {
+  padding: 5px;
+}
+#mandatory {
+  color: red;
+  font-size: 16px;
+}
+</style>
+<script type="text/javascript">
+ function Capture(id) {
+  try {
+    document.getElementById('data_finger_'+id).src = "data:image/bmp;base64,";
+    document.getElementById('finger_iso_'+id).value = "";
+    document.getElementById('img_finger_'+id).value = "";
+
+    var res = CaptureFinger();
+    if (res.httpStaus) {
+
+      if (res.data.ErrorCode == "0") {
+        document.getElementById('data_finger_'+id).src = "data:image/bmp;base64," + res.data.BitmapData;
+        document.getElementById('finger_iso_'+id).value = res.data.IsoTemplate;
+        document.getElementById('img_finger_'+id).value = res.data.BitmapData;
+      }
+    }
+    else {
+      alert(res.err);
+    }
+  }
+  catch (e) {
+    alert(e);
+  }
+  return false;
+} 
+
+</script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#role_type").change(function(e) {
+      $.get( "/user/get-all-role", { role_type_id: $( "#role_type" ).val() }, "json" )
+      .done(function( data ) {
+        select = document.getElementById('role');
+        select.options.length = 0;
+            options = data.options; // Or whatever source information you're working with
+            for (index = 0; index < options.length; ++index) 
+            {
+              option = options[index];
+              select.options.add(new Option(option.text, option.value));
+            }
+          });
+    });
+  });
+</script>
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <div class="row">
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <h3>Create New User</h3>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <a href="/user" class="btn btn-success pull-right">View Users</a>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-body">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mainDiv">
+          <form action="/user/create-user" method="POST" role="form" enctype="multipart/form-data" onsubmit="return validateUser()">
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <span style="font-weight: bold; font-size: 16px; color: #D60019;">*&nbsp;Fields are mandatory.</span>
+              </div>
+            </div>
+            <br clear="all">
+            <div class="row">
+              <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <label for="first_name">First Name <span id="mandatory">*</span></label>
+                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Enter First Name" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <label for="last_name">Last Name</label>
+                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Enter Last Name" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '');">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <label for="mobile_number">Mobile Number <span id="mandatory">*</span></label>
+                <input type="text" class="form-control" name="mobile_number" id="mobile_number" placeholder="Enter Mobile Number" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <label for="alternate_mobile">Alternate Mobile Number</label>
+                <input type="text" class="form-control" name="alternate_mobile" id="alternate_mobile" placeholder="Enter Alternate Mobile Number" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+              </div>
+            </div>
+            <br clear="all">
+            <div class="row">
+              <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <label for="email_id">Email ID <span id="mandatory">*</span></label>
+                <input type="email" class="form-control" name="email_id" id="email_id" placeholder="Enter Email ID">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <label for="Department" class="col-form-label">Department <span id="mandatory">*</span></label>
+                <select name="department" id="department"  value="" class="form-control">
+                  <option value="">---Select Department---</option>
+                  <?php foreach ($getalldepartment as $value) { ?>
+                   <option value="<?php echo $value['id'] ?>"><?php echo $value['department'] ?></option>
+                 <?php } ?>
+               </select>
+             </div>
+             <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+              <label for="role_type" class="col-form-label">Role Type <span id="mandatory">*</span></label>
+              <select name="role_type" id="role_type"  value="" class="form-control">
+                <option value="">---Select Role Type---</option>
+                <?php foreach ($getRoletype as $getroletype) { ?>
+                  <option value="<?php echo $getroletype['id'] ?>"><?php echo $getroletype['role_type'] ?></option>
+                <?php } ?>
+              </select>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+              <label for="Role" class="col-form-label">Role <span id="mandatory">*</span></label>
+              <select name="role" id="role"  value="" class="form-control">
+                <option value="">---Select Role---</option>
+              </select>
+            </div>
+          </div>
+          <br clear="all">
+          <div class="row">
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+              <label for="doj">Date of Joining <span id="mandatory">*</span></label>
+              <input type="text" class="form-control datepicker" name="doj" id="doj" placeholder="Select Date of Joining" readonly="">
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3" id="permanentAddressDiv">
+              <label for="address" class="col-form-label">Permanent Address</label>
+              <textarea type="text" name="p_address" id="p_address" placeholder="Permanent Address"  class="form-control"></textarea>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3" id="currentAddressDiv">
+              <label for="caddress" class="col-form-label">Current Address</label>
+              <textarea type="text" name="c_address" id="c_address" placeholder="Current Address"  class="form-control"></textarea>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+              <label for="doj">Profile Image </label>
+              <input type="file" name="profile_pic" id="profile_pic" class="form-control" onchange="showImage(this)">
+            </div>
+          </div>
+          <br clear="all">
+          <div class="row">
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+              <label for="Password">Password <span id="mandatory">*</span></label>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+              <label for="confirmPassword">Confirm Password <span id="mandatory">*</span></label>
+              <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Please Confirm Password">
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3 pull-right">
+              <img id="selectedFile" src="#" alt="" width="80px" height="60px">
+              <a href="javascript:void(0)" class="btn btn-danger" id="removeImage" style="display: none;">Remove</a>
+            </div>
+          </div>
+          <br clear="all">
+          <div class="row">
+            <div class="form-group col-sm-4">
+              <label>Capture Finger 1 :</label>
+              <input id="btnCapture" class="btn btn-info"  type="button" value="Capture" width="100px" onClick="return Capture('1');" />
+              <img id="data_finger_1" width="50px" height="50px" alt="" src="data:image/bmp;base64" />
+              <input type="hidden" id="img_finger_1" name="img_finger_1" value="">  
+              <input type="hidden" id="finger_iso_1" name="finger_iso_1" value="">  
+            </div>
+            <div class="form-group col-sm-4">
+              <label>Capture Finger 2 :</label>
+              <input id="btnCapture" class="btn btn-info"  type="button" value="Capture" width="100px" onClick="return Capture('2')" />
+              <img id="data_finger_2" width="50px" height="50px" alt="" src="data:image/bmp;base64" />
+              <input type="hidden" id="img_finger_2" name="img_finger_2" value="">  
+              <input type="hidden" id="finger_iso_2" name="finger_iso_2" value="">  
+            </div>
+            <div class="form-group col-sm-4">
+              <label>Capture Finger 3 :</label>
+              <input id="btnCapture" class="btn btn-info"  type="button" value="Capture" width="100px" onClick="return Capture('3')" />
+              <img id="data_finger_3" width="50px" height="50px" alt="" src="data:image/bmp;base64" />
+              <input type="hidden" id="img_finger_3" name="img_finger_3" value="">  
+              <input type="hidden" id="finger_iso_3" name="finger_iso_3" value="">  
+            </div>
+            <div class="form-group col-sm-4">
+              <label>Capture Finger 4 :</label>
+              <input id="btnCapture" class="btn btn-info"  type="button" value="Capture" width="100px" onClick="return Capture('4')" />
+              <img id="data_finger_4" width="50px" height="50px" alt="" src="data:image/bmp;base64" />
+              <input type="hidden" id="img_finger_4" name="img_finger_4" value=""> 
+              <input type="hidden" id="finger_iso_4" name="finger_iso_4" value="">  
+            </div>
+            <div class="form-group col-sm-4">
+              <label>Capture Finger 5 :</label>
+              <input id="btnCapture" class="btn btn-info"  type="button" value="Capture" width="100px" onClick="return Capture('5')" />
+              <img id="data_finger_5" width="50px" height="50px" alt="" src="data:image/bmp;base64" />
+              <input type="hidden" id="img_finger_5" name="img_finger_5" value=""> 
+              <input type="hidden" id="finger_iso_5" name="finger_iso_5" value="">  
+            </div>  
+
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <button type="submit" class="btn btn-success pull-right">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script type="text/javascript">
+ $(document).ready(function() {
+  $("#department").select2();
+  $("#role_type").select2();
+  $("#role").select2();
+  $(".datepicker").datepicker({ dateFormat: "dd/mm/yy", changeYear:true, changeMonth:true });
+
+  $("#removeImage").click(function(event) {
+    event.preventDefault();
+    $("#selectedFile").attr('src', '#');
+    $("#profile_pic").val("");
+    $("#removeImage").hide();
+  });
+});
+
+ function validateUser(){
+  var firstName     = $("#first_name").val();
+  var mobileNumber  = $("#mobile_number").val();
+  var alternateNum  = $("#alternate_mobile").val();
+  var emailId       = $("#email_id").val();
+  var department    = $("#department").val();
+  var roleType      = $("#role_type").val();
+  var role          = $("#role").val();
+  var dateOfJoining = $("#doj").val();
+  var password      = $("#password").val();
+  var confirmPass   = $("#confirmPassword").val();
+  if (firstName == "") {
+    swal({
+      title:"First Name Missing !",
+      text:"Please Enter First Name",
+      icon:"error"
+    }).then(function(){
+      $("#first_name").focus();
+    });
+    return false;
+  } else if (mobileNumber == "") {
+    swal({
+      title:"Mobile Number Missing !",
+      text:"Please Enter Mobile Number",
+      icon:"error"
+    }).then(function(){
+      $("#mobile_number").focus();
+    });
+    return false;
+  } else if (isNaN(mobileNumber)) {
+    swal({
+      title:"Invalid Number !",
+      text:"Please Enter Numbers Only",
+      icon:"error"
+    }).then(function(){
+      $("#mobile_number").val("");
+      $("#mobile_number").focus();
+    });
+    return false;
+  } else if (alternateNum && isNaN(alternateNum)) {
+    swal({
+      title:"Invalid Alternate Number !",
+      text:"Please Enter Numbers Only",
+      icon:"error"
+    }).then(function(){
+      $("#alternate_mobile").focus();
+    });
+    return false;
+  } else if (alternateNum && alternateNum.length > 10 || alternateNum && alternateNum.length < 10 ) {
+    swal({
+      title:"Invalid Alternate Number !",
+      text:"Please Enter 10 Digit Mobile Number",
+      icon:"error"
+    }).then(function(){
+      $("#alternate_mobile").focus();
+    });
+    return false;
+  } else if (mobileNumber.length > 10 || mobileNumber.length < 10) {
+    swal({
+      title:"Invalid Number !",
+      text:"Please Enter 10 Digit Mobile Number",
+      icon:"error"
+    }).then(function(){
+      $("#mobile_number").focus();
+    });
+    return false;
+  } else if (emailId == "") {
+    swal({
+      title:"Email ID Missing !",
+      text:"Please Enter Email ID",
+      icon:"error"
+    }).then(function(){
+      $("#email_id").focus();
+    });
+    return false;
+  } else if (department == "") {
+    swal({
+      title:"Department Missing !",
+      text:"Please Select Department",
+      icon:"error"
+    }).then(function(){
+      $("#department").focus();
+    });
+    return false;
+  } else if (roleType == "") {
+    swal({
+      title:"Role Type Missing !",
+      text:"Please Select Role Type",
+      icon:"error"
+    }).then(function(){
+      $("#role_type").focus();
+    });
+    return false;
+  } else if (role == "") {
+    swal({
+      title:"Role Missing !",
+      text:"Please Select Role",
+      icon:"error"
+    }).then(function(){
+      $("#role").focus();
+    });
+    return false;
+  } else if (dateOfJoining == "") {
+    swal({
+      title:"Joining Date Missing !",
+      text:"Please Select Date of Joining",
+      icon:"error"
+    }).then(function(){
+      $("#doj").focus();
+    });
+    return false;
+  } else if (password == "") {
+    swal({
+      title:"Password Missing !",
+      text:"Please Enter Password",
+      icon:"error"
+    }).then(function(){
+      $("#password").focus();
+    });
+    return false;
+  } else if (confirmPass == "") {
+    swal({
+      title:"Confirm Password Missing !",
+      text:"Please Enter Confirm Password",
+      icon:"error"
+    }).then(function(){
+      $("#confirmPassword").focus();
+    });
+    return false;
+  } else if (confirmPass != password) {
+    swal({
+      title:"Confirm Password Mismatch !",
+      text:"Confirm Password should be same as Password",
+      icon:"error"
+    }).then(function(){
+      $("#confirmPassword").val("");
+      $("#confirmPassword").focus();
+    });
+    return false;
+  }
+}
+function showImage(inputFile) {
+  if (inputFile.files && inputFile.files[0]) {
+    var readFile = new FileReader();
+    readFile.onload = function(e){
+      $("#selectedFile")
+      .attr('src', e.target.result)
+      .width(80)
+      .height(60);
+    };
+    readFile.readAsDataURL(inputFile.files[0]);
+    $("#removeImage").show();
+  }
+}
+</script>

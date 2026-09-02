@@ -1,0 +1,51 @@
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title"><?php echo $this->params['siteId']; ?>- Work Allocation Details</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<div class="table table-responsive">
+							<table class="table-striped" width="100%">
+								<thead>
+									<th>#</th>
+									<th>Allocation Type</th>
+									<th>Vendor Name</th>
+									<th>Supervisor Name</th>
+									<th>Allcoated Work</th>
+									<th>Allocated Date</th>
+									<th>Work Due Date</th>
+								</thead>
+								<tbody>
+									<?php if ($this->allocatedSiteDetails) { ?>
+										<?php $i = 1; 
+										foreach ($this->allocatedSiteDetails as $allocatedDetails): ?>
+											<tr>
+												<td><?php echo $i; ?></td>
+												<td><?php echo $allocatedDetails['allocation_type']; ?></td>
+												<td><?php if ($allocatedDetails['vendor_id']) {
+													echo $allocatedDetails['vendor_name'];
+												} else { echo "-"; } ?></td>
+												<td><?php echo $allocatedDetails['supervisor_name']; ?></td>
+												<td><?php echo $allocatedDetails['nature_of_work']; ?></td>
+												<td><?php echo date('d/m/Y', strtotime($allocatedDetails['created_at'])); ?></td>
+												<td><?php echo date('d/m/Y', strtotime($allocatedDetails['work_completion_date'])); ?></td>
+											</tr>
+											<?php $i++;
+										endforeach ?>
+									<?php } else { ?>
+										<tr><td colspan="7" style="text-align: center; color: red; font-weight: bold;">No Data Found!</td></tr>
+									<?php } ?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>

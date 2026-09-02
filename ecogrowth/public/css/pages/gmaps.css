@@ -1,0 +1,49 @@
+.gm-style-mtc span{
+    margin-top: -10px !important;
+}
+
+/*=================================gmap services=============================*/
+#overlays .overlay{
+    display: block;
+    text-align: center;
+    color: #fff;
+    font-size: 60px;
+    line-height: 80px;
+    opacity: 0.8;
+    background: #329cff;
+    border: solid 3px #329cff;
+    border-radius: 4px;
+    box-shadow: 2px 2px 10px #333;
+    text-shadow: 1px 1px 1px #666;
+    padding: 0 4px;
+}
+#overlays .overlay_arrow{
+    left: 50%;
+    margin-left: -16px;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+#overlays .overlay_arrow.above{
+    bottom: -15px;
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-top: 16px solid #329cff;
+}
+/*========================End of gmap services================================*/
+
+/*====================================gmap routes=====================================*/
+#instructions,#gmap_steps{
+    list-style-type: decimal;
+}
+/*==============================End of gmap routes=========================================*/
+@media (max-width: 440px) {
+    #map_type .gmnoprint .gm-style-mtc div:first-child {
+        padding: 5px !important;
+    }
+}
+@media (max-width: 4440px) {
+    #map_type .gmnoprint .gm-style-mtc div:nth-child(2) {
+        top:52px !important;
+    }
+}

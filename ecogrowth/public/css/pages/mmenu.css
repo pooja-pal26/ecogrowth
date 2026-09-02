@@ -1,0 +1,94 @@
+.hamburger--collapse .hamburger-inner {
+    position: absolute;
+    top: 36px;
+}
+html.mm-opening .mm-slideout {
+    transform: translate3d(250px, 0, 0) !important;
+}
+.mm-opened #page {
+    left: -250px;
+}
+#page {
+    left: 0;
+}
+.mm-menu.mm-offcanvas {
+    z-index: 0;
+    display: none;
+    position: fixed;
+    width: 80%;
+}
+.mm-hasnavbar-bottom-1 .mm-panels, .mm-navbar-bottom-2 {
+    bottom: 0;
+}
+.mm-navbar-bottom {
+    display: none;
+}
+.mm-listview > li:not(.mm-divider):after {
+    border: none;
+}
+@media (max-width: 760px) {
+    #hamburger {
+        background: none;
+        border-bottom: none;
+    }
+}
+#page {
+    padding: 0;
+    background: #F5F9FB;
+}
+
+#hamburger {
+    top: 0;
+    left: 5px;
+}
+
+.noti_footer, .msg_footer {
+    margin-bottom: 0;
+}
+
+.mm-opened #mm-blocker {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.hamburger--collapse {
+    margin-top: 5px !important;
+}
+
+@media (max-width: 1429px) {
+    .mm-menu.mm-offcanvas {
+        width: 250px !important;
+    }
+}
+
+@media (min-width: 1431px) {
+    .mm-menu.mm-offcanvas {
+        display: block;
+    }
+
+    #page {
+        left: -300px;
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 451px) {
+    #hamburger {
+        width: 55px;
+    }
+}
+
+/*==========mmenu active color==========*/
+li.active {
+    background-color: #d0d0d0;
+}
+
+li.active a {
+    color: #0a3c5f !important;
+}
+
+/*========end of active color=============*/
+@media screen and (max-width: 325px) {
+    .header .messages {
+        margin-left: -6px;
+    }
+}

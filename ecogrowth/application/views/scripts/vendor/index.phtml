@@ -1,0 +1,136 @@
+
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Vendor List
+          <div class="pull-right">
+            <a href="/vendor/create-vendor" class="btn btn-success">Add New Vendor</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive" id="user-list">
+            <table class="display" width="100%" id="vendorDtailsTable">
+              <thead>
+                <th>#</th>
+                <th>Vendor Name</th>
+                <th>Contact Person</th>
+                <th>Contact Number</th>
+                <th>Email ID</th>
+                <th>Action</th>
+              </thead>
+              <tbody>
+                <?php if($this->vendorDetails){ 
+                  $i = 1; 
+                  foreach($this->vendorDetails as $vendor){ ?>
+                    <tr>
+                      <td><?php echo $i; ?></td>
+                      <td><?php echo $vendor['vendor_name']; ?></td>
+                      <td><?php echo $vendor['contact_person']; ?></td>
+                      <td><?php echo $vendor['contact_number']; ?></td>
+                      <td><?php echo $vendor['email'];?></td>
+                      <td>
+                        <a href="javascript:;" title="View Details" onclick="showVendorDetails(<?php echo $vendor['id']; ?>)" style="color: #1DAA29;"><i class="fa fa-eye"></i></a>
+                        &nbsp;&nbsp;
+                        <a href="/vendor/edit-vendor-info/vendor-profile-id/<?php echo md5($vendor['id']); ?>" title="Edit Details" style="color: #1DAA29;"><i class="fa fa-pencil"></i></a>
+                        &nbsp;&nbsp;
+                        <a href="javascript:;" title="deactivate Vendor" onclick="deactivateVendor(<?php echo $vendor['id']; ?>)" style="color: red;"><i class="fa fa-ban"></i></a>
+                      </td>
+                    </tr>
+                    <?php $i++; }}?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal modal-success fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      </div>
+
+      <script>
+        $(document).ready(function() {
+          $("#vendorDtailsTable").DataTable();
+        });
+        function showVendorDetails(vendorId) {
+          if (vendorId == "") {
+            swal({
+              title : "Something Went Wrong!",
+              text  : "Please try after refreshing the page.",
+              icon  : "error"
+            });
+          } else {
+            $.ajax({
+              url: '/vendor/view-vendor-profile',
+              type: 'POST',
+              data: {vendor_id: vendorId},
+              success:function (data) {
+                $("#myModal").html(data);
+                $("#myModal").modal("toggle");
+              }
+            });
+
+          }
+        }
+        function deactivateVendor(vendorId) {
+          if (vendorId == "") {
+            swal({
+              title : "Something Went Wrong!",
+              text  : "Please try after refreshing the page.",
+              icon  : "error"
+            });
+          } else {
+            swal({
+              title : "Are you sure!",
+              text  : "Do you want to deactivate clicked vendor profile?",
+              icon  : "warning",
+              buttons: [true, "Yes, deactivate"],
+              dangerMode : true
+            }).then(function(isConfirm){
+              if (!isConfirm) {
+                return false;
+              } else {
+                $.ajax({
+                  url: '/vendor/deactivate-vendor-profile',
+                  type: 'POST',
+                  data: {vendor_id: vendorId},
+                  success:function(data){
+                    var data = JSON.parse(data);
+                    if (data.flag) {
+                      swal({
+                        title : "Deactivated",
+                        text  : data.message,
+                        icon  : "success"
+                      }).then(function(){
+                        location.reload("/vendor");
+                      });
+                    } else {
+                      swal({
+                        title : "Something Went Wrong!",
+                        text  : data.message,
+                        icon  : "error"
+                      });
+                    }
+                  }
+                });
+              }
+            });
+          }
+        }
+      </script>

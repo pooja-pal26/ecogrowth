@@ -1,0 +1,161 @@
+
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Asset Type List
+          <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" data-target="#addAssetTypeModal">Add Asset Type</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive" id="state-list">
+            <table class="display" width="100%" id="assetTypeListTable">
+             <thead>
+              <th>#</th>
+              <th>Asset Type</th>
+              <th>Status</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+              <?php if($this->assetsTypeDetails){
+                $i = 1;
+                foreach ($this->assetsTypeDetails as $assetType) { ?>
+                 <tr>
+                  <td><?php echo $i; ?></td>
+                  <td><?php echo $assetType['type']; ?></td>
+                  <td><?php echo $assetType['is_active']?"Active":"Deactive"; ?></td>
+                  <td>
+                    <?php if ($assetType['is_active']){ ?>
+                      <a href="javascript:void(0)" title="Edit Asset Type" onclick="editStateNameModal('<?php echo md5($assetType['id']); ?>')"><span class="fa fa-pencil" style="color: #1DAA29;"></span></a>
+                      &nbsp;&nbsp;
+                      <a href="javascript:void(0)" onclick="activateDeactivateDeleteAssetType('<?php echo $assetType['id'];?>','deactivate')" title="Deactivate Asset Type"><span class="fa fa-ban" style="color: #D66F00;"></span>
+                      </a>
+                    <?php } else { ?>
+                      <a href="javascript:void(0)" title="Activate Asset Type" onclick="activateDeactivateDeleteAssetType('<?php echo $assetType['id']; ?>','activate')"><span class="fa fa-sign-in" style="color: #1DAA29;"></span></a>
+                      &nbsp;&nbsp;
+                      <a href="javascript:void(0)" onclick="activateDeactivateDeleteAssetType('<?php echo $assetType['id'];?>','delete')" title="Delete Asset Type"><span class="fa fa-trash" style="color: red;"></span>
+                      </a>
+                    <?php } ?>
+                  </td>
+                </tr>
+                <?php $i++; } } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add State Modal : Start -->
+  <div class="modal fade" id="addAssetTypeModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Add Asset Type</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <form action="/assets/add-asset-type" method="POST" class="form-inline" role="form">
+              <div class="form-group col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                <label for="asset_type">Asset Type Name :</label>
+                <input type="text" class="form-control" name="asset_type" id="asset_type" placeholder="Enter Asset Type Name">
+              </div>
+              <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <input type="submit" class="btn btn-primary" value="Save">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Add State Modal : End -->
+
+  <!-- Edit Bank Modal : Start -->
+  <div class="modal fade" id="editAssetTypeModal"></div>
+  <!-- Edit Bank Modal : End -->
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#assetTypeListTable").DataTable();
+    });
+    function activateDeactivateDeleteAssetType(id, value) {
+      swal({
+        title : "Are you sure?",
+        text  : "Do you want to "+value+" clicked asset type?",
+        icon  : "warning",
+        buttons : [true, "Yes, "+value],
+        dangerMode : true
+      }).then(function(isConfirm){
+        if (!isConfirm) {
+          return false;
+        } else {
+          $.ajax({
+            url: '/assets/active-deactive-delete-asset-type',
+            type: 'POST',
+            data:{id:id, type:value},
+            success:function(data){
+              var data = JSON.parse(data);
+              console.log(data);
+              if (data.flag) {
+                swal({
+                  title : data.type,
+                  text  : data.message,
+                  icon  : "success",
+                }).then(function(){
+                  location.reload("/assets/asset-list");
+                });
+              } else {
+                swal({
+                  title : "Failed !",
+                  text  : data.message,
+                  icon  : "error"
+                });           
+              }
+            }
+          });
+
+        }
+      });
+    }
+    function editStateNameModal(id) {
+      if (id == "") {
+        swal({
+          title : "Asset Type ID Missing!",
+          text  : "Please try after refresh the page once.",
+          icon  : "error"
+        });
+      } else {
+        $.ajax({
+          url: '/assets/get-asset-type',
+          type: 'POST',
+          data: {asset_type_id: id},
+          success:function(data){
+            $("#editAssetTypeModal").html(data);
+            $("#editAssetTypeModal").modal("toggle");
+          }
+        });
+        
+      }
+    }
+  </script>
+

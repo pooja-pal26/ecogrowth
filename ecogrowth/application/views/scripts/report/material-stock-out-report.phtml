@@ -1,0 +1,97 @@
+<?php
+
+?>
+<style>
+
+	.modal-header .close {
+		color: #000000 !important;
+	</style>
+	<script type="text/javascript">
+
+		function closeModal() {
+			$("#myModal").modal("toggle");
+		}
+		function getstockOutRecords(id) {
+			$.ajax({
+				url: "/report/view-stock-out/id/"+id,
+				context: document.body,
+				success: function(responseText) {
+					console.log(responseText);
+					$("#myModal").html(responseText);
+					// $("#myModal").modal("toggle");
+				}
+
+			});
+		}
+	</script>
+
+	<div id="page-wrapper">
+		<div class="main-page">
+			<?php if ($this->messages): ?>
+				<?php foreach ($this->messages as $message): ?>
+					<?php if ($message['success']){ ?>
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							<strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+						</div>
+					<?php } else if ($message['error']) { ?>
+						<div class="alert alert-danger">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							<strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+						</div>
+					<?php } ?>
+				<?php endforeach ?>
+			<?php endif ?>
+			<div class="panel panel-primary">
+				<div class="panel panel-heading">
+					<h3>Material Stock Out Report
+						<div class="pull-right">
+							<!-- <a href="/user/create-user" class="btn btn-success">Download</a> -->
+						</div></h3>
+					</div>
+					<div class="panel panel-body">
+						<div class="table-responsive" id="user-list">
+							<table id="materialStockOutReportTable"  class="display" width="100%">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Stock Out Date</th>
+										<th>Allocated To</th>
+										<th>Allocated By</th>
+										<th>PO Number</th>
+										<th>Site ID</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php if($this->stockoutlist){ 
+										$i = 1; 
+										foreach($this->stockoutlist as $stockOut){ ?>
+											<tr>
+												<td> <?php echo $i; ?></td>
+												<td> <?php echo date("d/m/Y",strtotime($stockOut['stock_out_date'])); ?></td>
+												<td><?php echo $stockOut['received_by']; ?></td>
+												<td><?php echo $stockOut['allocated_by']; ?></td>
+												<td><?php echo $stockOut['po_no']; ?></td>
+												<td><?php echo $stockOut['site_id']; ?></td>
+												<td> <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" title="view" onclick="getstockOutRecords(<?php echo $stockOut['id'];?>)"><i class="fa fa-eye"></i></a> &nbsp;
+													<a href="/material-stock/edit-material-stock-details/stockID/<?php echo ($stockOut['id']); ?>" title="Edit "><i class="fa fa-pencil" style="color: green;"></i></a> 
+												</td>
+												<?php $i++; } } ?>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal modal-success fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+					</div>
+					<script>
+						$(document).ready(function() {
+							$("#materialStockOutReportTable").DataTable();
+						});
+						
+					</script>

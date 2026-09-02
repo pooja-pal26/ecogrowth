@@ -1,0 +1,322 @@
+<?php
+$getalldepartment = $this->getalldepartment;
+$getRoletype = $this->getRoletype;
+$params = $this->params;
+$getUserRecord = $this->getUserRecord;
+?>
+<link rel="stylesheet" href="/assets/css/select2.min.css">
+<script src="/assets/js/select2.min.js"></script>
+<style>
+    .select2.select2-container {
+        width: 100% !important;
+    }
+    .mainDiv {
+      background-color: #DCF2FE;
+      border-radius: 5px;
+  }
+  form {
+      padding: 5px;
+  }
+  #mandatory {
+      color: red;
+      font-size: 16px;
+  }
+  .table-bordered {
+    border: 2px solid #1b1a1a !important;
+}
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr, .table-bordered > tbody > tr > td {
+    border: 1px solid #1b1a1a !important;
+}
+</style>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#role_type").change(function(e) {
+			$.get( "/user/get-all-role", { role_type_id: $( "#role_type" ).val() }, "json" )
+			.done(function( data ) {
+				select = document.getElementById('role');
+				select.options.length = 0;
+            options = data.options; // Or whatever source information you're working with
+            for (index = 0; index < options.length; ++index) 
+            {
+            	option = options[index];
+            	select.options.add(new Option(option.text, option.value));
+            }
+        });
+		});
+	});
+</script>
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+        </div>
+    <?php } else if ($message['error']) { ?>
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+    </div>
+<?php } ?>
+<?php endforeach ?>
+<?php endif ?>
+<div class="panel panel-primary">
+  <div class="panel panel-heading">
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <h3>Edit Material Stock</h3>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <!-- <a href="/user" class="btn btn-success pull-right">View Users</a> -->
+    </div>
+</div>
+</div>
+<div class="panel panel-body">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mainDiv">
+	<form name="changePassword" method="post" enctype="multipart/form-data" onsubmit="return validateData()" action="">
+	<div class="form-group row">
+		<div class="col-lg-3">
+			<label for="dop" class="col-form-label">
+				Date of Stock In *
+			</label>
+			<div class="input-group">
+				<input type="text" value="<?php echo date('d/m/Y',strtotime($this->stockdetail['stock_in_date'])); ?>" name="dop" id="dop" placeholder="Select Date" class="form-control datepicker" readonly="">
+			</div>
+		</div>
+		<div class="col-lg-3">
+			<label for="Department" class="col-form-label">
+				Supplier *
+			</label>
+			<div class="input-group">
+				<select name="supplier"  style="width: 300px;" id="supplier"  value="" class="form-control">
+					<option value="">Select Supplier</option>
+					<?php foreach ($this->supplierDetails as $supplierList) {?>
+						<option value="<?php echo $supplierList['id']; ?>" <?php echo $supplierList['name']== $this->stockdetail['name'] ? "selected":"" ; ?>><?php echo $supplierList['name']; ?></option><?php } ?>
+					</select>
+				</div>
+			</div> 
+			<div class="col-lg-3">
+				<label for="recieved_by" class="col-form-label">
+					Recieved By *
+				</label>
+				<div class="input-group">
+					<input type="text" value="<?php echo $this->stockdetail['recieved_by']; ?>" name="recieved_by" id="recieved_by"  placeholder="Enter Reciever Name" class="form-control">
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<label for="bill_no" class="col-form-label">
+					Bill/Challan Number *
+				</label>
+				<div class="input-group">
+					<input type="text" value="<?php echo $this->stockdetail['bill_number']; ?>" name="bill_no" id="bill_no" placeholder="Enter Challan Number" class="form-control">
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<label for="bill_date" class="col-form-label">
+					Bill/Challan Date *
+				</label>
+				<div class="input-group">
+					<input type="text" value="<?php echo date('d/m/Y',strtotime($this->stockdetail['recieved_by'])); ?>" name="bill_date" id="bill_date" placeholder="Select Date" class="form-control datepicker" readonly="">
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<label for="address" class="col-form-label">
+					Remarks 
+				</label>
+				<div class="input-group">
+					<textarea type="text" name="remarks" id="remarks" placeholder="Enter remarks here"  class="form-control"></textarea>
+				</div>
+			</div>
+		</div>
+	<div class="form-group row" style="overflow: auto;">
+			<table class="table table-bordered" id="productDetailsTable">
+				<thead>
+					<th>Product Type</th>
+					<th>Product Name</th>
+					<th>Brand</th>
+					<th>Unit</th>
+					<th>Quantity</th>
+					<th></th>
+
+				</thead>
+				<tbody>
+					<?php if(count($this->stockinlist) > 0){
+						$i = 1;
+						foreach ($this->stockinlist as $stock) { ?>
+							<tr id="row_<?php echo $i; ?>">
+								<td>
+									<select name="product_category[]" id="product_category_<?php echo $i; ?>" class="form-control" onchange="showProductList(<?php echo $i; ?>)">
+										<option value="">Select Product Category</option>
+										<?php foreach ($this->productType as $productTypeList) {?>
+											<option value="<?php echo $productTypeList['id']; ?>" <?php echo $productTypeList['product_type_name'] == $stock['product_type'] ? "selected":""; ?>><?php echo $productTypeList['product_type_name']; ?></option><?php }  ?>
+										</select>
+									</td>
+									<td>
+										<select name="product_id[]" id="product_id_<?php echo $i; ?>" class="form-control" onchange="setUnitOfProduct(<?php echo $i; ?>)">
+											<option value="">Select Product </option>
+											<?php foreach ($this->productListResult as $product) {?>
+												<option value="<?php echo $product['id']; ?>" <?php echo $product['product_name'] == $stock['product_name'] ? "selected":""; ?>><?php echo $product['product_name']; ?></option><?php }  ?>
+											</select>
+										</td>
+
+
+										<td>
+											<select name="brand[]" id="brand_<?php echo $i; ?>" class="form-control">
+												<option value="">Select Product Brand</option>
+												<?php foreach ($this->materialBrand as $brands) {?>
+													<option value="<?php echo $brands['id']; ?>" <?php echo  $stock['brand_name'] == $brands['brand_name'] ? "selected":""; ?>><?php echo $brands['brand_name']; ?></option><?php } ?>
+												</select>
+											</td>
+											<td>
+												<input type="text" class="form-control" value="<?php echo  $stock['unit']; ?>" name="unit[]" id="unit_<?php echo $i; ?>" readonly="" size="4">
+											</td>
+											<td>
+												<input type="text" class="form-control" value="<?php echo  $stock['quantity']; ?>" name="quantity[]" id="quantity" required="" size="3">
+											</td>
+											<td><a href="javascript:void(0)" onclick="deleteRow(<?php echo $i; ?>)"><i class="fa fa-trash fa-2x" style="color:red;"></i></a></td>
+										</tr>
+										<?php  $i++;
+									} 
+									
+								} ?>
+							</tbody>
+						</table>
+					</div>
+					<div class="form-group row">
+						<div class="">
+							<button type="button" name="addRow" class="btn btn-responsive layout_btn_prevent btn-success" onclick="addMoreRow();">Add More Product</button>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="">
+							<button type="submit" name="saveData" id="saveData" class="btn btn-responsive layout_btn_prevent btn-info" style="float: right;">Save</button>
+						</div>
+					</div>
+	</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+	$(document).ready(function() {
+		$("#dop").datepicker({ 
+			format: "dd/mm/yyyy",
+			changeMonth: true,
+			changeYear: true,
+			autoclose: true 
+		});
+		$("#bill_date").datepicker({ 
+			format: "dd/mm/yyyy",
+			changeMonth: true,
+			changeYear: true,
+			autoclose: true 
+		});
+		$("#supplier").select2();
+		$("#product_category_1").select2();
+		$("#product_id_1").select2();
+		$("#brand_1").select2();
+		$("#unit_1").select2();
+	}); 
+
+	function addMoreRow() {
+		var row_count = $('#productDetailsTable tr').length;
+		var html_content = `<tr id="row_`+row_count+`">
+		<td>
+		<select name="product_category[]" id="product_category_`+row_count+`" class="form-control" onchange="showProductList(`+row_count+`)">
+		<option value="">Select Product Category</option>
+		<?php foreach ($this->productType as $productTypeList) {?>
+			<option value="<?php echo $productTypeList['id']; ?>"><?php echo $productTypeList['product_type_name']; ?></option><?php }  ?>
+			</select>
+			</td>
+			<td>
+			<select name="product_id[]" id="product_id_`+row_count+`"class="form-control" onchange="setUnitOfProduct(`+row_count+`)">
+			<option value="">Select Product </option>
+			</select>
+			</td>
+			<td>
+			<select name="brand[]" id="brand_`+row_count+`" class="form-control">
+			<option value="">Select Product Brand</option>
+			<?php foreach ($this->materialBrand as $brands) {?>
+				<option value="<?php echo $brands['id']; ?>"><?php echo $brands['brand_name']; ?></option><?php } ?>
+				</select>
+				</td>
+				<td>
+				<input type="text" class="form-control" name="unit[]" id="unit_`+row_count+`" size="4" readonly>
+				</td>
+				</td>
+				<td>
+				<input type="text" class="form-control" name="quantity[]" id="quantity" required="" size="3">
+				</td>
+				<td><a href="javascript:void(0)" onclick="deleteRow(`+row_count+`)"><i class="fa fa-trash fa-2x" style="color:red;"></i></a></td>
+				</tr>`;
+				$("#productDetailsTable").append(html_content);   
+				$("#product_category_"+row_count).select2();
+				$("#product_id_"+row_count).select2();
+				$("#brand_"+row_count).select2();
+				$("#unit_"+row_count).select2();   
+			} 
+
+			function showProductList(count) {
+				var productTypeId = $("#product_category_"+count).val();
+				if (productTypeId) {
+					$.ajax({
+						url: '/material-stock/get-products-by-product-category/product_type_id/'+productTypeId,
+						type: 'POST',
+						success:function (data) {
+							var data = JSON.parse(data);
+							$("#product_id_"+count).empty();
+							$("#product_id_"+count).append(data);
+						}
+					});
+
+				}
+			} 
+			function setUnitOfProduct(count) {
+				var productId = $("#product_id_"+count).val();
+				if (productId != '') {
+					$.ajax({
+						url: '/material-stock/get-product-unit-by-product-id/product_id/'+productId,
+						type: 'POST',
+						success:function(data){
+							var data = JSON.parse(data);
+							$("#unit_"+count).val(data.unit);
+						}
+					});
+				} else {
+					$("#unit_"+count).val('');
+				}         
+			}     
+			function deleteRow(count) {
+				$("#row_"+count).remove();
+			} 
+
+			function validateData() {
+				var n = $("select[name^='product_category']").length;
+				var array = $("select[name^='product_category']");
+				var dop             = $("#dop").val();
+				var supplierId      = $("#supplier").val();
+				var recievedBy      = $("#recieved_by").val();
+				var billNo          = $("#bill_no").val();
+				var billDate        = $("#bill_date").val();
+				if (dop == '') {
+					swal('Missing','Please select date of stock in.','info');
+					return false;
+				} else if(supplierId == '') {
+					swal('Missing','Please select supplier.','info');
+					return false;
+				} else if (recievedBy == '') {
+					swal('Error','Please enter reciever name.','error');
+					return false;
+				} else if (billNo == '') {
+					swal('Error','Please enter bill number.','error');
+					return false;
+				} else if (billDate == '') {
+					swal('Missing','Please select bill date.','info');
+					return false;
+				}
+			}
+</script>

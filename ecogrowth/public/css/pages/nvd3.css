@@ -1,0 +1,8 @@
+.nvd3 text{
+    font-family: "Nunito Sans", sans-serif !important;
+}
+@media (max-width:425px) {
+    #nvd3_chart3 .nv-legendWrap, #nvd3_chart4 .nv-legendWrap, #nvd3_chart7 .nv-legendWrap,#nvd3_chart3 .nv-legend .nv-series:nth-child(3){
+        display: none;
+    }
+}

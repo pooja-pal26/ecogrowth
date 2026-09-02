@@ -1,0 +1,250 @@
+<?php 
+$record = $this->paginator; 
+$totalrec = $this->totalrec;
+$auth               = Zend_Auth::getInstance();
+$authStorage        = $auth->getStorage();
+?>
+
+<style type="text/css">
+.table th ,   .table td , .table div{
+padding: 3px;
+text-align: left;
+} 
+#scroll-id {
+width: 600px;
+overflow-x: scroll;
+}
+@media print{
+.noprint {display:none !important; }
+}
+</style>
+
+<script type="text/javascript">
+ function getPage(page,order,type){ 
+      if(type == undefined){ var type = '';} else { var type = type;}  
+      if(order == undefined){ var order = '';} else { var order = order;} 
+      var date1=$("#date1").val(); 
+      if(date1 == undefined){ var date1 = '';} else { var date1 = date1; } 
+      var date2=$("#date2").val(); 
+      if(date2 == undefined){ var date2 = '';} else { var date2 = date2; } 
+      var newdate1 = date1.split("/").reverse().join("-");
+      var newdate2 = date2.split("/").reverse().join("-");
+      if( (new Date(newdate2).getTime() < new Date(newdate1).getTime()) ){
+      swal('Invalid Date Range..! Try Again.');
+      }else if( $("#date1").val() !='' && $("#date2").val()=='' ){
+      swal('Please , Select To Date..!');
+      }else if( $("#date1").val() =='' && $("#date2").val() !='' ){
+      swal('Please , Select From Date..!');
+      }
+      else{
+      var id    = 'expense-list';
+      $("#"+id).html('<div class="loading">Loading&#8230;</div>');  
+      $.ajax({
+      type : 'POST', 
+      url : '/expense/office-expenses-list/',
+      data : { page:page, order:order, type:type, date1:date1 , date2:date2 },
+      cache : false,
+      context: document.body,
+      success : function(responseText){
+              $("#"+id).html(responseText);
+              $("#"+id).find("script").each(function(i) {
+                  eval($(this).text());
+              });
+      },
+      });
+    }
+}   
+
+function clearDate(){
+  var date1 = $('#date1').val('');
+  var date2 = $('#date2').val('');
+  getPage('1');
+}
+</script>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+$("#date1").datepicker( { dateFormat: "dd/mm/yy" , numberOfMonths: 1, } );
+$("#date2").datepicker( { dateFormat: "dd/mm/yy" , numberOfMonths: 1, } );
+ });
+  
+function exportTable(){ 
+        $(".table2excel").table2excel({
+          exclude: ".noExl",
+          name: "Office Expense Report",
+          filename: "View_Office_Expense_Report",
+          fileext: ".xls",
+          exclude_img: true,
+          exclude_links: true,
+          exclude_inputs: true
+        });
+}
+</script>
+
+<script type="text/javascript">
+function generateExcel(date1,date2){
+window.location.href="/expense/office-expenses-list/type/Generate/date1/"+date1+"/date2/"+date2;
+}
+</script>
+
+<script type="text/javascript">
+            function CallPrint(strid) {
+            var prtContent = document.getElementById(strid);
+            var WinPrint = window.open('', '', 'left=250px,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+            WinPrint.document.write('<link href="/css/simpletable.css" rel="stylesheet">');
+            WinPrint.document.writeln("<style type='text/css'>.prt{color:black !important; } </style>");
+            WinPrint.document.writeln("<style type='text/css'>.noprint{display:none !important; } </style>");
+            WinPrint.document.write(prtContent.innerHTML);
+            WinPrint.document.close();
+            setTimeout(function () { WinPrint.print(); }, 500);
+            return false
+            }
+  </script> 
+
+<div class=" view-port-height">
+
+        <div class="content-header container-fluid bg-white">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4><i class="fa fa-bar-chart"></i>  Expense Module</h4>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="content">
+
+               <?php if ($this->messages): ?>
+                <div class="alert alert-success alert-dismissible fade show m-t-10" role="alert">
+                <?php foreach ($this->messages as $message): ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="alert_data">
+                <?php echo $message ?>.
+                </div>
+                <?php endforeach ?>
+                </div>
+            <?php endif ?>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card  profile2_aboutme">
+                   <div class="card-header card-info text-white">
+                    <p style="float: left; margin: 3px;"><i class="fa fa-bar-chart"></i> Office Expense Report</p> 
+              <!--<button id="vb" class="btn btn-warning btn-sm" style="float:right;">Export To Excel</button>--> 
+              <a href="javascript:void(0)" class="btn btn-success btn-sm" style="float:right;" 
+                 onclick="generateExcel()">Export To Excel</a> 
+                <button style="float:right; margin-right:10px;" type="button" class="btn btn-warning btn-sm"  onclick="CallPrint('divchallan');">Print <i class="fa fa-print"></i></button>
+                  </div>
+
+                        <div class="card-block">
+
+      <div class="row">
+
+    <div class="col-md-1"><b>Start Date</b></div>
+    <div class="col-md-2">
+    <input type="text" name="date1" id="date1" value="" class="form-control datepick" readonly="" 
+         placeholder="Select Start Date"  data-date-format="dd/mm/yyyy" data-grp="1" />
+        </div>
+    <div class="col-md-1"><b>To Date</b></div>    
+        <div class="col-md-2">
+    <input type="text" name="date2" id="date2" value="" class="form-control datepick" readonly="" 
+         placeholder="Select To Date"  data-date-format="dd/mm/yyyy" data-grp="1"  />
+        </div>
+        <div class="col-md-1">
+         <a href="javascript:void(0)" class="btn btn-sm btn-success" onclick="getPage('1')">Submit</a> 
+        </div>
+        <div class="col-md-1"><a href="javascript:void(0)" class="btn btn-sm btn-warning" onclick="clearDate()" >Clear</a></div>
+      </div>
+      
+
+
+
+                          <div class="row basic_tables">
+                               <div class="col-12 m-t-20">
+
+               <div class="table-responsive mt-1" id="expense-list">
+
+                       <div id="leftpag">
+
+                     Total Expense : <b><?php echo $this->sum_amount; ?></b>
+
+                        <?php if($totalrec > $this->perPage) { 
+                        echo $this->paginationControl($this->paginator, 'Sliding', 'expense-pagination.phtml'); 
+                         } ?>  
+                        </div>
+                         
+                         <div id="divchallan">
+
+                          <table class="table table-bordered table2excel" border="1" id="scroll-id">
+                                         <thead>
+                                            <tr>
+                                                <th style=" white-space:nowrap;">
+                                                # <a href="javascript:void(0)" onclick="getPage('1','asc','id')" >
+                                                  <img src="/img/desc.png" style="height:20px;" class="noprint" /></a></th>
+                                                <th style=" white-space:nowrap;">Transfer For</th>
+                                                <th style=" white-space:nowrap;">State For</th>
+                                                <th style=" white-space:nowrap;">Amount</th>
+                                                <th style=" white-space:nowrap;">Transfer Date</th>
+                                                <th style=" white-space:nowrap;">Transfered To</th>
+                                                <th style=" white-space:nowrap;">Remark</th>
+                                                <!--<th style=" white-space:nowrap;">Attachment</th>-->
+                                                <!--<th style=" white-space:nowrap;">Status</th>-->
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <?php 
+                                            if($totalrec){ 
+                                            $totalnum = $this->totalnum?$this->totalnum:1;
+                                            $istart = ($totalnum-1) * 10;
+                                            $i=$istart;
+                                            foreach($record as $expense){ ?>
+                                            <tr>
+                                            <td style=" white-space:nowrap;"><?php echo $i+1;?>.</td>
+                                            <td style=" white-space:nowrap;"><?php echo $expense['transferfor']; ?></td>
+                                            <td style=" white-space:nowrap;"><?php echo $expense['statefor']; ?></td> 
+                                            <td style=" white-space:nowrap;"><?php echo $expense['ofc_amount']; ?></td>
+                                            <td style=" white-space:nowrap;">
+                                            <?php if($expense['ofc_transfer_date']){ 
+                                            echo date('d/m/Y' , strtotime($expense['ofc_transfer_date']));
+                                            } ?>
+                                            </td>
+                                            <td style=" white-space:nowrap;"><?php echo $expense['name']; ?></td>
+                                            <td style=" white-space:nowrap;">
+                                            <?php if($expense['ofc_remark']){ echo $expense['ofc_remark']; }else{ echo "-"; } ?>
+                                            </td>
+                                            <!--<td style=" white-space:nowrap;">
+                                            <?php if($expense['ofc_attachment']){ echo $expense['ofc_attachment']; }else{ echo "-"; } ?>
+                                            </td>-->
+                                            <?php  $i++;} } else{  ?>
+                                            <tr><td colspan="7">
+                                            <p style="color:red; font-size:16px;">No Record Found !</p></td></tr>
+                                            <?php } ?>
+                                            </tbody>
+                                      </table>
+
+                                    </div>
+
+                        <div id="leftpag">
+                        <?php if($totalrec > $this->perPage) { 
+                        echo $this->paginationControl($this->paginator, 'Sliding', 'expense-pagination.phtml'); 
+                         } ?>  
+                        </div>
+
+                                  </div>
+                               </div>
+                          </div> 
+                           
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- end of content -->
+
+    </div>
+

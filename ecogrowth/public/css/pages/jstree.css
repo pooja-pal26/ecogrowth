@@ -1,0 +1,12 @@
+#search input {
+    width: 100%;
+}
+#tabelizer .header{
+    background: transparent;
+    position: relative;
+}
+@media (max-width:767px){
+    .overflow_x{
+        overflow-x:scroll;
+    }
+}

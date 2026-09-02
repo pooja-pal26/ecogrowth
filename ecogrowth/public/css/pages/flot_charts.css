@@ -1,0 +1,13 @@
+#flot_chart9 .button {
+    position: absolute;
+    cursor: pointer;
+}
+#flot_chart9 div.button {
+    color: #fff;
+    background-color: #937eff;
+    padding: 2px;
+}
+/*pie charts*/
+.pieLabel div{
+    font-size: 12px !important;
+}

@@ -1,0 +1,42 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" onclick="closeModal()">Close</span></button>
+      <h4 class="modal-title" id="myModalLabel"></h4>
+    </div>
+    <div class="modal-body" >
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Stock Details</h3>
+        </div>
+        <div class="panel-body">
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Product Type</th>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Unit</th>
+                <th>Quantity</th>
+                <!-- <th>Total Quantity</th> -->
+              </tr>
+            </thead>
+            <?php 
+            foreach ($this->stockindetail as $stock) {  ?>
+              <tr>
+                <td><?php echo $stock['product_type']; ?></td>
+                <td><?php echo $stock['product_name']; ?></td>
+                <td><?php echo $stock['brand']; ?></td>
+                <td><?php echo $stock['unit']; ?></td>
+                <td><?php echo $stock['quantity']; ?></td>
+                <!-- <td><?php echo $stock['total_quantity']; ?></td> -->
+              </tr>
+            <?php } ?>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

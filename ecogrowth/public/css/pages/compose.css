@@ -1,0 +1,144 @@
+.note-popover {
+    display: none;
+}
+
+.panel-heading.note-toolbar .dropdown-menu {
+    min-width: 130px;
+}
+
+.summer_note .btn-group, .wysihtml5-toolbar .btn-group, .note-color .btn-group {
+    display: inline-block;
+}
+
+.note-popover .popover-content, .panel-heading.note-toolbar {
+    border-bottom: 1px solid #ccc;
+    background-color: #eee;
+}
+
+.note-editing-area ul {
+    padding-left: 40px;
+}
+
+.click2edit ul {
+    padding-left: 40px;
+}
+@media (max-width: 346px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 144px;
+    }
+}
+@media (min-width: 347px) and (max-width: 390px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 165px;
+        margin-left: 0;
+    }
+}
+@media (min-width: 391px) and (max-width: 670px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 190px;
+        margin-left: -90px;
+    }
+}
+@media (min-width: 768px) and (max-width: 900px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 190px;
+        margin-left: -90px;
+    }
+}
+
+@media (min-width: 993px) and (max-width: 1150px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 240px;
+    }
+}
+@media (max-width:320px) {
+    .note-editor .note-color .dropdown-menu{
+        right: -100%;
+        left: inherit;
+    }
+}
+
+
+.note-editor .note-color .dropdown-menu li .btn-group{
+    margin-bottom: 20px !important;
+}
+
+/*==============*/
+.note-editable {
+    margin-bottom: 55px;
+}
+
+.note-popover .popover-content, .panel-heading.note-toolbar, .note-editor.note-frame .note-statusbar {
+    background-color: #fff;
+    border: 0;
+}
+
+.note-editor.note-frame {
+    border: 1px solid #ccc;
+}
+
+.note-editable ul li img,.modal-footer .text-center{
+    width: 100% !important;
+}
+.content .fullscreen i {
+    margin: 0;
+    line-height: 0;
+}
+blockquote{
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 18px;
+    border-left: 5px solid #eeeeee;
+}
+pre{
+    display: block;
+    margin: 10px 10px 0 0;
+    padding: 5px 10px;
+    margin-bottom: 1rem;
+    color: #292b2c;
+    line-height: 1.428571429;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.note-check li{
+    padding: 0 10px;
+}
+.note-style li {
+    padding-left: 10px;
+}
+/*choices*/
+.choices__list--multiple .choices__item{
+    background-color: #555;
+    border:1px solid #555;
+}
+.choices__inner{
+    border-radius: 25px;
+    background-color: transparent;
+    height: 38px;
+    min-height: 38px;
+    padding:0 0 0 10px;
+}
+.choices__list--multiple .choices__item{
+    margin-bottom: 0;
+}
+.choices__input{
+    background-color: transparent;
+}
+ .choices[data-type*=text] .choices__button{
+     border-left: 1px solid #dcd7d7;
+ }
+/*End of choices*/
+.fixed_menu .note-editor .dropdown-menu,.fixed_menu .tooltip{
+    z-index: 99;
+}
+@media (max-width: 992px){
+    .note-editor .dropdown-menu,.tooltip{
+        z-index: 99;
+    }
+    .note-para .dropdown-menu{
+        left:-90px;
+    }
+}

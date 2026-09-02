@@ -1,0 +1,416 @@
+<?php
+  $auth                  = Zend_Auth::getInstance();
+  $authStorage           = $auth->getStorage();
+  $this->WebLoginID      = $authStorage->read()->WebLoginID;
+  $this->id              = $authStorage->read()->id;
+  $this->Role            = $authStorage->read()->Role; 
+?>
+<script src="/amcharts/amcharts.js"></script>
+<script src="/amcharts/serial.js"></script>
+<script src="/amcharts/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="/amcharts/plugins/export/export.css" type="text/css" media="all" />
+<script src="/AmCharts/themes/light.js"></script>
+
+<style>
+    #chartdiv {
+      width: 100%;
+      height: 500px;
+    }                                         
+</style>
+
+<!-- Chart code -->
+<script type="text/javascript">
+    AmCharts.makeChart("chartdiv",
+                {
+                    "type": "serial",
+                    "categoryField": "month",
+                    "startDuration": 1,
+                    "categoryAxis": {
+                        "gridPosition": "start"
+                    },
+                    "chartCursor": {
+                        "enabled": true,
+                        "fileName":'s-curve'
+                    },
+                    "export": {
+                        "enabled": true
+                    },
+                    "trendLines": [],
+                    "graphs": [
+                        {
+                            "balloonText": "[[value]]%",
+                            "bullet": "round",
+                            "id": "AmGraph-1",
+                            "title": "Plan",
+                            "valueField": "plan"
+                        },
+                        {
+                            "balloonText": "[[value]]%",
+                            "bullet": "round",
+                            "id": "AmGraph-2",
+                            "title": "CUP-1",
+                            "valueField": "cup1"
+                        },
+                        {
+                            "balloonText": "[[value]]%",
+                            "bullet": "round",
+                            "id": "AmGraph-3",
+                            "title": "CUP-2",
+                            "valueField": "cup2"
+                        },
+                        {
+                            "balloonText": "[[value]]%",
+                            "bullet": "round",
+                            "id": "AmGraph-4",
+                            "title": "CUP-3",
+                            "valueField": "cup3"
+                        },
+                        {
+                            "balloonText": "[[value]]%",
+                            "bullet": "round",
+                            "id": "AmGraph-5",
+                            "title": "Actual",
+                            "valueField": "actual"
+                        }
+                    ],
+                    "guides": [],
+                    "valueAxes": [
+                        {
+                            "id": "ValueAxis-1",
+                            "title": "S-curve in percentage(%)"
+                        }
+                    ],
+                    "allLabels": [],
+                    "balloon": {},
+                    "legend": {
+                        "enabled": true,
+                        "useGraphSettings": true
+                    },
+                    "titles": [
+                        {
+                            "id": "Title-1",
+                            "size": 15,
+                            "text": "Overall"
+                        }
+                    ],
+                    "dataProvider": [
+                    <?php $i=0; foreach ($this->getScurveData as $key => $value) { 
+                        $planArray = $i.'plan';
+                        $planArray = array();
+
+                        $catch_up_plan_1Array = $i.'catch_up_plan_1';
+                        $catch_up_plan_1Array = array();
+
+                        $catch_up_plan_2Array = $i.'catch_up_plan_2';
+                        $catch_up_plan_2Array = array();
+
+                        $catch_up_plan_3Array = $i.'catch_up_plan_3';
+                        $catch_up_plan_3Array = array();
+
+                        $sumArray = $i.'sum';
+                        $sumArray = array();
+
+                        if($i == 0){
+                            array_push($planArray, $value['plan']);
+                            array_push($catch_up_plan_1Array, $value['cup1']);
+                            array_push($catch_up_plan_2Array, $value['cup2']);
+                            array_push($catch_up_plan_3Array, $value['cup3']);
+                            array_push($sumArray, $value['sum']);
+                        }else{
+                            for ($j=0; $j< $i+1; $j++) { 
+                                array_push($planArray, $this->getScurveData[$j]['plan']);
+                                array_push($catch_up_plan_1Array, $this->getScurveData[$j]['cup1']);
+                                array_push($catch_up_plan_2Array, $this->getScurveData[$j]['cup2']);
+                                array_push($catch_up_plan_3Array, $this->getScurveData[$j]['cup3']);
+                                array_push($sumArray, $this->getScurveData[$j]['sum']);
+                            }
+                        }
+                        
+
+                        ?>
+                        {
+                            "month": "<?php echo $value['month'];?>",
+                            "plan": "<?php if(array_sum($planArray)>100){ echo '100';}else{echo @ceil(array_sum($planArray));}?>",
+                            "cup1": "<?php if(array_sum($catch_up_plan_1Array)>100){ echo '100';}else{echo @ceil(array_sum($catch_up_plan_1Array));}?>",
+                            "cup2": "<?php if(array_sum($catch_up_plan_2Array)>100){ echo '100';}else{echo @ceil(array_sum($catch_up_plan_2Array));}?>",
+                            "cup3": "<?php if(array_sum($catch_up_plan_3Array)>100){ echo '100';}else{echo @ceil(array_sum($catch_up_plan_3Array));}?>",
+                            "actual": "<?php if(array_sum($sumArray)>100){ echo '100';}else{echo @ceil(array_sum($sumArray));}?>"
+                        },
+                        <?php $i++;}?>
+                    ]
+                }
+            );
+</script>
+<script type="text/javascript">
+            // AmCharts.makeChart("monthly",
+            //     {
+            //         "type": "serial",
+            //         "categoryField": "month",
+            //         "angle": 30,
+            //         "depth3D": 30,
+            //         "startDuration": 1,
+            //         "categoryAxis": {
+            //             "gridPosition": "start"
+            //         },
+            //         "chartCursor": {
+            //             "enabled": true,
+            //             "fileName":'s-curve'
+            //         },
+            //         "export": {
+            //             "enabled": true
+            //         },
+            //         "trendLines": [],
+            //         "graphs": [
+            //             {
+            //                 "balloonText": "[[value]]%",
+            //                 "fillAlphas": 1,
+            //                 "id": "AmGraph-1",
+            //                 "title": "Plan",
+            //                 "type": "column",
+            //                 "valueField": "plan"
+            //             },
+            //             {
+            //                 "balloonText": "[[value]]%",
+            //                 "fillAlphas": 1,
+            //                 "id": "AmGraph-2",
+            //                 "title": "CUP-1",
+            //                 "type": "column",
+            //                 "valueField": "cup1"
+            //             },
+            //             {
+            //                 "balloonText": "[[value]]%",
+            //                 "fillAlphas": 1,
+            //                 "id": "AmGraph-3",
+            //                 "title": "CUP-2",
+            //                 "type": "column",
+            //                 "valueField": "cup2"
+            //             },
+            //             {
+            //                 "balloonText": "[[value]]%",
+            //                 "fillAlphas": 1,
+            //                 "id": "AmGraph-4",
+            //                 "title": "CUP-3",
+            //                 "type": "column",
+            //                 "valueField": "cup3"
+            //             },
+            //             {
+            //                 "balloonText": "[[value]]%",
+            //                 "fillAlphas": 1,
+            //                 "id": "AmGraph-5",
+            //                 "title": "Actual",
+            //                 "type": "column",
+            //                 "valueField": "actual"
+            //             }
+            //         ],
+            //         "guides": [],
+            //         "valueAxes": [
+            //             {
+            //                 "id": "ValueAxis-1",
+            //                 "title": "S-curve in counts"
+            //             }
+            //         ],
+            //         "allLabels": [],
+            //         "balloon": {},
+            //         "legend": {
+            //             "enabled": true,
+            //             "useGraphSettings": true
+            //         },
+            //         "titles": [
+            //             {
+            //                 "id": "Title-1",
+            //                 "size": 15,
+            //                 "text": ""
+            //             }
+            //         ],
+            //         "dataProvider": [
+            //         <?php $i=0; foreach ($this->getScurveMonthlyGraphData as $key => $value) { ?>
+            //             {
+            //                 "plan": "<?php echo @number_format($value['plan'],2);?>",
+            //                 <?php if($value['cup1']){ ?>
+            //                 "cup1": "<?php echo @number_format($value['cup1'],2);?>",
+            //                 <?php  } if($value['cup2']){?>
+            //                 "cup2": "<?php echo @number_format($value['cup2'],2);?>",
+            //                  <?php  } if($value['cup3']){?>
+            //                 "cup3": "<?php echo @number_format($value['cup3'],2);?>",
+            //                  <?php  }?>
+            //                 "actual": "<?php echo @number_format($value['sum'],2);?>",
+            //                 "month": "<?php echo $value['month'];?>"
+            //             },
+            //         <?php }?>
+                    
+            //         ]
+            //     }
+            // );
+        </script>
+<script type="text/javascript">
+    function getLineList(project) {   
+            $.get( "/uploads/get-all-line", { project: project }, "json" )
+            .done(function( data ) {
+               
+              select = document.getElementById('line');
+
+                // Clear the old options
+                select.options.length = 0;
+
+                // Load the new options
+                options = data.options; // Or whatever source information you're working with
+                for (index = 0; index < options.length; ++index) {
+                  option = options[index];
+                  select.options.add(new Option(option.text, option.value));
+                }
+                
+            });
+
+
+
+            
+     }
+
+    function getPackageList(line){   
+            $.get( "/uploads/get-all-package", { line: line }, "json" )
+            .done(function( data ) {
+                // alert('hihiihi');
+                // alert( "Data Loaded: " + data );
+                select = document.getElementById('package');
+
+                // Clear the old options
+                select.options.length = 0;
+                // Load the new options
+                options = data.options; // Or whatever source information you're working with
+                //alert(options);
+                for (index = 0; index < options.length; ++index) {
+                  option = options[index];
+                  select.options.add(new Option(option.text, option.value));
+                }
+
+            });
+     };
+
+     function getScurveData(project, line, package, activity){
+        $.ajax({
+            url: "/dashboard/get-scurve-data/project/"+project+"/line/"+line+"/package/"+package+"/activity/"+activity,
+            context: document.body,
+            success: function(responseText) {
+                $("#scurve").html(responseText);
+                $("#scurve").find("script").each(function(i) {
+                    eval($(this).text());
+                });
+            }
+        });
+     }
+</script>
+<div class="main-container">    <!-- START: Main Container -->
+            
+            <div class="page-header">
+                <ol class="breadcrumb">
+                    <li><a href="/home">Dashboard</a></li>
+                    <li style="float: right">"Empowering Humanity by Addressing the toughest challenges of Energy Delivery"</li>
+                </ol>
+            </div>
+            
+          
+             <div class="content-wrap">  <!--START: Content Wrap-->
+                   <div class="row col-md-12">
+                     <div class="panel panel-primary">   
+                       <div class="panel-body"> 
+                         <div class="form-group col-md-2">
+                          <label>Project  :</label>
+                          <select name="project" id="project" onchange="getLineList(this.value);" class="form-control">
+                          <option value="">Select</option>
+                            <?php $i=0; foreach($this->projectdata as $project_detail){   ?>
+                                      <option value="<?php echo $project_detail['field_id'];  ?>" <?php if($i==0){ echo 'selected';}?>><?php echo $project_detail['field_id'];  ?></option>
+                            <?php $i++;} ?>        
+                          </select>  
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <label>Line  :</label>
+                                <select class=" form-control" id="line" name="line" tabindex="-1" aria-hidden="true" onchange="getPackageList(this.value); getScurveData(document.getElementById('project').value, document.getElementById('line').value, document.getElementById('package').value, document.getElementById('activity').value);">
+                                     <option value="">Select</option>
+                                     <?php $i=0; foreach($this->lineList as $line_detail){   ?>
+                                      <option value="<?php echo $line_detail['field_id'];  ?>" <?php if($i==0){ echo 'selected';}?>><?php echo $line_detail['field_id'];  ?></option>
+                                     <?php $i++;} ?> 
+                                </select>
+                        </div>
+
+
+                        <div class="form-group col-sm-2">
+                            <label>Package :</label>
+                            
+                               <select class=" form-control" onchange="getScurveData(document.getElementById('project').value, document.getElementById('line').value, document.getElementById('package').value, document.getElementById('activity').value);" id="package" name="package" tabindex="-1" aria-hidden="true">
+                                    <option value="">Select</option>
+                                    <?php  foreach($this->packageList as $package){   ?>
+                                      <option value="<?php echo $package['field_id'];  ?>"><?php echo $package['field_id'];  ?></option>
+                                     <?php } ?>
+                                </select>
+                        </div>
+                        <div class="form-group col-md-2" >
+                            <label>Activity :</label>
+                                <select name="activity" id="activity" class=" form-control" onchange="getScurveData(document.getElementById('project').value, document.getElementById('line').value, document.getElementById('package').value, document.getElementById('activity').value);" id="activity" name="activity" tabindex="-1" aria-hidden="true">
+                                    <option value="">Overall</option>
+                                    <option value="Check Survey">Check Survey</option>
+                                    <option value="Material Delivery">Material Delivery</option>
+                                    <option value="Foundations">Foundation</option>
+                                    <option value="Tower Erection">Erection</option>
+                                    <option value="Ready for Charging">Stringing</option>
+                                </select>
+                            </div>
+                       <!--  <div class="form-group col-sm-2">
+                            <label>Date From :</label>
+                            
+                               <div class="input-group date" data-provide="datepicker" style="width:150px;">
+                                  <input type="text" name="date_from" id="date_from" class="form-control" value="" placeholder="Date From"  onchange="getActivity(this.value, this.form.date_to.value);">
+                                  <div class="input-group-addon">
+                                      <span class="sli-calendar"></span>
+                                  </div>
+                              </div>
+                        </div>
+
+
+                        <div class="form-group col-sm-2">
+                            <label>Date To :</label>
+                            
+                              <div class="input-group date" data-provide="datepicker" style="width:150px;">
+                                  <input type="text" name="date_from" id="date_from" class="form-control" value="" placeholder="Date To"  onchange="getActivity(this.value, this.form.date_to.value);">
+                                  <div class="input-group-addon">
+                                      <span class="sli-calendar"></span>
+                                  </div>
+                              </div>
+                        </div> -->
+                      </div>
+                     </div>     
+                    </div> 
+                <br clear="all">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="height:46px;">
+                                <h3 class="panel-title">S-curve [Cumulative]</h3>
+                            </div>
+                             
+                            <div class="panel-body" id="scurve">
+                                <div id="chartdiv" style="height:350px; "></div>
+
+                                <!--  <div id="monthly" style="height:350px; "></div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--  <div class="col-md-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading" style="height:46px;">
+                                <h3 class="panel-title">S-curve [Monthly]</h3>
+                            </div>
+                             
+                            <div class="panel-body" id="scurve">
+                                <div id="monthly" style="height:350px; "></div>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                
+            </div>  <!--END: Content Wrap-->
+            
+</div>  <!-- END: Main Container -->
+
+       
+       

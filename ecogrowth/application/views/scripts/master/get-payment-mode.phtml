@@ -1,0 +1,22 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Edit Payment Mode</h4>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <form action="/master/edit-payment-mode/payment-mode-id/<?php echo md5($this->paymentModeDetails['id']); ?>" method="POST" class="form-inline" role="form">
+          <div class="form-group col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <label for="payment_mode">Payment Mode :</label>
+            <input type="text" class="form-control" name="payment_mode" id="payment_mode" placeholder="Enter Payment Mode" value="<?php echo $this->paymentModeDetails['payment_mode']; ?>">
+          </div>
+          <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <input type="submit" class="btn btn-primary" value="Update">
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</div>

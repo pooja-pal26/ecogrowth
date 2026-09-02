@@ -1,0 +1,51 @@
+
+
+<table  class="table table-striped">
+    <thead>
+        <tr>
+            <strong>
+                <th>#</th>
+                <th style="text-align:left!important;">PO</th>
+                <th style="text-align:left!important;" nowrap>Site Id</th>
+                <th style="text-align:left!important;" nowrap>Assigned Date</th>
+                <th style="text-align:left!important;">Zone</th>
+                <th style="text-align:left!important;" nowrap>Cluster</th>
+                <th style="text-align:left!important;" nowrap>Technician Name</th>
+                <th style="text-align:left!important;" nowrap>Technician Mobile No.</th>
+                <th style="text-align:left!important;" nowrap>Allocated User</th>
+                
+                
+            </strong>
+        </tr>
+    </thead>
+    <tbody>
+        <?php 
+        if($this->pending_allocate_site_list){ 
+            $i=1;
+            foreach($this->pending_allocate_site_list as $user)
+                { ?>
+                    <tr>
+                        <td ><?php echo $i;?>.</td>
+                        
+                        <td style="text-align:left!important;"><?php echo $user['po_no']; ?></td>
+                        <td style="text-align:left!important;"><?php echo $user['site_id']; ?></td>
+                        <td style="text-align:left!important;"><?php echo date('d/m/Y', strtotime($user['created'])); ?></td>
+                        <!-- <td style="text-align:left!important;"><?php echo $user['infratel_id']; ?></td> -->
+                        <td style="text-align:left!important;"><?php echo $user['zone']; ?></td>
+                        <td style="text-align:left!important;"><?php echo $user['cluster']; ?></td>
+                        
+                        <!-- <td style="text-align:left!important;"><?php echo $user['cluster_mobile']; ?></td> -->
+                        <td style="text-align:left!important;"><?php echo $user['tech_name']; ?></td>
+                        <td style="text-align:left!important;"><?php echo $user['tech_mobile'];?></td>
+
+                        <!-- <td style="text-align:left!important;"><?php if($user['resource_allocator'] == 'Vendor') { echo $user['vendor']; }else{ echo $user['allocate_user'];}?></td> -->
+
+                        <td style="text-align:left!important;"><?php echo $user['supervisor']; ?></td>
+
+                        <!--  <td style="text-align:left!important;"><?php echo date('d/m/Y', strtotime($user['due_date'])); ?></td> -->
+                    </tr>
+                    <?php  $i++;} } else{  ?>
+                        <tr><td colspan="16"><p style="color:red; font-size:16px;">No Data Found !</p></td></tr>
+                    <?php  } ?>
+                </tbody>
+            </table>             

@@ -1,0 +1,212 @@
+<?php 
+$user_list = $this->user_list;
+$record = $this->paginator; 
+$totalrec = $this->totalrec;
+?>
+
+<style type="text/css">
+    .table_vb td {
+    padding: 1px;
+     } 
+   .table th ,   .table td {
+    padding: 1px;
+    text-align: center;
+     } 
+
+</style>
+
+<script type="text/javascript">
+ function getPage(page){
+      var url   = '/expense/expense-list/page/'+page;
+      var id    = 'expense-list';
+      $("#"+id).html('<div class="loading">Loading&#8230;</div>');
+      $.ajax({
+          url: url,
+          context: document.body,
+          success: function(responseText) {
+              $("#"+id).html(responseText);
+              $("#"+id).find("script").each(function(i) {
+                  eval($(this).text());
+              });
+          }
+      });
+}   
+</script>
+
+<div class="right-aside view-port-height">
+
+        <div class="content-header container-fluid bg-white">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4><i class="ti-list"></i>  Expense Module</h4>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="content">
+
+            <?php if ($this->messages): ?>
+                <div class="alert alert-success alert-dismissible fade show m-t-10" role="alert">
+                    <?php foreach ($this->messages as $message): ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="alert_data">
+                <?php echo $message ?>.
+                </div>
+                <?php endforeach ?>
+                </div>
+            <?php endif ?>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card  profile2_aboutme">
+                   <div class="card-header card-info text-white">
+                    <p style="float: left; margin: 3px;">Expense</p> 
+                <!--<a href="/user/create-user" type="button" class="btn btn-success btn_lg_width m-t-10 m-r-10" style="float: right; margin-top: 0px;margin-left: 10px">
+                              <i class="ti-user"></i> Create New User
+                            </a>-->
+                   <button id="vb" class="btn btn-warning btn-sm" style="float:right;">Export To Excel</button>         
+                        </div>
+
+                        <div class="card-block">
+
+                          <div class="row basic_tables">
+                               <div class="col-12 m-t-20">
+                                  <div class="table-responsive mt-1" id="expense-list">
+
+                   <div id="leftpag">
+                        <?php if($totalrec > $this->perPage) { 
+                        echo $this->paginationControl($this->paginator, 'Sliding', 'expense-pagination.phtml'); 
+                         } ?>  
+                        </div>
+
+                        <?php  
+                        $user = new Application_Model_User(); 
+                        ?>
+
+
+                                   <table class="table table-bordered table2excel">
+                                         <thead>
+                                            <tr>
+                                                <th style=" white-space:nowrap;">#</th>
+                                                <th style=" white-space:nowrap;">PO</th>
+
+                                                <th style=" white-space:nowrap;">Site ID</th>
+                                                <th style=" white-space:nowrap;">Last Fund Transferred Date</th>
+                                                <th style=" white-space:nowrap;">Expenses</th>
+                                                <th style=" white-space:nowrap;">Assigned To</th>
+                                                <th style=" white-space:nowrap;">Invoice No.</th>
+                                                <th style=" white-space:nowrap;">Invoice Value</th>
+                                                <th style=" white-space:nowrap;">Change Request Status</th>
+
+                                                <th style=" white-space:nowrap;">Order Date</th>
+                                                <th style=" white-space:nowrap;">Amount</th>
+                                                <th style=" white-space:nowrap;">Inclusive Tax</th>
+                                                <th style=" white-space:nowrap;">Exclusive Tax</th>
+                                                <th style=" white-space:nowrap;">Tax Amount</th>
+                                                <th style=" white-space:nowrap;">Status</th>
+                                                
+                                                
+                                            </tr>
+                                            </thead>
+                                              <tbody>
+                                            <?php 
+                                            if($totalrec){ 
+                                            $totalnum = $this->totalnum?$this->totalnum:1;
+                                            $istart = ($totalnum-1) * 10;
+                                            $i=$istart;
+                                            foreach($record as $expense)
+                                            { ?>
+                                            <tr>
+                                                <td style=" white-space:nowrap;"><?php echo $i+1;?>.</td>
+                                                <td style=" white-space:nowrap;"><?php echo $expense['po_number']; ?></td>
+
+                                                <td style=" white-space:nowrap;">
+                                                  <table class="table2excel" width="100%"><tr>
+                                                <?php foreach ($expense['po_site'] as $key) { ?>
+                                                <td><?php echo $key; ?></td></tr>
+                                                <?php } ?>
+                                                </table></td> 
+
+                                                <td style=" white-space:nowrap;"><table width="100%">
+                                                <?php foreach ($expense['po_site'] as $key) { ?>
+                                                <tr><td style="height:28.2px;">
+                                                <?php echo $user->getLastFundDate($expense['po_number'],$key); ?>
+                                                </td></tr>
+                                                <?php } ?>
+                                                </table></td>
+
+                                                 <td style=" white-space:nowrap;"><table width="100%" >
+                                                <?php foreach ($expense['po_site'] as $key) { ?>
+                                                <tr><td style="height:28.2px;">
+                                                <?php echo $user->getExpensesByPoSite($expense['po_number'],$key); ?>
+                                                </td></tr>
+                                                <?php } ?>
+                                                </table></td>
+
+                                                <td style=" white-space:nowrap;"><table width="100%">
+                                                <?php foreach ($expense['po_site'] as $key) { ?>
+                                                <tr><td style="height:28.2px;">
+                                                <?php echo $user->assignedTo($expense['po_number'],$key); ?>
+                                                </td></tr>
+                                                <?php } ?>
+                                                </table></td>
+
+                                                <td style=" white-space:nowrap;"><table width="100%">
+                                                <?php foreach ($expense['po_site'] as $key) { ?>
+                                                <tr><td style="height:28.2px;"></td></tr>
+                                                <?php } ?>
+                                                </table></td>
+
+                                                <td style=" white-space:nowrap;"><table width="100%" >
+                                                <?php foreach ($expense['po_site'] as $key) { ?>
+                                                <tr><td style="height:28.2px;"></td></tr>
+                                                <?php } ?>
+                                                </table></td>
+
+                                                <td style=" white-space:nowrap;"><table width="100%" >
+                                                <?php foreach ($expense['po_site'] as $key) { ?>
+                                                <tr><td style="height:28.2px;"></td></tr>
+                                                <?php } ?>
+                                                </table></td>
+
+                                            
+                                                <td style=" white-space:nowrap;"></td>
+                                                <td style=" white-space:nowrap;"></td>
+                                                <td style=" white-space:nowrap;"></td>
+                                                <td style=" white-space:nowrap;"></td>
+                                                <td style=" white-space:nowrap;"></td>
+                                                <td style=" white-space:nowrap;"></td>
+                                              
+                                            </tr>
+                                            <?php  $i++;} } else{  ?>
+                                                            <tr><td colspan="7"><p style="color:red; font-size:16px;">No User Found !</p></td></tr>
+                                                <?php  } ?>
+                                            </tbody>
+                                      </table>
+
+                            <div id="leftpag">
+                        <?php if($totalrec > $this->perPage) { 
+                        echo $this->paginationControl($this->paginator, 'Sliding', 'expense-pagination.phtml'); 
+                         } ?>  
+                        </div>
+
+                                  </div>
+                               </div>
+                          </div> 
+                           
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- end of content -->
+
+    </div>
+</div>
+
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->

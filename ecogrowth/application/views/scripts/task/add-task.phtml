@@ -1,0 +1,650 @@
+<?php
+
+    $getalldepartment = $this->getalldepartment;
+
+    $getRoletype = $this->getRoletype;
+
+    //print_r($getalldepartment);
+
+
+
+    $params = $this->params;
+
+
+
+    $getUserRecord = $this->getUserRecord;
+
+?>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+  <script type="text/javascript">
+     $(document).ready(function() {
+                  $("#department").select2();
+                  $("#role_type").select2();
+                  $("#role").select2();
+
+
+                  $(".datepick").datepicker({ dateFormat: "dd MM yy" });
+
+
+      });
+      </script>
+
+<script type="text/javascript">
+
+    function validateUser(){ 
+
+        if(document.getElementById("name").value==""){
+
+            alert("Please Enter Name.");
+
+            document.getElementById("name").focus();
+
+            return false;
+
+        }
+
+
+
+        // if(document.getElementById("email").value==""){
+
+        //     alert("Please Enter Email.");
+
+        //     document.getElementById("email").focus();
+
+        //     return false;
+
+        // }
+
+        
+
+        
+
+            if(document.getElementById("Password").value==""){
+
+            alert("Please Enter New Password.");
+
+            document.getElementById("Password").focus();
+
+            return false;
+
+            }
+
+
+
+            if(document.getElementById("confirmPassword").value==""){
+
+            alert("Please Enter Confirm Password.");
+
+            document.getElementById("confirmPassword").focus();
+
+            return false;
+
+            }
+
+
+
+            if(document.getElementById("Password").value!=document.getElementById("confirmPassword").value){
+
+            alert("Password do not match, please enter valid password");
+
+            document.getElementById("confirmPassword").focus();
+
+            return false;
+
+            }
+
+
+
+            if(document.getElementById("mobile").value==""){
+
+            alert("Please Enter Mobile Number.");
+
+            document.getElementById("Password").focus();
+
+            return false;
+
+            }
+
+
+
+            if(document.getElementById("email").value==""){
+
+            alert("Please Enter Email.");
+
+            document.getElementById("email").focus();
+
+            return false;
+
+            }
+
+
+
+            if(document.getElementById("location").value==""){
+
+            alert("Please Enter location.");
+
+            document.getElementById("location").focus();
+
+            return false;
+
+            }
+
+
+
+            if(document.getElementById("department").value==""){
+
+            alert("Please select Department.");
+
+            document.getElementById("Password").focus();
+
+            return false;
+
+            }
+
+            if(document.getElementById("role_type").value==""){
+
+            alert("Please select Role Type.");
+
+            document.getElementById("role_type").focus();
+
+            return false;
+
+            }
+
+            if(document.getElementById("role").value==""){
+
+            alert("Please select Role.");
+
+            document.getElementById("role").focus();
+
+            return false;
+
+            }
+
+            if(document.getElementById("p_address").value==""){
+
+            alert("Please Enter Permanent Address.");
+
+            document.getElementById("p_address").focus();
+
+            return false;
+
+            }
+
+            if(document.getElementById("c_address").value==""){
+
+            alert("Please Enter Current Address.");
+
+            document.getElementById("c_address").focus();
+
+            return false;
+
+            }
+
+    }         
+
+</script>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("#role_type").change(function(e) {
+
+            //alert("hi");
+
+         //alert($( "#project" ).val());    
+
+        $.get( "/user/get-all-role", { role_type_id: $( "#role_type" ).val() }, "json" )
+
+        .done(function( data ) {
+
+          //alert(data);
+
+           // alert('hihiihi'); 
+
+        //alert( "Data Loaded: " + data );
+
+          select = document.getElementById('role');
+
+
+
+            // Clear the old options
+
+            select.options.length = 0;
+
+
+
+            // Load the new options
+
+            options = data.options; // Or whatever source information you're working with
+
+            for (index = 0; index < options.length; ++index) 
+
+            {
+
+              option = options[index];
+
+              select.options.add(new Option(option.text, option.value));
+
+            }
+
+            
+
+        });
+
+
+
+        });
+
+     });
+
+</script>
+
+<div class=" view-port-height">
+
+<!-- Content Header (Page header) -->
+
+        <div class="content-header container-fluid bg-white">
+
+            <div class="row">
+
+                <div class="col-sm-4">
+
+                    <h4><i class="ti-user"></i> Create New User </h4>
+
+                </div>
+
+              
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Main content -->
+
+        <div class="content">
+
+            <?php if ($this->messages): ?>
+
+            <div class="alert alert-success alert-dismissable">
+
+            <?php foreach ($this->messages as $message): ?>
+
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php echo $message ?>
+
+            <?php endforeach ?>
+
+            </div>
+
+            <?php endif ?>
+
+            <?php if($this->errorMessage) { ?>
+
+            <br clear="all">
+
+            <div class="alert alert-danger alert-dismissable">
+
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php  echo $this->errorMessage;   ?>                                             
+
+            </div>
+
+            <?php } ?>
+
+            <div class="row">
+
+                <div class="col-12">
+
+               
+
+                   <div class="card  profile2_aboutme">
+
+                   <div class="card-header card-primary text-white">
+
+                                   <p style="float: left; margin: 0px;">Create Users</p> <a href="/user"  style="float: right; margin: 0px;" class="btn btn-success btn_width m-t-10 m-r-10">View All Users</a>
+
+                                    </div>
+
+                                <div class="card-block ">
+
+                                    
+
+                                    <div class="row m-t-10">
+
+                                        <div class="col-lg-12">
+
+                                        <form name="changePassword" method="post" onsubmit="return validateUser();"  action="/user/create-user" enctype="multipart/form-data"><!-- 
+
+                                        
+
+                                            <input type="hidden" value="<?php  echo $getUserRecord['id']; ?>" name="id" > -->
+
+                                           <div class="form-group row">
+
+                                        <div class="col-lg-3">
+
+                                            <label for="first_name1" class="col-form-label">
+
+                                                Name *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input type="text" name="name" id="name" placeholder="Name" value="<?php echo $params['name'];?>" class="form-control">
+
+                                            </div>
+
+                                        </div>
+
+                                         <div class="col-lg-3">
+
+                                            <label for="first_name1" class="col-form-label">
+
+                                                Email *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input type="email" class="form-control " id="email" name="email"  value="<?php echo $params['email'];?>" placeholder="Email">
+
+                                            </div>
+
+                                        </div> 
+
+                                        
+
+                                        <div class="col-lg-3">
+
+                                            <label for="first_name1" class="col-form-label">
+
+                                                 Password *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input type="password" name="Password" id="Password"  placeholder="Password" class="form-control">
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="first_name1" class="col-form-label">
+
+                                                Confirm Password *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input type="password" value="" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password">
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="mobile" class="col-form-label">
+
+                                                Mobile *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input type="text" name="mobile" id="mobile" placeholder="Mobile"  value="<?php echo $params['mobile'];?>" class="form-control">
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="mobile" class="col-form-label">
+
+                                               Alternate Mobile 
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input type="text" name="a_mobile" id="a_mobile" placeholder="Alternamte Mobile"  value="<?php echo $params['a_mobile'];?>" class="form-control">
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="address" class="col-form-label">
+
+                                                Permanent Address *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <textarea type="text" name="p_address" id="p_address" placeholder="Permanent Address"  class="form-control"><?php echo $params['p_address'];?></textarea>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="caddress" class="col-form-label">
+
+                                                Current Address *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <textarea type="text" name="c_address" id="c_address" placeholder="Current Address"  class="form-control"><?php echo $params['c_address'];?></textarea>
+
+                                            </div>
+
+                                        </div>
+
+                                        
+
+                                        <div class="col-lg-3">
+
+                                            <label for="mobile" class="col-form-label">
+
+                                                Location *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input type="text" name="location" id="location" placeholder="location" value="<?php echo $params['location'];?>" class="form-control">
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="Department" class="col-form-label">
+
+                                                Department *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <select name="department"  style="width: 300px;" id="department"  value="" class="form-control">
+
+                                                    <option value="">---Select Department---</option>
+
+                                                    <?php
+
+                                                    foreach ($getalldepartment as $value) 
+
+                                                     {
+
+                                                         ?><option value="<?php echo $value['id'] ?>"><?php echo $value['department'] ?></option><?php
+
+                                                     } 
+
+                                                     ?>
+
+                                                </select>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="role_type" class="col-form-label">
+
+                                                Role Type *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <select name="role_type"  style="width: 300px;" id="role_type"  value="" class="form-control">
+
+                                                    <option value="">---Select Role Type---</option>
+
+                                                    <?php
+
+                                                    foreach ($getRoletype as $getroletype) 
+
+                                                     {
+
+                                                         ?><option value="<?php echo $getroletype['id'] ?>"><?php echo $getroletype['role_type'] ?></option><?php
+
+                                                     } 
+
+                                                     ?>
+
+                                                    
+
+                                                </select>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="Role" class="col-form-label">
+
+                                                Role *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <select name="role" id="role"  style="width: 300px;"  value="" class="form-control">
+
+                                                    <option value="">---Select Role---</option>
+
+                                                </select>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="Date Of Birth" class="col-form-label">
+
+                                                Date Of Birth *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input name="dob" readonly="" placeholder="" id="date" value="<?php echo date('d/m/Y')?>" class="form-control  datepick" data-date-format="dd/mm/yyyy" style="width: 110px;"  type="text" required="" />
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="Date of joining" class="col-form-label">
+
+                                                Date Of Joining *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input name="doj" readonly="" placeholder="" id="date" value="<?php echo date('d/m/Y')?>" class="form-control  datepick" data-date-format="dd/mm/yyyy" style="width: 110px;" " type="text" required="" />
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <label for="profile" class=" col-form-label">
+
+                                                Profile Pic *
+
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <input type="file" name="profile_pic" id="profile_pic" placeholder="" value="" class="form-control">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group row">
+
+                                        <div class="col-12">
+
+                                            <button type="submit" name="submit" class="btn btn-responsive layout_btn_prevent btn-info">Save</button>
+
+                                        </div>
+
+                                    </div>
+
+                                       
+
+                                        
+
+                                    </form>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- /.content -->
+
+    </div>
+
+</div>

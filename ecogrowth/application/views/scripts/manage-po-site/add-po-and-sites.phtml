@@ -1,0 +1,409 @@
+
+
+<style>
+	.mainDiv {
+		background-color: #DCF2FE;
+		border-radius: 5px;
+	}
+	form {
+		padding: 5px;
+	}
+	#mandatory {
+		color: red;
+		font-size: 16px;
+	}
+	.error_box{
+		border: 1px solid red;
+		border-radius: 5px;
+	}
+	.table-bordered {
+		border: 2px solid #1b1a1a !important;
+	}
+	.table-bordered > thead > tr > th, .table-bordered > tbody > tr, .table-bordered > tbody > tr > td {
+		border: 1px solid #1b1a1a !important;
+	}
+	.hidden {
+		display: none;
+	}
+</style>
+<div id="page-wrapper">
+	<div class="main-page">
+		<?php if (isset($this->params['error'])): ?>
+			<?php if ($this->params['error']) { ?>
+				<div class="alert alert-danger alert-dismissable">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<strong>Error !</strong>&nbsp; <?php echo $this->params["error"]; ?>
+				</div>
+			<?php } ?>
+		<?php endif ?>
+		<div class="panel panel-primary">
+			<div class="panel panel-heading">
+				<div class="row">
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<h3>Add New PO</h3>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<!-- <a href="/invoice/invoice-report" class="btn btn-success pull-right">View Generated Invoices</a> -->
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-body">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mainDiv">
+					<form action="/manage-po-site/add-po-and-sites" method="POST" role="form" id="addPoAndSitesForm">
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<span style="font-weight: bold; font-size: 16px; color: #D60019;">*&nbsp;Field is mandatory.</span>
+							</div>
+						</div>
+						<br clear="all">
+						<?php ?>
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="state_id">State<span id="mandatory">*</span> :</label>
+								<select class="form-control select2" name="state_id" id="state_id" onchange="getClientMasterList()">
+									<option value="">Select State</option>
+									<?php foreach ($this->stateList as $state): ?>
+										<option value="<?php echo $state['id']; ?>"><?php echo $state['state_name']; ?></option>
+									<?php endforeach ?>								
+								</select>
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="client_id">Client Name<span id="mandatory">*</span> :</label>
+								<select class="form-control select2" name="client_id" id="client_id">
+									<option value="">Select Client</option>
+								</select>
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="po_type">PO Type<span id="mandatory">*</span> :</label>
+								<select class="form-control select2" name="po_type" id="po_type">
+									<option value="">Select PO Type</option>
+									<option value="Standard PO" selected>Standard PO</option>
+								</select>
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="po_amount">PO Amount<span id="mandatory">*</span> :</label>
+								<input type="text" class="form-control" name="po_amount" id="po_amount"  oninput="this.value = this.value.replace(/[^\0-9\.]/g,'')" required="">
+							</div>
+
+							<!-- <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="operationg_unit">Operating Unit<span id="mandatory">*</span> :</label>
+								<input type="text" class="form-control" name="operating_unit" id="operating_unit" oninput="this.value = this.value.replace(/[^A-Z a-z]/g,'')" >
+							</div> -->
+						</div>
+
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="po_number">PO Number<span id="mandatory">*</span> :</label>
+								<!--<input type="text" class="form-control" name="po_number" id="po_number" oninput="this.value = this.value.replace(/[^A-Z / a-z 0-9]/g,'')">-->
+								<input type="text" class="form-control" name="po_number" id="po_number">
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="po_date">PO Date<span id="mandatory">*</span> :</label>
+								<input type="text" class="form-control datepicker" name="po_date" id="po_date" readonly="">
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="revision">Revision :</label>
+								<input type="text" class="form-control" name="revision" id="revision" oninput="this.value = this.value.replace(/[^0-9]/g,'')">
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="site_type">Site Type :</label>
+								<select class="form-control select2" name="site_type" id="site_type" >
+                    			    <option value="">Select Site Type</option>
+                    				<option value="RTT">RTT</option>
+                    				<option value="GBT">GBT</option>
+                    				<option value="Upgrade ">Upgrade</option>
+                    		</select>
+							</div>
+						</div>
+						<br>
+						<h3 align="center"><u>Site Details</u></h3>
+						<br>
+
+						<div class="row" id="productsServicesDiv" style="overflow: auto; padding: 8px 15px;">
+							<table class="table table-bordered" id="siteDetailsTable">
+								<thead>
+									<tr>
+										<th style="text-align: center;">Site ID <span id="mandatory">*</span></th>
+										<th style="text-align: center;">Site Name</th>
+										<th style="text-align: center;">SO Number</th>
+										<th style="text-align: center;">Infratel ID</th>
+										<th style="text-align: center;">Location <span id="mandatory">*</span></th>
+										<th style="text-align: center;">Latitude</th>
+										<th style="text-align: center;">Longitude</th>
+										<th style="text-align: center;">Work Type <span id="mandatory">*</span></th>
+										<th style="text-align: center;">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr id="row_2">
+										<td width="10%">
+											<input type="text" name="site_id[]" id="site_id_2" class="form-control site_id" onkeyup="getInfratelId(2,this.value)">
+										</td>
+
+										<td>
+											<input type="text" name="site_name[]" id="site_name_2" class="form-control">
+										</td>
+
+										<td>
+											<input type="text" name="so_number[]" id="so_number_2" class="form-control">
+										</td>
+										<td>
+											<input type="text" class="form-control" name="infratel_id[]" id="infratel_id_2">
+										</td>
+										<td>
+											<input type="text" class="form-control" name="location[]" id="location_2">
+										</td>
+										<td>
+											<input type="text" class="form-control" name="latitude[]" id="latitude_2">
+										</td>
+										<td>
+											<input type="text" class="form-control" name="longitude[]" id="longitude_2">
+										</td>
+										<td width="25%">
+											<input type="text" class="form-control" name="work_type[]" id="work_type_2" >
+										</td>
+										<td></td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+									<button type="button" name="addRow" class="btn btn-responsive layout_btn_prevent btn-success" onclick="addMoreRow();">Add More Sites</button>
+								</div>
+							</div>
+						</div>
+						<br clear="all">
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<button type="submit" class="btn btn-primary pull-right" id="addPoAndSitesButton">Add Sites</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".select2").select2();
+		$(".datepicker").datepicker({ dateFormat: "dd/mm/yy", changeYear:true, changeMonth:true });
+		var stateId = sessionStorage.getItem('state_id');				
+		$('#state_id').select2().select2('val', $("#state_id option[value="+stateId+"]").val());
+			
+		$("#addPoAndSitesButton").click(function(event) {
+			event.preventDefault();
+			if(!checkInputData()){
+				return false;
+			} else {
+				$("#loading-bg").show();
+				var stateid = $('#state_id').val();
+				var clientid = $('#client_id').val();
+				sessionStorage.setItem('state_id', stateid); 				
+				sessionStorage.setItem('client_id', clientid);				 				
+				$.ajax({
+					url: $("#addPoAndSitesForm").attr('action'),
+					type: 'POST',
+					data: $("#addPoAndSitesForm").serialize(),
+					success:function(data){
+						var data = JSON.parse(data);
+						$("#loading-bg").hide();
+						console.log(data);
+						if (data.flag) {
+							swal({
+								title : data.title,
+								text  : data.message,
+								icon  : "success"
+							}).then(function(){
+								window.location.href = "/manage-po-site/po-details";
+							});
+						} else {
+							swal({
+								title : data.title,
+								text  : data.message,
+								icon  : "error"
+							});
+							return false;
+						}
+					}
+				});
+			}
+		});
+	});
+	function getClientMasterList() {		
+		var state_id = $("#state_id").val();		
+		if (state_id == "") {
+			swal({
+				title : "State Missing!",
+				text  : "Please select state name.",
+				icon  : "error"
+			}).then(function(){
+				$("#state_id").select2('open');
+			});
+			$("#client_id").empty();
+			$("#client_id").append('<option value="">Select Client</option>');
+			return false;
+		} else {
+			$("#loading-bg").show();
+			$.ajax({
+				url: '/master/get-client-details',
+				type: 'POST',
+				data: {state_id: state_id},
+				success:function(data){
+					var data = JSON.parse(data);
+					$("#loading-bg").hide();
+					console.log(data);
+					if (data.flag) {
+						$("#client_id").empty();	
+						$("#client_id").append('<option value="">Select Client</option>');	
+						$.each(data.clientDetails, function(index, val) {
+							if(sessionStorage.getItem('client_id') == val.id ) {
+								$("#client_id").append('<option value="'+val.id+'" selected>'+val.client_name+'</option>');								
+							} else {
+								$("#client_id").append('<option value="'+val.id+'">'+val.client_name+'</option>');		
+							}							
+						});
+					} else {
+						swal({
+							title : data.title,
+							text  : data.message,
+							icon  : "error"
+						});
+						$("#client_id").empty();	
+						$("#client_id").append('<option value="">Select Client</option>');	
+					}
+				}
+			});
+
+		}
+	}
+	
+	function addMoreRow() {
+		var length = $("#siteDetailsTable tr").length;
+		var row_count = parseInt(length) + 1;
+		var row_html = `<tr id="row_`+row_count+`">
+		<td>
+		<input type="text" name="site_id[]" id="site_id_`+row_count+`" class="form-control site_id" onkeyup="getInfratelId(`+row_count+`,this.value)">
+		</td>
+		<td>
+		<input type="text" name="site_name[]" id="site_name_`+row_count+`" class="form-control">
+		</td>
+		<td>
+		<input type="text" name="so_number[]" id="so_number_`+row_count+`" class="form-control">
+		</td>
+		<td>
+		<input type="text" class="form-control" name="infratel_id[]" id="infratel_id_`+row_count+`">
+		</td>
+		<td>
+		<input type="text" class="form-control" name="location[]" id="location_`+row_count+`">
+		</td>
+		<td>
+		<input type="text" class="form-control" name="latitude[]" id="latitude_`+row_count+`">
+		</td>
+		<td>
+		<input type="text" class="form-control" name="longitude[]" id="longitude_`+row_count+`">
+		</td>
+		<td>
+		<input type="text" class="form-control" name="work_type[]" id="work_type_`+row_count+`" >
+		</td>
+		<td><a href="javascript:void(0)" title="Delete Row" onclick="deleteRow(`+row_count+`)"><i class="fa fa-trash fa-2x" style="color: red;"></i></a></td>
+		</tr>`;
+		$("#siteDetailsTable").append(row_html);
+	}
+	function deleteRow(count) {
+		$("#row_"+count).remove();
+	}
+	
+
+	function getInfratelId(count,site_id){
+		if(site_id != ""){
+			$.ajax({
+				url: '/manage-po-site/get-site-matrix-data/site_id/'+site_id,
+				type: 'GET',
+				success:function(data){
+					console.log(data);
+					if(data){
+						var data = JSON.parse(data);
+						$('#infratel_id_'+count).val(data.infratel_id);
+						$('#site_name_'+count).val(data.zone);
+						$('#location_'+count).val(data.zone);
+					}
+				}
+			});
+		}
+		
+
+	}
+
+	function checkInputData() {
+		if ($("#state_id").val() == "") {
+			swal({
+				title : "State Missing!",
+				text  : "Please select state name.",
+				icon  : "error"
+			}).then(function(){
+				$("#state_id").select2('open');
+			});
+			return false;
+		} else if ($("#client_id").val() == "") {
+			swal({
+				title : "Client Missing!",
+				text  : "Please select client name.",
+				icon  : "error"
+			}).then(function(){
+				$("#client_id").select2('open');
+			});
+			return false;
+		} else if ($("#po_type").val() == "") {
+			swal({
+				title : "PO Type Missing!",
+				text  : "Please select PO type.",
+				icon  : "error"
+			}).then(function(){
+				$("#po_type").select2('open');
+			});
+			return false;
+		}  else if ($("#po_amount").val() == "") {
+			swal({
+				title : "PO Amount Missing!",
+				text  : "Please enter PO Amount.",
+				icon  : "error"
+			}).then(function(){
+				$("#po_amount").focus();
+			});
+			return false;
+		} else if ($("#po_number").val() == "") {
+			swal({
+				title : "PO Number Missing!",
+				text  : "Please enter PO number.",
+				icon  : "error"
+			}).then(function(){
+				$("#po_number").focus();
+			});
+			return false;
+		} else if ($("#po_date").val() == "") {
+			swal({
+				title : "PO Date Missing!",
+				text  : "Please select PO date.",
+				icon  : "error"
+			}).then(function(){
+				$("#po_date").focus();
+			});
+			return false;
+		} else if ($(".site_id").val() == "") {
+        			swal({
+        				title : "Site id Missing!",
+        				text  : "Please enter Site Id.",
+        				icon  : "error"
+        			}).then(function(){
+        				$(".site_id").focus();
+        			});
+    			return false;
+		} 
+		
+		else {
+			return true;
+		}
+	}
+</script>

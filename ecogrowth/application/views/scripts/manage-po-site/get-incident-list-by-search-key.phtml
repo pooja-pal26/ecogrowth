@@ -1,0 +1,34 @@
+<div class="table-responsive" id="incident-list">
+  <table class="display" width="100%" id="incidentsReportTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>PO Number</th>
+        <th>Site ID</th>
+        <th>Incident Date</th>
+        <th>Staff Name</th>
+        <th>Vendor Name</th>
+        <th>Company Vendor</th>
+        <th>Date of Reporting</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if($this->incidentsList){ 
+        $i = 1;
+        foreach($this->incidentsList as $incident) { ?>
+          <tr>
+            <td><?php echo $i;?>.</td>
+            <td><?php echo $incident['po_no']; ?></td>
+            <td><?php echo $incident['site_id']; ?></td>
+            <td><?php echo date('d/m/Y', strtotime($incident['incident_date'])); ?></td>
+            <td><?php echo $incident['responsible_staff']; ?></td>
+            <td><?php echo $incident['responsible_vendor'] ? rtrim($incident['responsible_vendor'],", "):"-"; ?></td>
+            <td><?php echo $incident['company_vendor_id'] ? $incident['company_vendor_id']:"-"; ?></td>
+            <td><?php echo date('d/m/Y', strtotime($incident['created_at'])); ?></td>
+            <td><a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" title="View Details" onclick="getIncidentDetails(<?php echo $incident['id']; ?>)"><i class="fa fa-eye fa-2x" style="color: green;"></i></a></td>
+          </tr>
+          <?php  $i++; } } ?>
+        </tbody>
+      </table>
+    </div>

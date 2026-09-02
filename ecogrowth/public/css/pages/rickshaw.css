@@ -1,0 +1,13 @@
+.rickshaw_legend_wrap {
+    position: absolute;
+    top: 25px;
+    right: 2px;
+    background-color: transparent;
+}
+.rickshaw_legend_wrap > .legend_bg {
+    background-color: transparent;
+    color: #2A363B;
+}
+.line{
+    font-family: "Nunito Sans", sans-serif;
+}

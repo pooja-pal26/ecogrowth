@@ -1,0 +1,148 @@
+ 
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Import PO
+          <div class="pull-right">
+              		<form action="/manage-po-site/export-po-details" method="post">
+					<input type="hidden" id="export_from_date" name="export_from_date" value="">
+					<input type="hidden" id="export_to_date" name="export_to_date" value="">
+                  <button class="btn btn-info"  type="submit"  title="file-excel"><i class="glyphicon glyphicon-circle-arrow-down" ></i>Export Excel</button>
+                  <a href="/manage-po-site/add-po-and-sites" class="btn btn-success">Add New PO</a>
+                  	</form>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+            <div class="row">
+						<form action="/manage-po-site/po-details" method="POST" role="form" >  
+						<!--onsubmit="return validateForm()"-->
+							<div class="col-md-2">
+								<div class="form-group">
+									<label for="">From date</label>
+									<input type="text" class="form-control datepicker " name="from_date" id="from_date" placeholder="From Date" readonly="" value="<?php if(isset($this->from_date)){ echo $this->from_date;} ?>" >
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<label for="">To date</label>
+									<input type="text" class="form-control datepicker " name="to_date" id="to_date" placeholder="To Date" readonly="" value="<?php if(isset($this->to_date)){ echo $this->to_date; } ?>">
+								</div>
+							</div>
+							<div class="col-md-2" >
+								<div class="form-group">
+									<button type="submit" class="btn btn-primary" style="margin-bottom:-50px;">Submit</button>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<a href="/manage-po-site/po-details" class="btn btn-info" style="margin-bottom:-50px;">Reset</a>
+								</div>
+							</div>
+						</form>
+					</div>
+          <div class="table-responsive" id="user-list">
+            <table class="display" width="100%" id="poDetailsTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>PO Number</th>
+                  <th>PO Order Date</th>
+                  <th>Revision</th>
+                  <th>Amount</th>
+                  <th>Site Type</th>
+                  <th>Exclusive Tax</th>
+                  <th>Total Tax</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php if($this->poDetailsList){ 
+                  $i = 1;
+                  foreach($this->poDetailsList as $poDetails) { ?>
+                    <tr>
+                      <td><?php echo $i;?>.</td>
+                      <td>
+                        <a href="javascript:void(0)" title="View Site" onclick="getSiteList('<?php echo $poDetails['po_no']; ?>')"><?php echo $poDetails['po_no']; ?></a>
+                      </td>
+                      <td><?php echo date('d/m/Y', strtotime($poDetails['order_date'])); ?></td>
+                      <td><?php echo $poDetails['rev']; ?></td>
+                      <td><?php echo $poDetails['po_amount']; ?></td>
+                      <td><?php echo $poDetails['site_type']; ?></td>
+                      <td><?php echo $poDetails['exclusive_tax']; ?></td>
+                      <td><?php echo $poDetails['tax_amount']; ?></td>
+                      <td><?php echo $poDetails['status']; ?></td>
+                      <td><a href="/manage-po-site/edit-po-and-sites/po/<?php echo $poDetails['id']; ?>"><i class="fa fa-pencil"></i></a></td>
+                    </tr>
+                    <?php  $i++; } } ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal modal-success fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      </div>
+
+      <script>
+      $(document).ready(function() {
+			$(".datepicker").datepicker({ dateFormat: "yy-mm-dd", changeYear:true, changeMonth:true });
+
+			var t =$("#siteExpenseDetailsTable").DataTable({
+				// "order": [[ 6, "desc" ]],
+				 // columnDefs: [
+			  //      { type: 'date-mmm-yyyy', targets: 6 }
+			  //    ]
+			} );
+
+			t.on( 'order.dt search.dt', function () {
+				t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+					cell.innerHTML = i+1;
+				} );
+			} ).draw();
+		});
+        $(document).ready(function() {
+          $("#poDetailsTable").DataTable();
+        });
+        function getSiteList(po_number) {
+          $.ajax({
+            url: '/manage-po-site/get-site-list-by-po-number',
+            type: 'POST',
+            data: {po_number: po_number},
+            success:function(data){
+              $('#myModal').html(data);
+              $('#myModal').modal('toggle');
+            }
+          });
+          
+        }
+        
+        $('#from_date').change(function() {
+            var from_date = $(this).val();
+             $('#export_from_date').val(from_date);
+            // console.log(date, 'change')
+        });
+        $('#to_date').change(function() {
+            var to_date = $(this).val();
+             $('#export_to_date').val(to_date);
+            // console.log(date, 'change')
+        });
+      </script>
+

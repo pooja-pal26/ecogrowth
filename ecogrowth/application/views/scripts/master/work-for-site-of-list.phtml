@@ -1,0 +1,166 @@
+<link rel="stylesheet" href="/assets/css/select2.min.css">
+<script src="/assets/js/select2.min.js"></script>
+<div id="page-wrapper">
+  <div class="main-page">
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Work For Site Of List
+          <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" data-target="#addWorkForSiteOfModal">Add Work For Site Of</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive">
+            <table class="display" width="100%" id="workForSiteOfListTable">
+             <thead>
+              <th>#</th>
+              <th>Work For Site Of Name</th>
+              <th>Status</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+              <?php if($this->workForSiteOfList){
+                $i = 1;
+                foreach ($this->workForSiteOfList as $workForSiteOf) { ?>
+                 <tr>
+                  <td><?php echo $i; ?></td>
+                  <td><?php echo $workForSiteOf['work_for_site_of_name']; ?></td>
+                  <td><?php echo $workForSiteOf['is_active'] == "1" ? "Active":"Deactive"; ?></td>
+                  <td>
+                    <?php if ($workForSiteOf['is_active'] == "1") { ?>
+                      <a href="javascript:void(0)" onclick="deactivateActivateDeleteWorkForSiteOf(<?php echo $workForSiteOf['id']; ?>,'deactivate')" title="Deactivate Work Type"><span class="fa fa-ban" style="color: #D66F00;"></span></a>
+                    <?php } else { ?>
+                      <a href="javascript:void(0)" title="Activate Work Type" onclick="deactivateActivateDeleteWorkForSiteOf(<?php echo $workForSiteOf['id']; ?>,'activate')"><span class="fa fa-sign-in" style="color: #1DAA29;"></span></a>
+                      &nbsp;&nbsp;
+                      <a href="javascript:void(0)" onclick="deactivateActivateDeleteWorkForSiteOf(<?php echo $workForSiteOf['id']; ?>,'delete')" title="Delete Work Type"><span class="fa fa-trash" style="color: red;"></span></a>
+                    <?php } ?>
+                  </td>
+                </tr>
+                <?php $i++; } } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add State Modal : Start -->
+  <div class="modal fade" id="addWorkForSiteOfModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3 class="modal-title">Add Work For Site Of</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <form role="form" class="form-inline">
+              <div class="form-group col-xs-12 col-sm-12 col-md-10 col-lg-10">
+                <label for="work_for_site_of">Work For Site Of :</label>
+                <input type="text" class="form-control" name="work_for_site_of" id="work_for_site_of" placeholder="Enter work for site of" style="width: 70%;">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                <input type="submit" class="btn btn-primary" id="saveWorkForSiteOfButton" value="Save">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Add State Modal : End -->
+
+  <!-- Edit Bank Modal : Start -->
+  <div class="modal fade" id="editExpenseInTypeModal"></div>
+  <!-- Edit Bank Modal : End -->
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#workForSiteOfListTable").DataTable();
+      $(".select2").select2();
+      $("#saveWorkForSiteOfButton").click(function(event) {
+        event.preventDefault();
+        var work_for = $("#work_for_site_of").val();
+        if (work_for == "") {
+          swal({
+            title : "Work For Missing!",
+            text  : "Please enter work for site of.",
+            icon  : "error",
+          }).then(function(){
+            $("#work_for_site_of").focus();
+          });
+        } else {
+          $("#addWorkForSiteOfModal").modal("toggle");
+          $("#loading-bg").show();
+          $.ajax({
+            url: '/master/add-work-for-site-of',
+            type: 'POST',
+            data: {work_for:work_for},
+            success:function(data){
+              $("#loading-bg").hide();
+              var data = JSON.parse(data);
+              console.log(data);
+              if (data.flag) {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "success"
+                }).then(function(){
+                  location.reload();
+                });
+              } else {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "error"
+                }).then(function(){
+                  $("#addWorkForSiteOfModal").modal("toggle");
+                });
+              }
+            }
+          });
+        }
+      });
+    });
+    function deactivateActivateDeleteWorkForSiteOf(id, type) {
+      swal({
+        title : "Are you sure?",
+        text  : "Do you want to "+type+" site type?",
+        icon  : "warning",
+        buttons : [true, "Yes, "+type],
+        dangerMode : true
+      }).then(function(isConfirm){
+        if (!isConfirm) {
+          return false;
+        } else {
+          $.ajax({
+            url  : '/master/deactivate-activate-delete-site-type',
+            type : 'POST',
+            data : {type:type, work_type_id:id},
+            success:function(data){
+              var data = JSON.parse(data);
+              if (data.flag) {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "success",
+                }).then(function(){
+                  location.reload();
+                });
+              } else {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "error"
+                });           
+              }
+            }
+          });
+
+        }
+      });
+    }
+  </script>
+

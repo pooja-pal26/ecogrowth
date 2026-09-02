@@ -1,0 +1,19 @@
+.form_validator .has-error input:focus{
+    border-radius: 0;
+    box-shadow: 0.3em 0 0 0 #f86a67 inset;
+    border: 1px solid #f86a67;
+}
+.form_validator .has-success input:focus{
+    border-radius: 0;
+    box-shadow: 0.3em 0 0 0 #5aca82 inset;
+}
+.form_validator input:focus{
+    border-radius: 0;
+    box-shadow: 0.3em 0 0 0 #329cff inset;
+}
+.has-success .input-group-addon{
+    color: #5aca82 !important;
+}
+.has-error small{
+    display: block;
+}

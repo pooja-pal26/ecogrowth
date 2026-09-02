@@ -1,0 +1,13 @@
+@media (min-width:544px ) {
+
+    .navbar-brand {
+        background-color: #5aca82;
+        height: 56px;
+        width: 250px;
+        margin: -8px 15px -8px -16px;
+    }
+    .header
+    {
+        background: #676B6E;
+    }
+}

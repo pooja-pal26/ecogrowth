@@ -1,0 +1,18 @@
+.export-main ul li:nth-child(4){
+    display: none;
+}
+.export-drawing ul li:nth-child(4){
+    display: none;
+}
+/*font family*/
+.amcharts-chart-div a,text{
+    font-family: "Nunito Sans", sans-serif !important;
+}
+.height_450{
+    height: 450px;
+}
+@media (max-width: 375px) {
+    .amcharts-export-menu li > a{
+        padding: 12px 7px;
+    }
+}

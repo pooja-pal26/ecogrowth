@@ -1,0 +1,105 @@
+
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDf1k34CZOWmMUpTXeXtbpgEwbHZ0CYqts"
+  type="text/javascript"></script>
+<div class="">
+<!-- Content Header (Page header) -->
+
+       <!--  <div class="content-header container-fluid bg-white">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4><i class="ti-user"></i> Site Allocation List Data</h4>
+                </div>
+            </div>
+        </div> -->
+        <br clear="all">
+        <!-- Main content -->
+        <div class="content">
+            <?php if ($this->messages): ?>
+                <div class="alert alert-success alert-dismissible fade show m-t-10" role="alert">
+                    <?php foreach ($this->messages as $message): ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="alert_data">
+                <?php echo $message ?>.
+                </div>
+                <?php endforeach ?>
+                </div>
+            <?php endif ?>
+        
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card  profile2_aboutme">
+                   <div class="card-header card-primary text-white">
+                    <p style="float: left; margin: 0px;">Allocated Site Location
+                    </p>
+                   <a href="/home" style="float: right; margin: 0px;" class="btn btn-success btn_width m-t-10 m-r-10">Dashboard
+                    </a>
+                  </div>
+                                    
+                        <div class="card-block" style="height: 550px;">
+                            <div class="row basic_tables">
+                                <div class="col-12">
+                                    <div class="table-responsive mt-0" id="my-siteallocation" style="padding:0px !important;">
+                                      
+                                        <div id="map" style="width: 98%; height: 500px; position: absolute !important;"></div>
+
+  <script type="text/javascript">
+    var locations = [
+  <?php
+    
+    foreach($this->site_list  as $site)
+    { 
+      
+    
+  ?>
+      ['Infratel Site Id : <strong><?php echo ucwords($site['infratel_site_id']);?></strong><br/>Technical Site Id : <strong><?php echo ucwords($site['site_id']);?></strong><br/>Technician Name : <strong><?php echo ucwords($site['tech_name']);?></strong><br/>Technician Mobile No. : <strong><?php echo $site['tech_mobile'];?></strong><br/>', <?php echo $site['latitude'];?>, <?php echo $site['longitude'];?>, 4], 
+             <?php }?>
+    ];
+  google.maps.visualRefresh = true;
+    var map = new google.maps.Map(document.getElementById('map'), {
+       zoom: 8,
+       center: new google.maps.LatLng(26.8467, 80.9462),
+       mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+   
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+
+        var icon = {
+          url: '/img/tower/tower.png'
+        }
+
+    for (i = 0; i < locations.length; i++) { 
+   //alert(locations[i][1]);
+         //alert(locations[i][2]); 
+        
+
+       marker = new google.maps.Marker({
+         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+         map: map,
+         icon: icon
+       });
+   
+       google.maps.event.addListener(marker, 'click', (function(marker, i) {
+         return function() {
+           infowindow.setContent(locations[i][0]);
+           infowindow.open(map, marker);
+         }
+       })(marker, i));
+    }
+  </script>
+
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- /.content -->
+    </div>
+</div>
+

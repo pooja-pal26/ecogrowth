@@ -1,0 +1,99 @@
+#menu .navigation .menu_icon {
+    font-size: 30px;
+    margin-top:5px;
+}
+#menu .navigation > li > a {
+    padding: 14px 24px;
+    text-align: center;
+}
+
+#menu .navigation a {
+    padding: 11px 24px;
+}
+.user_section{
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.left_aside .jspScrollable, .left_aside .jspContainer {
+    overflow: visible !important;
+}
+.left_aside .jspVerticalBar{
+    width: 0;
+}
+.left_aside .jspPane{
+    width: 100% !important;
+}
+.navigation li p{
+    margin-bottom: 0;
+}
+.menu-dropdown .menu_icon{
+    margin-left: 35px;
+}
+.menu-dropdown .menu_icon_dropdown{
+    font-size: 12px !important;
+    margin-left: 20px;
+}
+.dropdown_head p{
+    margin-top: 5px;
+}
+@media (max-width: 992px){
+    .header {
+        position: fixed;
+        z-index: 99999999;
+    }
+}
+@media (min-width: 576px){
+    .left_aside,
+    .sidebar,
+    .menu-dropdown > a,
+    #menu .navigation {
+        width: 150px;
+    }
+    .menu-dropdown,
+    #menu .navigation > li:not(.menu-dropdown) > a {
+        position: relative;
+    }
+    #menu .menu-dropdown > ul{
+        position: absolute;
+        width: 250px;
+        top: 0;
+        left:150px;
+        z-index: 2;
+        display: none;
+        border: 1px solid #d1e3ec;
+        box-shadow: 3px 0 12px -1px #ddd;
+    }
+    #menu .menu-dropdown:hover > ul{
+        display: block;
+        height: auto;
+        z-index: 1000;
+        background-color: #fff;
+    }
+
+    #menu .navigation {
+        padding: 4px 0 15px;
+        border-bottom: 0;
+    }
+
+    #menu .menu-dropdown .sidebarbottom {
+        top: auto;
+        bottom: 0;
+    }
+}
+@media (max-width: 575px) {
+    .left_aside, .sidebar, .menu-dropdown > a, #menu .navigation{
+        width: 100%;
+    }
+    .menu_level
+    {
+        padding-bottom: 25px !important;
+    }
+}
+@media (max-width: 992px){
+    .wrapper{
+        padding-top: 56px;
+    }
+    .sidebar1 #menu{
+        padding-bottom: 56px ;
+    }
+}

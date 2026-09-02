@@ -1,0 +1,168 @@
+<link rel="stylesheet" href="/assets/css/select2.min.css">
+<script src="/assets/js/select2.min.js"></script>
+<style>
+	.mainDiv {
+		background-color: #DCF2FE;
+		border-radius: 5px;
+	}
+	form {
+		padding: 5px;
+	}
+	#mandatory {
+		color: red;
+		font-size: 16px;
+	}
+</style>
+<div id="page-wrapper">
+	<div class="main-page">
+		<?php if (isset($this->params['error'])): ?>
+			<?php if ($this->params['error']) { ?>
+				<div class="alert alert-danger alert-dismissable">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<strong>Error !</strong>&nbsp; <?php echo $this->params["error"]; ?>
+				</div>
+			<?php } ?>
+		<?php endif ?>
+		<div class="panel panel-primary">
+			<div class="panel panel-heading">
+				<div class="row">
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<h3>Invoice Punching Form</h3>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+						<a href="/expense/invoice-report" class="btn btn-success pull-right">View Invoice List</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-body">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mainDiv">
+					<form action="/expense/punch-invoice" method="POST" role="form" enctype="multipart/form-data" onsubmit="return validateInputData()">
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<span style="font-weight: bold; font-size: 16px; color: #D60019;">*&nbsp;Field is mandatory.</span>
+							</div>
+						</div>
+						<br clear="all">
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="client_id">Client Name<span id="mandatory">*</span> :</label>
+								<select class="form-control select2" name="client_id" id="client_id">
+									<option value="">Select Client</option>
+									<?php foreach ($this->clientList as $client): ?>
+										<option value="<?php echo $client['id']; ?>"<?php echo $this->params['client_id'] == $client['id'] ? "selected":""; ?>><?php echo $client['client_name']; ?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="state_id">State For<span id="mandatory">*</span> :</label>
+								<select class="form-control select2" name="state_id" id="state_id" onchange="getSitesByPoNumber()">
+									<option value="">Select State</option>
+									<?php foreach ($this->stateList as $state): ?>
+										<option value="<?php echo $state['id']; ?>"><?php echo $state['state_name']; ?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="po_number">PO Number :</label>
+								<select class="form-control select2" name="po_number" id="po_number" onchange="getSitesByPoNumber()">
+									<option value="">Select PO Number</option>
+									<?php foreach ($this->poNumber as $po): ?>
+										<option value="<?php echo $po['po_number']; ?>"><?php echo $po['po_number']; ?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="site_id">Site ID :</label>
+								<select class="form-control select2" name="site_id" id="site_id">
+									<option value="">Select Site ID</option>
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="invoice_date">Invoice Date<span id="mandatory">*</span> :</label>
+								<input type="text" class="form-control datepicker" name="invoice_date" id="invoice_date" placeholder="Select Date" readonly="">
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="invoice_amount">Invoice Amount<span id="mandatory">*</span> :</label>
+								<input type="text" class="form-control" name="invoice_amount" id="invoice_amount" placeholder="Enter Invoice Amount" oninput="this.value = this.value.replace(/[^\0-9\.]/g,'')">
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="received_amount_date">Received Amount Date :</label>
+								<input type="text" class="form-control datepicker" name="received_amount_date" id="received_amount_date" placeholder="Select Date" readonly="">
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="received_amount">Received Amount :</label>
+								<input type="text" class="form-control" name="received_amount" id="received_amount" placeholder="Enter Received Amount" oninput="this.value = this.value.replace(/[^\0-9\.]/g,'')">
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="invoice_number">Invoice Number<span id="mandatory">*</span> :</label>
+								<input type="text" class="form-control" name="invoice_number" id="invoice_number" placeholder="Enter Invoice Number">
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="remark">Remarks :</label>
+								<input type="text" class="form-control" name="remark" id="remark" placeholder="Enter Remarks">
+							</div>
+							<div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+								<label for="invoice_doc">Upload Invoice :</label>
+								<input type="file" class="form-control" name="invoice_doc" id="invoice_doc" placeholder="Enter Received Amount">
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+								<button type="submit" class="btn btn-primary pull-right">Submit</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".select2").select2();
+		$(".datepicker").datepicker({ dateFormat: "dd/mm/yy", changeYear:true, changeMonth:true });
+	});
+	function getSitesByPoNumber() {
+		var po_number = $("#po_number").val();
+		if (po_number != "") {
+			$.ajax({
+				url: '/siteallocation/get-allocated-sites-by-po-number',
+				type: 'POST',
+				data: {po_number: po_number},
+				success:function(data){
+					var data = JSON.parse(data);
+					console.log(data);
+					if (data.flag) {
+						$("#site_id").html(data.allocated_sites);
+					} else {
+						swal({
+							title : data.title,
+							text  : data.message,
+							icon  : 'error'
+						});
+					}
+				}
+			});
+		} else {
+			$("#site_id").html("<option>Select Site ID</option>");
+		}
+	}
+	function validateInputData(){ 
+		if($("#unit_name").val() == ""){
+			swal({
+				title : "Product Unit Missing !",
+				text : "Please Enter Product Unit.",
+				icon : "error"
+			}).then(function(){
+				$("#unit_name").focus();
+			});
+			return false;
+		}
+	}
+</script>

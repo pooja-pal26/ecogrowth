@@ -1,0 +1,346 @@
+.text-sm{
+    font-size:12px;
+}
+.cover_photo{
+    background-image: url("../../img/users/cover_photo1.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 20px;
+
+}
+.cover_photo img{
+    width:100px;
+    height:100px;
+    border:2px solid #fff;
+}
+
+.social_icons div {
+    color: #ff6666;
+    transition: 200ms;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    margin-right: 15px;
+}
+.social_icons div i{
+    position: relative;
+    top:9px;
+    padding: 10px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    color:#fff;
+}
+
+.social_icons div i:hover{
+    background-color: #007bb8;
+    color:#fff !important;
+}
+.social_icons div .ti-google:hover{
+    background-color: #f86a67;
+    color:#fff !important;
+}
+.social_icons div .ti-twitter:hover{
+    background-color: #33CCFF;
+    color:#fff !important;
+}
+.border_bottom{
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.user_statistics .progress-bar{
+    height: 0.4rem;
+}
+/*-----------user followed------*/
+.user_following,.profile2_aboutme{
+    min-height: 250px;
+}
+.user_following span{
+    font-size: 30px;
+    line-height: 35px;
+}
+
+/*-------------Chat list---------*/
+
+.user_chatlist .list-group-item{
+    padding-left: 0;
+}
+
+.inbox_contact_img {
+    width: 35px;
+    height: 35px;
+}
+.status-online {
+    width: 8px;
+    height: 8px;
+    border-radius: 5px;
+    background-color: #22b24c;
+    position: relative;
+    top:-11px;
+    left:-6px;
+    float: left;
+}
+.status-busy {
+    width: 8px;
+    height: 8px;
+    float: left;
+    border-radius: 5px;
+    background-color: #8e8e8e;
+    position: relative;
+    top:-11px;
+    left:-6px;
+}
+.status-away {
+    width: 8px;
+    height: 8px;
+    float: left;
+    border-radius: 5px;
+    background-color: #f39c12;
+    position: relative;
+    top:-11px;
+    left:-6px;
+}
+/*------------tab section----------*/
+#user_profile th{
+    width: 150px;
+    padding: 5px;
+}
+@media(max-width: 577px) {
+    .media {
+        display:block;
+    }
+}
+/*---------*/
+#user_friends .media img{
+    width:70px;
+    border:1px solid #ccc;
+}
+#user_activities .user_avtar{
+    width:55px;
+    border:1px solid #ccc;
+}
+.userfrd_online{
+    width: 8px;
+    height: 8px;
+    border-radius: 5px;
+    background-color: #22b24c;
+    position: relative;
+    top:8px;
+    float: left;
+}
+.userfrd_offline{
+    width: 8px;
+    height: 8px;
+    border-radius: 5px;
+    background-color: #ccc;
+    position: relative;
+    top:8px;
+    float: left;
+}
+/*----------*/
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
+    color:#555;
+    background-color: transparent;
+}
+.nav-tabs .nav-link{
+    border-radius: 0;
+}
+.nav-item a{
+    text-align: center;
+    background-color: #fafafa;
+    color:#555;
+
+}
+
+#user_activities2 a:hover, #user_activities2 a:active, #user_activities2 a:focus,#user_activities2 .active{
+    border-top:2px solid #31d0d6;
+    border-bottom:1px solid #fff;
+}
+#primary2 a:hover, #primary2 a:active, #primary2 a:focus,#primary2 .active{
+    border-top:2px solid #329cff;
+    border-bottom:1px solid #fff;
+}
+#social2 a:hover, #social2 a:active, #social2 a:focus,#social2 .active{
+    border-top:2px solid #5aca82;
+}
+#promotions2 a:hover,#promotions2 a:active,#promotions2 a:focus,#promotions2 .active{
+    border-top:2px solid #937eff;
+    border-bottom:1px solid #fff;
+}
+.nav-tabs{
+    /*border-bottom: 0;*/
+}
+.activity_likes .ti-comment{
+    font-size: 13px;
+    margin-left: 15px;
+}
+.activity_likes span{
+    font-size: 18px;
+    position: relative;
+    top:3px;
+    cursor: pointer;
+}
+.activity_likes .ti-thumb-down{
+    margin-left: 20px;
+}
+.user_status{
+    font-size: 18px;
+    padding-left: 10px;
+}
+.br_0{
+    border-radius: 0;
+}
+.chat_scroll li{
+    border-top-right-radius: 0!important;
+    border-top-left-radius: 0 !important;
+    padding: 5px;
+}
+/*--------------search box-------*/
+.input_icon {
+    position: relative;
+}
+.icon_right_input {
+    padding-right: 40px;
+}
+.input_icon_right {
+    right: 8px;
+}
+.input_icon_left, .input_icon_right {
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    width: 36px;
+    text-align: center;
+}
+
+
+
+/*--------------Profile2 css----------------*/
+.user_profile2_main{
+    padding: 0 10px 10px;
+}
+.user_profile2_main .card{
+    margin-top:15px;
+}
+.profile2_user{
+    width:85px;
+    height:85px;
+    border:2px solid #fff;
+    position: relative;
+    top:-20px;
+    z-index: 99;
+}
+
+.cover_photo2{
+    background-image: url("../../img/widget_bg_img1.jpg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    padding-bottom: 20px;
+    max-height: 140px;
+
+}
+.profile2_frdlist img{
+    height: 50px;
+    width:50px;
+    border:1px solid #ccc;
+}
+
+.profile2_userprofile td{
+    min-width: 90px;
+}
+.profile2_photos img{
+    /*width:120px;*/
+    /*height:100px;*/
+}
+.profile2_aboutme span{
+    font-size: 18px;
+}
+.profile2_notifications ul li{
+    padding: 5px 0;
+
+    border:0;
+
+}
+.profile2_notifications .badge{
+    font-size: 100%;
+    border-radius: 0;
+
+}
+.profile2_notifications a{
+    color:#536973;
+}
+#search-field{
+    padding-left: 20px !important;
+}
+iframe{
+    width:100%;
+    height: 300px;
+    border:0
+}
+@media (min-width:768px) and (max-width:991px){
+    .md_hide_msg{
+        display:none;
+    }
+}
+/*--------------Delete user--------------------*/
+.user_face img{
+    width:35px;
+    height:35px;
+}
+.user_face{
+    min-width: 120px;
+}
+/*------------------add user--------------------*/
+.input_icon_left{
+    left: 8px;
+}
+.input_icon input{
+    padding-left: 45px;
+}
+.fileinput img{
+    height:200px;
+    width: 200px;
+}
+select.form-control:not([size]):not([multiple]){
+    height:35px;
+}
+.has-error .help-block{
+    color: #f86a67 ;
+    display: block;
+    font-size: 13px;
+
+}
+.custom-control-indicator{
+    top:2px;
+}
+.custom-control span,.has-success .col-form-label,.has-success .custom-control{
+    color:#536973 !important;
+
+
+}
+#upload2,#upload2 ._imgshow img,
+#upload,#upload ._imgshow img{
+    width:230px !important;
+    height:250px !important;
+}
+#upload._cssimg, #upload2._cssimg{
+    position: relative;
+}
+._imgshow img{
+    height:100%;
+}
+
+.user_face img{
+    width:35px;
+    height:35px;
+}
+.user_face{
+    min-width: 120px;
+}
+table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before, table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before{
+    top:20px;
+}
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td,.table-bordered td{
+    vertical-align: middle;
+}
+/*------------------*/

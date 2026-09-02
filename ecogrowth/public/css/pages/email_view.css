@@ -1,0 +1,182 @@
+.email_view_icons i{
+    font-size: 20px;
+    padding:0 3px;
+    cursor: pointer;
+}
+.email_view_body img{
+    width:50px;
+    height: 50px;
+}
+.email_view_body .email_view_sub{
+    margin-left: 15px;
+}
+.email_view_sub .ti-angle-down{
+    font-size: 11px;
+    position: relative;
+    top: 2px;
+}
+.email_view_sender_info{
+    min-width: 17rem;
+    left: -80px;
+    margin: 15px 0 0;
+    padding: 10px;
+}
+.email_view_sender_info h6{
+    margin-left: 10px;
+    margin-top: 5px;
+}
+.email_view_sender_info:before {
+    position: absolute;
+    top: -9px;
+    left: 38%;
+    display: inline-block;
+    content: '';
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #ccc;
+    border-bottom-color: #e6e6e6;
+    border-left: 10px solid transparent;
+}
+.modal{
+    top:0 !important;
+    z-index: 999999999;
+}
+.modal-backdrop{
+    z-index: 99999999;
+}
+/*-----------------------Css for summernote----------*/
+.note-popover {
+    display: none;
+}
+
+.panel-heading.note-toolbar .dropdown-menu {
+    min-width: 130px;
+}
+
+.summer_note .btn-group, .wysihtml5-toolbar .btn-group, .note-color .btn-group {
+    display: inline-block;
+}
+
+.note-popover .popover-content, .panel-heading.note-toolbar {
+    border-bottom: 1px solid #ccc;
+    background-color: #eee;
+}
+
+.note-editing-area ul {
+    padding-left: 40px;
+}
+
+.click2edit ul {
+    padding-left: 40px;
+}
+@media (max-width: 346px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 144px;
+    }
+}
+@media (min-width: 347px) and (max-width: 390px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 165px;
+        margin-left: 0;
+    }
+}
+@media (min-width: 391px) and (max-width: 670px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 190px;
+        margin-left: -90px;
+    }
+}
+@media (min-width: 768px) and (max-width: 900px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 190px;
+        margin-left: -90px;
+    }
+}
+
+@media (min-width: 993px) and (max-width: 1150px) {
+    .note-popover .popover-content .note-color .dropdown-menu, .panel-heading.note-toolbar .note-color .dropdown-menu {
+        min-width: 240px;
+    }
+}
+@media (max-width:320px) {
+    .note-editor .note-color .dropdown-menu{
+        right: -100%;
+        left: inherit;
+    }
+}
+
+
+.note-editor .note-color .dropdown-menu li .btn-group{
+    margin-bottom: 20px !important;
+}
+/*==============*/
+
+
+.note-popover .popover-content, .panel-heading.note-toolbar, .note-editor.note-frame .note-statusbar {
+    background-color: #fff;
+    border: 0;
+}
+
+.note-editor.note-frame {
+    border: 1px solid #ccc;
+}
+
+.note-editable ul li img,.modal-footer .text-center{
+    width: 100% !important;
+}
+.content .fullscreen i {
+    margin: 0;
+    line-height: 0;
+}
+blockquote{
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 18px;
+    border-left: 5px solid #eeeeee;
+}
+pre{
+    display: block;
+    margin: 10px 10px 0 0;
+    padding: 5px 10px;
+    margin-bottom: 1rem;
+    color: #292b2c;
+    line-height: 1.428571429;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.note-check li{
+    padding: 0 10px;
+}
+.note-style li {
+    padding-left: 10px;
+}
+/*==============*/
+
+.note-popover .popover-content, .panel-heading.note-toolbar,.note-editor.note-frame .note-statusbar{
+    background-color: #fff;
+    border:0;
+}
+.note-editor.note-frame{
+    border:1px solid #ccc;
+}
+.attachments img{
+    width: 230px;
+    height: auto;
+}
+.fixed_menu .note-editor .dropdown-menu,.fixed_menu .tooltip{
+    z-index: 99;
+}
+@media (max-width: 992px){
+    .note-editor .dropdown-menu,.tooltip{
+        z-index: 99;
+    }
+    .note-para .dropdown-menu{
+        left:-90px;
+    }
+}
+.note-toolbar .dropdown-menu{
+    bottom: 100% !important;
+    top:inherit;
+}

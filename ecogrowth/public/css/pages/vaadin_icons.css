@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'Vaadin-Icons';
+    src: url('../../vendors/vaadin_icons/fonts/Vaadin-Icons.eot');
+    src: url('../../vendors/vaadin_icons/fonts/Vaadin-Iconsd41d.eot?#iefix') format('embedded-opentype'),
+    url('../../vendors/vaadin_icons/fonts/Vaadin-Icons.woff') format('woff'),
+    url('../../vendors/vaadin_icons/fonts/Vaadin-Icons.ttf') format('truetype'),
+    url('../../vendors/vaadin_icons/fonts/Vaadin-Icons.svg#icomoon') format('svg');
+}
+
+.icon {
+    font-family: Vaadin-Icons;
+    speak: none;
+    font-weight: normal;
+    font-variant: normal;
+    font-style: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+}

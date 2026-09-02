@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Genstree AI LLP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Glance Design Dashboard Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+    SmartPhone Compatible web template, free WebDesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- Bootstrap Core CSS -->
+    <link href="assets/css/bootstrap.css" rel='stylesheet' type='text/css' />
+    <!-- Custom CSS -->
+    <link href="assets/css/style.css" rel='stylesheet' type='text/css' />
+    <!-- font-awesome icons CSS -->
+    <link href="assets/css/font-awesome.css" rel="stylesheet"> 
+    <!-- Sweet Alert CSS -->
+    <link href="/assets/css/sweetalert.css" rel="stylesheet"> 
+    <!-- side nav css file -->
+    <!-- <link href='assets/css/SidebarNav.min.css' media='all' rel='stylesheet' type='text/css'/> -->
+    <!-- //side nav css file -->
+    
+    <!-- js-->
+    <script src="assets/js/jquery-1.11.1.min.js"></script>
+    <script src="assets/js/modernizr.custom.js"></script>
+    <!-- SweetAlert JS -->
+    <script src="/assets/js/sweetalert.min.js"></script>
+    <!--webfonts-->
+    <link href="//fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <!--//webfonts--> 
+
+    <!-- chart -->
+    <script src="assets/js/Chart.js"></script>
+    <!-- //chart -->
+
+    <!-- Metis Menu -->
+    <script src="assets/js/metisMenu.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <link href="assets/css/custom.css" rel="stylesheet">
+    <style>
+    .cbp-spmenu-push div#page-wrapper {
+        margin: 0px 0px 0px 0px !important;
+    }
+    
+    /* Video Background Styles */
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    #video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        object-fit: fill;
+    }
+    
+    /* Overlay for better text readability (optional) */
+    .video-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3); /* Semi-transparent black overlay */
+        z-index: -1;
+    }
+    
+    .main-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .title1 img {
+        /*background-color: white;*/
+        border-radius: 6px;
+    }
+</style>
+</head> 
+<body class="cbp-spmenu-push main-body">
+    <!-- Video Background -->
+    <video id="video-background" autoplay muted loop playsinline>
+        <source src="/img/ecogrowth-login.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <!-- Optional: Semi-transparent overlay for better readability -->
+    <div class="video-overlay"></div>
+    
+    <div class="main-content">
+        <div id="page-wrapper">
+            <div class="main-page login-page ">
+                <?php if ($this->messages): ?>
+                    <?php foreach ($this->messages as $message): ?>
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <strong>Error!&nbsp;</strong><?php echo $message['error']; ?>
+                        </div>
+                    <?php endforeach ?>
+                <?php endif ?>
+                <h2 class="title1"><img src="/img/echo_growth.png" width="250" height="45" alt=""></h2>
+                <!-- <div class="widget-shadow"> -->
+                    <div class="login-body">
+                        <form action="/index" method="post" onsubmit="return checkValidData()" style="margin-bottom: 20px; margin-top: 15px;">
+                            <input type="email" class="user" name="email" id="email" placeholder="Enter Your Email">
+                            <input type="password" name="password" id="password" class="lock" placeholder="Password">
+                            <input type="submit" name="Sign In" value="Sign In">
+                        </form>
+                    </div>
+                    <!-- </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!--scrolling js-->
+        <script src="assets/js/jquery.nicescroll.js"></script>
+        <script src="assets/js/scripts.js"></script>
+        <!--//scrolling js-->
+        <script>
+            function checkValidData() {
+                var email = $("#email").val();
+                var password = $("#password").val();
+                if (email == "") {
+                    swal({
+                        title:"Email Missing !",
+                        text:"Please enter email.",
+                        icon:"error"
+                    }).then(function(){
+                        $("#email").focus();
+                    });
+                    return false;
+                } else if (password == "") {
+                    swal({
+                        title:"Password Missing !",
+                        text:"Please enter password.",
+                        icon:"error"
+                    }).then(function(){
+                        $("#password").focus();
+                    });
+                    return false;
+                }
+            }
+        </script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="assets/js/bootstrap.js"> </script>
+        <!-- //Bootstrap Core JavaScript -->
+
+    </body>
+    </html>

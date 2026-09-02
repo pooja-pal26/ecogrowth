@@ -1,0 +1,101 @@
+    <table border="3" width="100%" cellspacing="0" cellpadding="0">
+     <tr>
+      <td style="margin: 10px;">
+        <table class="table"  style="width:100%;height:5%;" >
+          <tr>
+            <td width="7%">
+              <span style="float: left;"><img src="\assets\images\tower.png" style="width: 159px; "></span>
+            </td>
+            <td style="padding: 0px;"><span style="text-align: center;">
+              <p style="font-weight: 5px; margin: 0px;">
+                <u>PAYMENT VOUCHER</u>
+                <p style="font-size:20px;margin: 0px; "><b><?php echo strtoupper($this->officeExpenseDetails['name'])?>.</b>
+                 <p style="margin: 0px;">Registered Office : <?php echo $this->officeExpenseDetails['address'];?></p>
+                 <p style="margin: 0px;">Mob : <?php echo $this->officeExpenseDetails['mobile_number']?> / Email :<?php echo $this->officeExpenseDetails['email'];?></p></p></p>
+               </span>
+             </td>
+             <td width="10%">
+             </td>
+           </tr>
+         </table>
+         <table class="table"  style="width:100%!important;" >
+          <tr>
+            <td  width="20%">&nbsp;&nbsp;No.</td>
+            <td width="50%"><u><?php echo $this->officeExpenseDetails['voucher_number']?></u></td>
+            <td align="center" width="10%">Date</td>
+            <td width="20%"><u><?php echo $this->officeExpenseDetails['transfer_date']?><u></td>
+            </tr>
+          </table>
+          <table class="table"  style="width:100%!important;" >
+            <tr>
+              <td align="center" width="10%">Debit Account</td>
+              <td width="50%" align="left"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <u><?php echo $this->officeExpenseDetails['debit_account']?></u></td>
+                <td align="center" >Cash /Cheque No.</td>
+                <td><?php echo $this->officeExpenseDetails['payment_mode']?></td>
+              </tr>
+            </table><br>
+            <table class="table" border="1" style="width:100%!important;" cellpadding="0" cellspacing="0" >
+              <tr>
+                <td align="left" width="80%" rowspan="2">&nbsp;&nbsp;Pay To </td>
+                <td align="center" width="20%" colspan="2">Amount</td>
+              </tr>
+              <tr>
+                <td align="center">Rs.</td>
+                <td align="center">P.</td>
+              </tr>
+              <tr>
+                <td align="center" width="80%"><p><?php echo $this->officeExpenseDetails['payee']?></p></td>
+                <td align="center" width="12.5%"><p><?php echo $this->officeExpenseDetails['amount']?></p></td>
+                <td align="center"><p>&nbsp;</p></td>
+
+              </tr>
+              <tr>
+                <td align="center" width="80%"><p>&nbsp;</p></td>
+                <td align="center" width="12.5%"><p>&nbsp;</p></td>
+                <td align="center"><p>&nbsp;</p></td>
+
+              </tr>
+              <tr>
+                <td align="center" width="80%"><?php echo $this->officeExpenseDetails['remark']?></td>
+                <td align="center" width="12.5%">&nbsp;</td>
+                <td align="center">&nbsp;</td>
+
+              </tr>
+              <tr>
+                <td align="center" width="80%">&nbsp;</td>
+                <td align="center" width="12.5%">&nbsp;</td>
+                <td align="center">&nbsp;</td>
+              </tr>
+              <tr>
+                <td align="right" width="80%">Total&nbsp;</td>
+                <td align="center" colspan="2"><?php echo $this->officeExpenseDetails['amount']?></td>
+              </tr>
+            </table>
+            <table class="table"   style="width:100%!important;" cellpadding="0" cellspacing="0" >
+              <tr>
+                <td style="margin-left:14px;" width="80%"><br>&nbsp;&nbsp;&nbsp;
+                  Rupees <u> <b><?php
+                  $helper = new Application_Model_User();
+                  $words= $helper->getIndianCurrency($this->officeExpenseDetails['amount']);
+                  echo ucwords($words);
+                  ?>
+                </b></u>
+              </td>
+            </tr>
+            <tr>
+              <td  width="80%"><div style="border:1px solid black; height: 80px;width: 80px;float: right;margin-right:75px;padding:0px 30px 0px 30px;">
+                <?php echo $this->officeExpenseDetails['payee']?>
+              </div></td>
+            </tr>
+          </table>
+          <table class="table" style="width:100%!important;" >
+            <tr>
+              <td align="center" width="30%" >Accountant</td>
+              <td align="center" width="40%"><p>Passed by:</p></td>
+              <td align="center" width="30%"><p>&nbsp;&nbsp;Reciever's Signature</p></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>

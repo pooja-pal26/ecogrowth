@@ -1,0 +1,34 @@
+
+.ui-sortable .card {
+    clear         : both;
+    margin-top    : 0;
+    margin-bottom : 25px;
+    padding       : 0;
+}
+.ui-sortable-handle:not(.notsort) {
+    cursor : move;
+}
+.ui-sortable  .card > .card-block {
+    background-color : #fff;
+    padding          : 10px;
+    border-top       : none;
+}
+.ui-sortable .card > .card-header, .copy_card .card > .card-header,.delete_card .card > .card-header{
+    background-color : #fff;
+    padding   : 10px 10px 4px 10px;
+    font-size : 16px;
+}
+.sortable {
+    min-height : 50px;
+}
+.sorted_portlet>.card-header{
+    color:#fff !important;
+    background-color: #31d0d6 !important;
+}
+.sorted_portlet>.card-block{
+    background-color: #31d0d6 !important;
+    color:#fff !important;
+}
+.copy_card .card,.delete_card .card{
+    cursor: move;
+}

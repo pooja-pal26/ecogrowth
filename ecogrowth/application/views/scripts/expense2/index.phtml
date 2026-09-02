@@ -1,0 +1,322 @@
+<?php 
+$user_list = $this->user_list;
+$record = $this->paginator; 
+$totalrec = $this->totalrec;
+
+$auth               = Zend_Auth::getInstance();
+$authStorage        = $auth->getStorage();
+$this->WebLoginID   = $authStorage->read()->WebLoginID;
+$this->id           = $authStorage->read()->id;
+$this->Role         = $authStorage->read()->Role; 
+$this->access_token = $authStorage->read()->access_token;
+?>
+
+<style type="text/css">
+.table th ,   .table td , .table div{
+  padding: 3px;
+  text-align: left;
+} 
+#scroll-id {
+  width: 600px;
+  overflow-x: scroll;
+}
+@media print{
+  .noprint {display:none !important; }
+}
+</style>
+
+<script type="text/javascript">
+ function getPage(page,order,type){
+  if(type == undefined){ var type = '';} else { var type = type;}  
+  if(order == undefined){ var order = '';} else { var order = order;} 
+  var ponumber=$("#ponumber").val(); 
+  if(ponumber == undefined){ var ponumber = '';} else { var ponumber = ponumber; } 
+  var siteid=$("#siteid").val(); 
+  if(siteid == undefined){ var siteid = '';} else { var siteid = siteid; }
+  var url   = '/expense/expense-list/page/'+page+'/ponumber/'+ponumber+"/siteid/"+siteid+"/order/"+order+"/type/"+type;
+  var id    = 'expense-list';
+  $("#"+id).html('<div class="loading">Loading&#8230;</div>');
+  $.ajax({
+    url: url,
+    context: document.body,
+    success: function(responseText) {
+      $("#"+id).html(responseText);
+      $("#"+id).find("script").each(function(i) {
+        eval($(this).text());
+      });
+    }
+  });
+}   
+</script>
+
+<script type="text/javascript">
+  function showDetailedExpenseList(po_no,site_id){
+    $("#modal-id").modal({ backdrop: 'static', keyboard: false });
+    $.ajax({
+      type : 'POST',
+      url  : '/expense/show-detailed-expense-list',
+      data  : {po_no:po_no,site_id:site_id},
+      cache : false,
+      success : function(responseText){
+//alert(responseText);
+$('#result-div').html(responseText);
+$('#modal-id').modal('show'); 
+},
+});
+  }
+</script>
+
+<!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+<script type="text/javascript">
+  function exportTable(){
+    $(".table2excel").table2excel({
+      exclude: ".noExl",
+      name: "Expense Report",
+      filename: "View_Expense_Report",
+      fileext: ".xls",
+      exclude_img: true,
+      exclude_links: true,
+      exclude_inputs: true
+    });
+  }
+
+  function exportTable2(){
+    $(".table2excel2").table2excel({
+      exclude: ".noExl",
+      name: "Expense Report",
+      filename: "View_Detailed_Expense_Report",
+      fileext: ".xls",
+      exclude_img: true,
+      exclude_links: true,
+      exclude_inputs: true
+    });
+  }
+</script>
+
+<script type="text/javascript">
+  function CallPrint(strid) {
+    var prtContent = document.getElementById(strid);
+    var WinPrint = window.open('', '', 'left=250px,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+    WinPrint.document.write('<link href="/css/simpletable.css" rel="stylesheet">');
+    WinPrint.document.writeln("<style type='text/css'>.prt{color:black !important; } </style>");
+    WinPrint.document.writeln("<style type='text/css'>.noprint{display:none !important; } </style>");
+    WinPrint.document.write(prtContent.innerHTML);
+    WinPrint.document.close();
+    setTimeout(function () { WinPrint.print(); }, 500);
+    return false
+  }
+</script> 
+
+<div class="right-aside view-port-height">
+
+  <div class="content-header container-fluid bg-white">
+    <div class="row">
+      <div class="col-sm-4">
+        <h4><i class="fa fa-bar-chart"></i>  Expense Module</h4>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="content">
+
+   <?php if ($this->messages): ?>
+    <div class="alert alert-success alert-dismissible fade show m-t-10" role="alert">
+      <?php foreach ($this->messages as $message): ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="alert_data">
+          <?php echo $message ?>.
+        </div>
+      <?php endforeach ?>
+    </div>
+  <?php endif ?>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card  profile2_aboutme">
+       <div class="card-header card-info text-white">
+        <p style="float: left; margin: 3px;"><i class="fa fa-bar-chart"></i> Site Expense Report</p> 
+        <!--<button id="vb" class="btn btn-warning btn-sm" style="float:right;">Export To Excel</button>--> 
+        <a href="javascript:void(0)" class="btn btn-warning btn-sm" style="float:right;" 
+        onclick="exportTable()">Export To Excel</a>
+      </div>
+
+      <div class="card-block">
+
+        <div class="row">
+
+          <div class="col-md-3">
+            <input type="text" name="ponumber" id="ponumber" value="" class="form-control" placeholder="Search By PO Number" onkeyup="getPage('1')" />
+          </div>
+
+          <div class="col-md-3">
+            <input type="text" name="siteid" id="siteid" value="" class="form-control" placeholder="Search By Site Id"
+            onkeyup="getPage('1')" />
+          </div>
+
+        </div>
+
+
+
+        <div class="row basic_tables">
+         <div class="col-12 m-t-20">
+          <div class="table-responsive mt-1" id="expense-list">
+
+            
+           <div id="leftpag">
+            <?php if($totalrec > $this->perPage) { 
+              echo $this->paginationControl($this->paginator, 'Sliding', 'expense-pagination.phtml'); 
+            } ?>  
+          </div>
+
+          <?php  $user = new Application_Model_User(); ?>
+
+          <table class="table table-bordered table2excel" id="scroll-id">
+           <thead>
+            <tr>
+              <th style=" white-space:nowrap;">
+                # <a href="javascript:void(0)" onclick="getPage('1','asc','id')" >
+                  <img src="/img/desc.png" style="height:20px;" /></a></th>
+                  <th style=" white-space:nowrap;">PO</th>
+                  <!--<th style=" white-space:nowrap;">Description</th>-->
+                  <th style=" white-space:nowrap;">Order Date</th>
+                  <th style=" white-space:nowrap;">Amount</th>
+                  <th style=" white-space:nowrap;">Inclusive Tax</th>
+                  <th style=" white-space:nowrap;">Exclusive Tax</th>
+                  <th style=" white-space:nowrap;">Tax Amount</th>
+                  <th style=" white-space:nowrap;">Change Request Status</th>
+                  <th style=" white-space:nowrap;">Status</th>
+                  
+                  <th style=" white-space:nowrap;">Site ID</th>
+                  <th style=" white-space:nowrap;">Last Fund Transferred Date</th>
+                  <th style=" white-space:nowrap;">Expenses</th>
+                  <th style=" white-space:nowrap;">Assigned To</th>
+                  <th style=" white-space:nowrap;">Invoice No.</th>
+                  <th style=" white-space:nowrap;">Invoice Value</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <?php 
+                if($totalrec){ 
+                  $totalnum = $this->totalnum?$this->totalnum:1;
+                  $istart = ($totalnum-1) * 10;
+                  $i=$istart;
+                  foreach($record as $expense){ ?>
+                    <tr>
+                      <td style=" white-space:nowrap;"><?php echo $i+1;?>.</td>
+                      <td style=" white-space:nowrap;"><?php echo $expense['po_number']; ?></td>
+                      <!--<td style=" min-width:220px;"><?php echo $expense['description']; ?></td>-->
+                      <td style=" white-space:nowrap;"><?php echo $expense['order_date']; ?></td> 
+                      <td style=" white-space:nowrap;"><?php echo $expense['amount']; ?></td>
+                      <td style=" white-space:nowrap;"><?php echo $expense['inclusive_tax']; ?></td>
+                      <td style=" white-space:nowrap;"><?php echo $expense['exclusive_tax']; ?></td>
+                      <td style=" white-space:nowrap;"><?php echo $expense['tax_amount']; ?></td>
+                      <td style=" white-space:nowrap;"><?php echo $expense['change_request_status']; ?></td>
+                      <td style=" min-width:110px;"><?php echo $expense['status']; ?></td>
+
+                      <td style=" white-space:nowrap;">
+                        <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                          <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;"> 
+                            <?php echo $value; ?>
+                          </div>
+                        <?php } ?>
+                      </td>
+
+                      <td style=" white-space:nowrap;">
+                        <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                          <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;"> 
+                            <?php if($user->getLastFundDate($expense['po_number'],$value) != ''){ ?>
+                              <?php echo date('d/m/Y', strtotime( $user->getLastFundDate($expense['po_number'],$value) ) ); ?>
+                            <?php }else { echo "-"; } ?>
+                          </div>
+                        <?php } ?>
+                      </td>
+
+                      <td style=" white-space:nowrap;">
+                        <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                          <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;">
+                            <?php if( $user->getExpensesByPoSite($expense['po_number'],$value) !='' ){ ?>
+                              <a href="javascript:void(0)" id="<php echo $i+1; ?>" 
+                                onClick="showDetailedExpenseList('<?php echo $expense['po_number']; ?>','<?php echo $value; ?>')">
+                                <?php echo $user->getExpensesByPoSite($expense['po_number'],$value); ?>
+                              </a>
+                            <?php }else echo "-"; ?> 
+                          </div>
+                        <?php } ?>
+                      </td>
+
+                      <td style=" white-space:nowrap;">
+                        <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                          <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;">
+                            <?php if( $user->assignedTo($expense['po_number'],$value) !='' ){ ?>
+                              <?php echo $user->assignedTo($expense['po_number'],$value); ?>
+                            <?php }else echo "-"; ?> 
+                          </div>
+                        <?php } ?>
+                      </td>
+
+                      <td style=" white-space:nowrap;">
+                        <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                          <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;"> 
+                            <?php echo "-"; ?>
+                          </div>
+                        <?php } ?>
+                      </td>
+
+                      <td style=" white-space:nowrap;">
+                        <?php foreach ($expense['site_ids'] as $key => $value) { ?>
+                          <div class="col-md-12" style="border-bottom:1px solid grey; height:28.5px;">
+                            <?php echo "-"; ?> 
+                          </div>
+                        <?php } ?>
+                      </td>
+                      
+                    </tr>
+                    <?php  $i++;} } else{  ?>
+                      <tr><td colspan="7">
+                        <p style="color:red; font-size:16px;">No Record Found !</p></td></tr>
+                      <?php } ?>
+                    </tbody>
+                  </table>
+
+                  <div id="leftpag">
+                    <?php if($totalrec > $this->perPage) { 
+                      echo $this->paginationControl($this->paginator, 'Sliding', 'expense-pagination.phtml'); 
+                    } ?>  
+                  </div>
+
+                </div>
+              </div>
+            </div> 
+            
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- end of content -->
+
+</div>
+</div>
+
+
+<div id="modal-id" class="modal fade" role="dialog" style="display: none;">
+  <div class="modal-dialog modal-lg animated rollIn" style="max-width:1100px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">EXPENSE DETAILS LIST</h4>
+      </div>
+      <div class="modal-body">
+        <div id="result-div"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div> 
+  </div> 
+</div> 

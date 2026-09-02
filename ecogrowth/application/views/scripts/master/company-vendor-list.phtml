@@ -1,0 +1,135 @@
+<link rel="stylesheet" href="/assets/css/select2.min.css">
+<script src="/assets/js/select2.min.js"></script>
+<div id="page-wrapper">
+  <div class="main-page">
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Company Vendor List
+          <div class="pull-right">
+            <a href="/master/add-company-vendor" class="btn btn-success">Add Company Vendor</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive">
+            <table class="display" width="100%" id="companyVendorListTable">
+             <thead>
+              <th style="white-space: nowrap;">#</th>
+              <th style="white-space: nowrap;">Company Name</th>
+              <th style="white-space: nowrap;">Contact Person Name</th>
+              <th style="white-space: nowrap;">Contact Number</th>
+              <th style="white-space: nowrap;">PAN Number</th>
+              <th style="white-space: nowrap;">Status</th>
+              <th style="white-space: nowrap;">Action</th>
+            </thead>
+            <tbody>
+              <?php if($this->companyVendorList){
+                $i = 1;
+                foreach ($this->companyVendorList as $companyVendor) { ?>
+                 <tr>
+                  <td><?php echo $i; ?></td>
+                  <td><?php echo $companyVendor['vendor_company_name']; ?></td>
+                  <td><?php echo $companyVendor['contact_person_name']; ?></td>
+                  <td><?php echo $companyVendor['contact_number']; ?></td>
+                  <td><?php echo $companyVendor['pan_number']; ?></td>
+                  <td><?php echo $companyVendor['is_active'] == "1" ? "Active":"Deactive"; ?></td>
+                  <td>
+                    <?php if ($companyVendor['is_active'] == "1") { ?>
+                      <a href="javascript:void(0)" onclick="showCompanyVendorDetails(<?php echo $companyVendor['id']; ?>)" title="View Details"><span class="fa fa-info-circle"></span></a>
+                      &nbsp;&nbsp;
+                      <a href="javascript:void(0)" onclick="deactivateActivateDeleteCompanyVendor(<?php echo $companyVendor['id']; ?>,'deactivate')" title="Deactivate Work Type"><span class="fa fa-ban" style="color: #D66F00;"></span></a>
+                    <?php } else { ?>
+                      <a href="javascript:void(0)" title="Activate Work Type" onclick="deactivateActivateDeleteCompanyVendor(<?php echo $companyVendor['id']; ?>,'activate')"><span class="fa fa-sign-in" style="color: #1DAA29;"></span></a>
+                      &nbsp;&nbsp;
+                      <a href="javascript:void(0)" onclick="deactivateActivateDeleteCompanyVendor(<?php echo $companyVendor['id']; ?>,'delete')" title="Delete Work Type"><span class="fa fa-trash" style="color: red;"></span></a>
+                    <?php } ?>
+                  </td>
+                </tr>
+                <?php $i++; } } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Work Description Modal : Start -->
+  <div class="modal fade" id="companyVendorDetailsModal">
+  </div>
+  <!-- Add Work Description Modal : End -->
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#companyVendorListTable").DataTable();
+      $(".select2").select2();
+    });
+    function showCompanyVendorDetails(company_id) {
+      if (company_id == "") {
+        swal({
+          title : "Compnay ID Missing!",
+          text  : "Please try again after refreshing the page.",
+          icon  : "error"
+        });
+        return false;
+      } else {
+        $("#loading-bg").show();
+        $.ajax({
+          url: '/master/view-company-vendor-details',
+          type: 'POST',
+          data: {company_id: company_id},
+          success:function(response){
+            $("#loading-bg").hide();
+            if (typeof(response) == 'object') {
+              var data = JSON.parse(response);
+              swal({
+                title : data.title,
+                text  : data.message,
+                icon  : "error"
+              });
+            } else {
+              $("#companyVendorDetailsModal").html(response);
+              $("#companyVendorDetailsModal").modal('toggle');
+            }
+          }
+        });
+      }
+    }
+    function deactivateActivateDeleteCompanyVendor(id, type) {
+      swal({
+        title : "Are you sure?",
+        text  : "Do you want to "+type+" company vendor?",
+        icon  : "warning",
+        buttons : [true, "Yes, "+type],
+        dangerMode : true
+      }).then(function(isConfirm){
+        if (!isConfirm) {
+          return false;
+        } else {
+          $.ajax({
+            url  : '/master/deactivate-activate-delete-company-vendor',
+            type : 'POST',
+            data : {type:type, company_id:id},
+            success:function(data){
+              var data = JSON.parse(data);
+              if (data.flag) {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "success",
+                }).then(function(){
+                  location.reload();
+                });
+              } else {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "error"
+                });           
+              }
+            }
+          });
+        }
+      });
+    }
+  </script>
+

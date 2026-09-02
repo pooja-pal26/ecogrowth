@@ -1,0 +1,476 @@
+<?php 
+$auth 			= Zend_Auth::getInstance();                    
+$authStorage 	= $auth->getStorage();
+$name 			= $authStorage->read()->name;
+$role_type 		= $authStorage->read()->role_type;
+$role 			= $authStorage->read()->role;
+$this->role_type    = $authStorage->read()->role_type;
+$front = Zend_Controller_Front::getInstance();
+$controller = $front->getRequest()->getControllerName(); 
+$action = $front->getRequest()->getActionName(); 
+
+
+?>
+<?php if(empty($authStorage->read()->id) && empty($authStorage->read()->role)) { ?>
+<?php } else  { ?>
+	<div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left " id="cbp-spmenu-s1">
+		<!--left-fixed -navigation-->
+		<aside class="sidebar-left " style="overflow: scroll;  -webkit-overflow-scrolling: touch
+		; width: 250px">
+		<nav class="navbar navbar-inverse">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".collapse" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<h1><a class="navbar-brand" href="/home" style="padding: 15px 10px 10px 10px; background-color: white; height: 75px;"><img src="/img/echo_growth.png" alt="" height="45px" width="210px"></a></h1>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="sidebar-menu">
+					<br clear="all">
+					<li class="treeview">
+						<a href="/home">
+							<i class="fa fa-dashboard"></i> <span>Dashboard</span>
+						</a>
+					</li>
+					<li class="treeview <?php if($controller == "master"){ echo "active"; } ?>">
+						<a href="#">
+							<i class="fa fa-cog"></i>
+							<span>Master Data</span>
+							<i class="fa fa-angle-left pull-right"></i>
+						</a>
+						<ul class="treeview-menu">
+							<li class="<?php if($controller == "master" && $action == "state-list") { echo "active"; } ?>">
+								<a href="/master/state-list"><i class="fa fa-angle-right"></i>State List</a>
+							</li>
+
+							<li class="<?php if($controller == "master" && $action == "client-list") { echo "active"; } ?>">
+								<a href="/master/client-list"><i class="fa fa-angle-right"></i>Client Master Data</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "company-vendor-list") { echo "active"; } ?>">
+								<a href="/master/company-vendor-list"><i class="fa fa-angle-right"></i>Company Vendor</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "material-suppliers") { echo "active"; } ?>">
+								<a href="/master/material-suppliers"><i class="fa fa-angle-right"></i>Material Suppliers (Site)</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "transporter-list") { echo "active"; } ?>">
+								<a href="/master/transporter-list"><i class="fa fa-angle-right"></i>Transporters</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "state-for") { echo "active"; } ?>">
+								<a href="/master/state-for"><i class="fa fa-angle-right"></i>State For</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "bank-list") { echo "active"; } ?>">
+								<a href="/master/bank-list"><i class="fa fa-angle-right"></i>Bank Name List</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "site-document") { echo "active"; } ?>">
+								<a href="/master/site-document"><i class="fa fa-angle-right"></i>Site Documents</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "bank-list") { echo "active"; } ?>">
+								<a href="/master/add-location"><i class="fa fa-angle-right"></i>Add Geo Location</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "payment-modes") { echo "active"; } ?>">
+								<a href="/master/payment-modes"><i class="fa fa-angle-right"></i>Payment Modes</a>
+							</li>
+							<li class="<?php if($controller == "master" && $action == "bank-accounts") { echo "active"; } ?>">
+								<a href="/master/bank-accounts"><i class="fa fa-angle-right"></i>Bank Accounts</a>
+							</li>
+							<li class="treeview <?php if(($controller == "master" && $action == "site-type") || ($controller == "master" && $action == "work-by-work-type") || ($controller == "master" && $action == "work-description")) { echo "active"; } ?>">
+								<a href="#"><i class="fa fa-wrench"></i>&nbsp;<span>Work Master Data</span><i class="fa fa-angle-left pull-right"></i>
+								</a>
+								<ul class="treeview-menu">
+									<li class="<?php if($controller == "master" && $action == "work-for-site-of-list") { echo "sub_active"; } ?>">
+										<a href="/master/work-for-site-of-list"><i class="fa fa-angle-right"></i>Work For Site Of</a>
+									</li>
+
+									<li class="<?php if($controller == "master" && $action == "nature-of-work") { echo "sub_active"; } ?>">
+										<a href="/master/nature-of-work"><i class="fa fa-angle-right"></i>Nature Of Work</a>
+									</li>
+
+									<li class="<?php if($controller == "master" && $action == "site-type") { echo "sub_active"; } ?>">
+										<a href="/master/site-type"><i class="fa fa-angle-right"></i>Site Type</a>
+									</li>
+									<li class="<?php if($controller == "master" && $action == "work-by-work-type") { echo "sub_active"; } ?>">
+										<a href="/master/work-by-work-type"><i class="fa fa-angle-right"></i>Work</a>
+									</li>
+									<li class="<?php if($controller == "master" && $action == "work-description") { echo "sub_active"; } ?>">
+										<a href="/master/work-description"><i class="fa fa-angle-right"></i>Work Description</a>
+									</li>
+								</ul>
+							</li>
+							<li class="treeview">
+								<a href="#"><i class="fa fa-money"></i>&nbsp;<span>Expense Master Data</span><i class="fa fa-angle-left pull-right"></i></a>
+								<ul class="treeview-menu">
+									<li>
+										<a href="/master/expense-type"><i class="fa fa-angle-right"></i>Expense Type</a>
+									</li>
+									<li>
+										<a href="/master/expense-in-type"><i class="fa fa-angle-right"></i>Expense In</a>
+									</li>
+									<li>
+										<a href="/master/transfer-for"><i class="fa fa-angle-right"></i>Expense For</a>
+									</li>
+								</ul>
+							</li>
+							<li class="treeview">
+								<a href="#"><i class="fa fa-money"></i>&nbsp;<span>Debit Accounts</span><i class="fa fa-angle-left pull-right"></i></a>
+								<ul class="treeview-menu">
+									<li>
+										<a href="/master/debit-accounts"><i class="fa fa-angle-right"></i>Debit Account Details</a>
+									</li>
+								</ul>
+							</li>
+							<li class="treeview">
+								<a href="#"><i class="fa fa-product-hunt"></i>&nbsp;<span>Product Master Data</span><i class="fa fa-angle-left pull-right"></i></a>
+								<ul class="treeview-menu">
+									<li>
+										<a href="/master/supplier-list"><i class="fa fa-angle-right"></i>Product Suppliers</a>
+									</li>
+									<li>
+										<a href="/master/add-new-product"><i class="fa fa-angle-right"></i>Add New Product</a>
+									</li>
+									<li>
+										<a href="/master/product-list"><i class="fa fa-angle-right"></i>Product (s)</a>
+									</li>
+									<li>
+										<a href="/master/product-type"><i class="fa fa-angle-right"></i>Product Type</a>
+									</li>
+									<li>
+										<a href="/master/product-unit-list"><i class="fa fa-angle-right"></i>Product Unit</a>
+									</li>
+									<li>
+										<a href="/master/product-brand-list"><i class="fa fa-angle-right"></i>Product Brand</a>
+									</li>
+								</ul>
+							</li>
+							<li class="treeview">
+								<a href="#"><i class="fa fa-vimeo-square"></i>&nbsp;<span>Vendor Master Data</span><i class="fa fa-angle-left pull-right"></i></a>
+								<ul class="treeview-menu">
+									<li>
+										<a href="/master/vendor-experience-master"><i class="fa fa-angle-right"></i>Vendor Experience</a>
+									</li>
+									<li>
+										<a href="/master/organization-type-master"><i class="fa fa-angle-right"></i>Organization Type</a>
+									</li>
+									<li>
+										<a href="/master/association-years-master"><i class="fa fa-angle-right"></i>Association Years</a>
+									</li>
+									<li>
+										<a href="/master/geographical-presence-master"><i class="fa fa-angle-right"></i>Geographical Presense</a>
+									</li>
+									<li>
+										<a href="/master/major-clients-master"><i class="fa fa-angle-right"></i>Major Clients</a>
+									</li>
+									<li>
+										<a href="/master/team-strength-master"><i class="fa fa-angle-right"></i>Team Strength</a>
+									</li>
+									<li>
+										<a href="/master/annual-turnover-master"><i class="fa fa-angle-right"></i>Annual Turnover</a>
+									</li>
+									<li>
+										<a href="/master/work-handling-amount-master"><i class="fa fa-angle-right"></i>Work Handle Amount</a>
+									</li>
+								</ul>
+							</li>
+
+							<li>
+								<a href="#"><img src="/img/partnership.png" alt="">&nbsp;Employee Roles<i class="fa fa-angle-left pull-right"></i></a>
+								<ul class="treeview-menu">
+									<li>
+										<a href="/master/employee-roles-list"><i class="fa fa-angle-right"></i>Roles</a>
+									</li>
+									<li>
+										<a href="/master/employee-roles-type-list"><i class="fa fa-angle-right"></i>Role Types</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<?php if ($role_type == 1 || $role_type == 4 || $role_type == 3): ?>
+						<li class="treeview">
+							<a href="/expense/expense-dashboard">
+								<i class="fa fa-line-chart"></i>
+								<span>Expense Dashboard</span>
+							</a>
+						</li>
+						<li class="treeview <?php if($controller == "expense"){ echo "active"; } ?>">
+							<a href="#">
+								<i class="fa fa-rupee"></i>
+								<span>Expense Module</span> 
+								<i class="fa fa-angle-left pull-right"></i>
+							</a>
+							<ul class="treeview-menu">
+								<li class="<?php if($controller == "expense" && $action == "create-new-expense"){ echo "sub_active"; } ?>">
+									<a href="/expense/create-new-expense"><i class="fa fa-angle-right"></i>Create New Expense</a>
+								</li>
+								<li class="<?php if($controller == "expense" && $action == "index"){ echo "sub_active"; } ?>">
+									<a href="/expense"><i class="fa fa-angle-right"></i>Site Expense Report</a>
+								</li>
+								<li class="<?php if($controller == "expense" && $action == "invoice-report"){ echo "sub_active"; } ?>">
+									<a href="/expense/invoice-report"><i class="fa fa-angle-right"></i>Invoice's Report</a>
+								</li>
+								<li class="<?php if($controller == "expense" && $action == "office-expenses"){ echo "sub_active"; } ?>">
+									<a href="/expense/office-expenses"><i class="fa fa-angle-right"></i>Office Expense Report</a>
+								</li>
+								<!-- 
+								<li class="<?php if($controller == "expense" && $action == "fund-transfer"){ echo "sub_active"; } ?>">
+									<a href="/expense/fund-transfer-report"><i class="fa fa-angle-right"></i>B2B Fund Transfer Report</a>
+								</li> -->
+								<li class="<?php if($controller == "expense" && $action == "fund-transfer"){ echo "sub_active"; } ?>">
+									<a href="/expense/fund-transfer-reports"><i class="fa fa-angle-right"></i>B2B Fund Transfer Report</a>
+								</li>
+							</ul>
+						</li>
+					<?php endif ?>
+					<li class="treeview <?php if($controller == "company"){ echo "active"; } ?>">
+						<a href="#">
+							<i class="fa fa-laptop"></i>
+							<span>Company</span>
+							<i class="fa fa-angle-left pull-right"></i>
+						</a>
+						<ul class="treeview-menu">
+							<li class="<?php if($controller == "company" && $action == "company-details"){ echo "sub_active"; } ?>">
+								<a href="/company/company-details"><i class="fa fa-angle-right"></i>Company details</a>
+							</li>
+						</ul>
+					</li>
+						<li class="treeview <?php if($controller == "expense"){ echo "active"; } ?>">
+							<a href="#">
+								<i class="fa fa-rupee"></i>
+								<span>Expense Module</span> 
+								<i class="fa fa-angle-left pull-right"></i>
+							</a>
+							<ul class="treeview-menu">
+								<li class="<?php if($controller == "expense" && $action == "create-new-expense"){ echo "sub_active"; } ?>">
+									<a href="/expense/create-new-expense"><i class="fa fa-angle-right"></i>Create New Expense</a>
+								</li>
+								<li class="<?php if($controller == "expense" && $action == "index"){ echo "sub_active"; } ?>">
+									<a href="/expense"><i class="fa fa-angle-right"></i>Site Expense Report</a>
+								</li>
+								<li class="<?php if($controller == "expense" && $action == "invoice-report"){ echo "sub_active"; } ?>">
+									<a href="/expense/invoice-report"><i class="fa fa-angle-right"></i>Invoice's Report</a>
+								</li>
+								<li class="<?php if($controller == "expense" && $action == "office-expenses"){ echo "sub_active"; } ?>">
+									<a href="/expense/office-expenses"><i class="fa fa-angle-right"></i>Office Expense Report</a>
+								</li>
+								<!-- 
+								<li class="<?php if($controller == "expense" && $action == "fund-transfer"){ echo "sub_active"; } ?>">
+									<a href="/expense/fund-transfer-report"><i class="fa fa-angle-right"></i>B2B Fund Transfer Report</a>
+								</li> -->
+								<li class="<?php if($controller == "expense" && $action == "fund-transfer"){ echo "sub_active"; } ?>">
+									<a href="/expense/fund-transfer-reports"><i class="fa fa-angle-right"></i>B2B Fund Transfer Report</a>
+								</li>
+							</ul>
+						</li>
+					<li class="treeview <?php if($controller == "invoice"){ echo "active"; } ?>">
+						<a href="#">
+							<i class="fa fa-file-text-o"></i>
+							<span>Invoice Module</span>
+							<i class="fa fa-angle-left pull-right"></i>
+						</a>
+						<ul class="treeview-menu">
+							<li class="<?php if($controller == "invoice" && $action == "invoice-report"){ echo "sub_active"; } ?>">
+								<a href="/invoice/invoice-report"><i class="fa fa-angle-right"></i>Punched Invoices</a>
+							</li>
+							<li class="<?php if($controller == "invoice" && $action == "punch-invoice"){ echo "sub_active"; } ?>">
+								<a href="/invoice/punch-invoice"><i class="fa fa-angle-right"></i>Punch Invoice</a>
+							</li>
+							<!--<li class="<?php if($controller == "invoice" && $action == "generated-invoices-report"){ echo "sub_active"; } ?>">-->
+							<!--	<a href="/invoice/generated-invoices-report"><i class="fa fa-angle-right"></i>Generated Invoices</a>-->
+							<!--</li>-->
+							<li class="<?php if($controller == "expense" && $action == "monthly-invoice"){ echo "sub_active"; } ?>">
+								<a href="/invoice/monthly-invoice"><i class="fa fa-angle-right"></i>Monthly Invoice Report</a>
+							</li>
+							<li class="<?php if($controller == "invoice" && $action == "generate-invoice"){ echo "sub_active"; } ?>">
+								<a href="/invoice/generate-invoice"><i class="fa fa-angle-right"></i>Generate Invoice</a>
+							</li>
+							<li class="<?php if($controller == "invoice" && $action == "services-products-for-invoice"){ echo "sub_active"; } ?>">
+								<a href="/invoice/services-products-for-invoice"><i class="fa fa-angle-right"></i>Services/Products</a>
+							</li>
+						</ul>
+					</li>
+
+					<li class="treeview <?php if($controller == "manage-po-site" || $controller == "siteallocation"){ echo "active"; } ?>">
+						<a href="#">
+							<i class="fa fa-book"></i>
+							<span>PO & Sites</span>
+							<i class="fa fa-angle-left pull-right"></i>
+						</a>
+						<ul class="treeview-menu">
+							<li class="treeview <?php if($controller == "manage-po-site" && ($action == "add-po-and-sites" || $action == "add-po-sites" || $action == "po-details" || $action == "po-status" )){ echo "active"; } ?>">
+								<a href="#"><i class="fa fa-file-text-o"></i>&nbsp;<span>PO</span><i class="fa fa-angle-left pull-right"></i></a>
+								<ul class="treeview-menu">
+									<li class="<?php if($controller == "manage-po-site" && $action == "add-po-and-sites"){ echo "sub_active"; } ?>">
+										<a href="/manage-po-site/add-po-and-sites"><i class="fa fa-angle-right"></i>Add New PO</a>
+									</li>
+									<li class="<?php if($controller == "manage-po-site" && $action == "add-po-sites"){ echo "sub_active"; } ?>">
+										<a href="/manage-po-site/add-po-sites"><i class="fa fa-angle-right"></i>Add New PO sites</a>
+									</li>
+									<li class="<?php if($controller == "manage-po-site" && $action == "po-details"){ echo "sub_active"; } ?>">
+										<a href="/manage-po-site/po-details"><i class="fa fa-angle-right"></i>PO Details</a>
+									</li>
+									<li class="<?php if($controller == "manage-po-site" && $action == "po-status"){ echo "sub_active"; } ?>">
+										<a href="/manage-po-site/po-status"><i class="fa fa-angle-right"></i>PO Status</a>
+									</li>
+								</ul>
+							</li>
+							<li class="treeview <?php if(($controller == "manage-po-site" || $controller == "siteallocation") && ($action == "import-site-data" || $action == "allocate-site" || $action == "index" || $action = "allocated-site-status")){ echo "active"; } ?>">
+								<a href="#"><img src="/img/telecommunications.png" alt="">&nbsp;<span>Sites</span><i class="fa fa-angle-left pull-right"></i></a>
+								<ul class="treeview-menu">
+									<li class="<?php if($controller == "manage-po-site" && $action == "import-site-data"){ echo "sub_active"; } ?>">
+										<a href="/manage-po-site/import-site-data"><i class="fa fa-angle-right"></i>Import Site Data</a>
+									</li>
+									<li class="<?php if($controller == "siteallocation" && $action == "allocate-site"){ echo "sub_active"; } ?>">
+										<a href="/siteallocation/allocate-site"><i class="fa fa-angle-right"></i>Allocate Site</a>
+									</li>
+									<li class="<?php if($controller == "siteallocation" && $action == "index"){ echo "sub_active"; } ?>">
+										<a href="/siteallocation"><i class="fa fa-angle-right"></i>Allocated Site List</a>
+									</li>
+									<li class="<?php if($controller == "siteallocation" && $action == "allocated-site-status"){ echo "sub_active"; } ?>">
+										<a href="/siteallocation/allocated-site-status"><i class="fa fa-angle-right"></i>Allocated Site Status</a>
+									</li>
+								</ul>
+							</li>
+							<li class="treeview <?php if(($controller == "manage-po-site") && ($action == "site-incidents-report" || $action == "report-new-incident" )){ echo "active"; } ?>">
+								<a href="#"><i class="fa fa-tasks"></i>&nbsp;<span>Incidents Reporting</span><i class="fa fa-angle-left pull-right"></i></a>
+								<ul class="treeview-menu">
+									<li class="<?php if($controller == "manage-po-site" && $action == "site-incidents-report"){ echo "sub_active"; } ?>">
+										<a href="/manage-po-site/site-incidents-report"><i class="fa fa-angle-right"></i>Incidents Report</a>
+									</li>
+									<li class="<?php if($controller == "manage-po-site" && $action == "report-new-incident"){ echo "sub_active"; } ?>">
+										<a href="/manage-po-site/report-new-incident"><i class="fa fa-angle-right"></i>Report New Incident</a>
+									</li>
+								</ul>
+							</li>
+
+						</ul>
+					</li>
+					<!--<li class="treeview <?php if($controller == "attendance"){ echo "active"; } ?>">-->
+					<!--	<a href="#">-->
+					<!--		<i class="fa fa-calendar"></i>-->
+					<!--		<span>Attendance</span>-->
+					<!--		<i class="fa fa-angle-left pull-right"></i>-->
+					<!--	</a>-->
+					<!--	<ul class="treeview-menu">-->
+					<!--		<li><a href="/attendance" target="_blank"><i class="fa fa-angle-right"></i>Mark Office Attendance</a></li>-->
+					<!--		<li><a href="#"><i class="fa fa-angle-right"></i>Mark Field Attendance</a></li>-->
+					<!--		<li class="<?php if($controller == "attendance" && $action == "employees-monthly-attendance"){ echo "sub_active"; } ?>">-->
+					<!--		<a href="/attendance/employees-monthly-attendance"><i class="fa fa-angle-right"></i>Monthly Attendance</a></li>-->
+					<!--		<li class="<?php if($controller == "attendance" && $action == "attendance_setting"){ echo "sub_active"; } ?>">-->
+					<!--		<a href="/attendance/attendance_setting"><i class="fa fa-angle-right"></i>Attendance Setting</a></li>							-->
+					<!--	</ul>-->
+					<!--</li>-->
+					<li class="treeview <?php if($controller == "assets"){ echo "active"; } ?>">
+						<a href="#">
+							<i class="fa fa-laptop"></i>
+							<span>Asset Management</span>
+							<i class="fa fa-angle-left pull-right"></i>
+						</a>
+						<ul class="treeview-menu">
+							<li class="<?php if($controller == "assets" && $action == "assets-type"){ echo "sub_active"; } ?>"><a href="/assets/assets-type"><i class="fa fa-angle-right"></i> Asset Type</a></li>
+							<li class="<?php if($controller == "assets" && $action == "asset"){ echo "sub_active"; } ?>"><a href="/assets/asset/"><i class="fa fa-angle-right"></i>Assets</a></li>
+							<li class="<?php if($controller == "assets" && $action == "asset-assignments"){ echo "sub_active"; } ?>"><a href="/assets/asset-assignments"><i class="fa fa-angle-right"></i>Asset assignments</a></li>
+						</ul>
+					</li>
+					<?php if ($role == 1 || $role_type == 3 ){ ?>
+						<li class="treeview <?php if($controller == "user"){ echo "active"; } ?>">
+							<a href="#">
+								<i class="fa fa-users"></i>
+								<span>Manage Users</span>
+								<i class="fa fa-angle-left pull-right"></i>
+							</a>
+							<ul class="treeview-menu">
+								<li class="<?php if($controller == "user" && $action == "create-user") { echo "active"; } ?>"><a href="/user/create-user"><i class="fa fa-angle-right"></i>Add New User</a></li>
+								<li class="<?php if($controller == "user" && $action == "index") { echo "active"; } ?>"><a href="/user"><i class="fa fa-angle-right"></i>Active Users</a></li>
+								<li class="<?php if($controller == "user" && $action == "deactive-users") { echo "active"; } ?>"><a href="/user/deactive-users"><i class="fa fa-angle-right"></i>Deactive Users</a></li>
+							</ul>
+						</li>
+					<?php } ?>
+					<li class="treeview <?php if($controller == "vendor") { echo "active"; } ?>">
+						<a href="#">
+							<i class="fa fa-cogs"></i>
+							<span>Manage Vendors</span>
+							<i class="fa fa-angle-left pull-right"></i>
+						</a>
+						<ul class="treeview-menu">
+							<li class="<?php if($controller == "vendor" && $action == "create-vendor") { echo "sub_active"; } ?>"><a href="/vendor/create-vendor"><i class="fa fa-angle-right"></i>Add New Vendor</a></li>
+							<li class="<?php if($controller == "vendor" && $action == "index") { echo "sub_active"; } ?>"><a href="/vendor"><i class="fa fa-angle-right"></i>Active Vendors</a></li>
+							<li class="<?php if($controller == "vendor" && $action == "deactivated-vendor-list") { echo "sub_active"; } ?>"><a href="/vendor/deactivated-vendor-list"><i class="fa fa-angle-right"></i>Deactive Vendors</a></li>
+						</ul>
+					</li>
+					<?php if ($role_type == 1 || $role_type == 4 || $role_type == 3 && ($role == 15 || $role == 16)): ?>
+
+						<li class="treeview <?php if($controller == "material-stock") { echo "active"; } ?>">
+							<a href="#">
+								<i class="fa fa-truck"></i>
+								<span>Material Stock</span>
+								<i class="fa fa-angle-left pull-right"></i>
+							</a>
+							<ul class="treeview-menu">
+								<li class="<?php if($controller == "report" && $action="material-stock-report") { echo "sub_active"; } ?>">
+								<a href="/report/material-stock-report"><i class="fa fa-angle-right"></i>Material Stock Report</a></li>
+								<li class="<?php if($controller == "material-stock" && $action="material-stock-in") { echo "sub_active"; } ?>">
+								<a href="/material-stock/material-stock-in"><i class="fa fa-angle-right"></i>Stock In</a></li>
+								<li class="<?php if($controller == "material-stock" && $action="material-stock-out") { echo "sub_active"; } ?>">
+								<a href="/material-stock/material-stock-out"><i class="fa fa-angle-right"></i>Stock Out</a></li>
+							</ul>
+						</li>
+						<li class="treeview <?php if($controller == "report") { echo "active"; } ?>">
+							<a href="#">
+								<i class="fa fa-file-excel-o"></i>
+								<span>Reports</span>
+								<i class="fa fa-angle-left pull-right"></i>
+							</a>
+							<ul class="treeview-menu">
+								<li class="treeview">
+									<a href="#"><i class="fa fa-truck"></i><span>Stock Report</span><i class="fa fa-angle-left pull-right"></i></a>
+									<ul class="treeview-menu">
+										<li><a href="/report/material-stock-in-report"><i class="fa fa-angle-right"></i>Stock In</a></li>
+										<li><a href="/report/material-stock-out-report"><i class="fa fa-angle-right"></i>Stock Out</a></li>
+									</ul>
+								</li>
+								<li class="<?php if($controller == "report" && $action="summary-report") { echo "sub_active"; } ?>">
+									<a href="/report/summary-report"><i class="fa fa-file "></i><span>Summary Report</span><i class="fa fa-angle-left pull-right"></i></a>
+								</li>
+							</ul>
+						</li>
+						<!--<li class="treeview">-->
+						<!--	<a href="#">-->
+						<!--		<i class="fa fa-wrench"></i>-->
+						<!--		<span>Drivers</span>-->
+						<!--		<i class="fa fa-angle-left pull-right"></i>-->
+						<!--	</a>-->
+						<!--	<ul class="treeview-menu">-->
+						<!--		<li class="treeview">-->
+						<!--			<a href="#"><i class="fa fa-thumbs-up"></i><span>Finger Scanner</span><i class="fa fa-angle-left pull-right"></i></a>-->
+						<!--			<ul class="treeview-menu">-->
+						<!--				<li><a href="/drivers/BioEnable ekyc-32Bit.zip"><i class="fa fa-angle-right"></i>Bioenable 32-bit</a></li>-->
+						<!--				<li><a href="/drivers/BioEnable ekyc-64Bit.zip"><i class="fa fa-angle-right"></i>Bioenable 64-bit</a></li>-->
+						<!--			</ul>-->
+						<!--		</li>-->
+						<!--	</ul>-->
+						<!--</li>-->
+
+					<?php endif ?>
+					<?php if($role_type == 1 && $role  == 1):
+						$username = base64_encode('shantanu@logimetrix.co.in');
+						$password = base64_encode('123456');
+						?>
+						<!--<li class="treeview">-->
+						<!--	<a href="http://logimetrixtask.taskmonitor.in/index/index/access/<?php echo $username;?>/token/<?php echo $password; ?>" target="_blank">-->
+						<!--		<i class="fa fa-tasks"></i>-->
+						<!--		<span>TaskApp</span>-->
+						<!--		<i class="fa fa-angle-left pull-right"></i>-->
+						<!--	</a>-->
+						<!--</li>-->
+					<?php endif ?>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+	</aside>
+</div>
+<!--left-fixed -navigation-->
+
+<?php }?>

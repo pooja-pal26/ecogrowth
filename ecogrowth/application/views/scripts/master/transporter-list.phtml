@@ -1,0 +1,225 @@
+<style>
+  .mandatory{
+    color: red;
+    font-size: 20px;
+  }
+</style>
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Transporter's List
+          <div class="pull-right">
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#addTransporterModal" class="btn btn-success">Add Transporter</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive" id="transporter-list">
+            <table class="display" width="100%" id="transporterListTable">
+             <thead>
+              <th>#</th>
+              <th>Transporter Name</th>
+              <th>Contact Person</th>
+              <th>Contact Number</th>
+              <th>GST Number</th>
+              <th>Status</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+              <?php if($this->transporterList){
+                $i = 1;
+                foreach ($this->transporterList as $transporter) { ?>
+                 <tr>
+                  <td><?php echo $i; ?></td>
+                  <td><?php echo $transporter['transporter_name']; ?></td>
+                  <td><?php echo $transporter['transporter_contact_person']; ?></td>
+                  <td><?php echo $transporter['transporter_contact_number']; ?></td>
+                  <td><?php echo $transporter['transporter_gst_number']; ?></td>
+                  <td><?php echo $transporter['is_active']?"Active":"Deactive"; ?></td>
+                  <td>
+                   <?php if ($transporter['is_active'] == "1") { ?>
+                    <a href="javascript:void(0)" onclick="deactivateActivateDeleteTransporter(<?php echo $transporter['id']; ?>,'deactivate')" title="Deactivate Transporter"><span class="fa fa-ban" style="color: #D66F00;"></span></a>
+                  <?php } else { ?>
+                    <a href="javascript:void(0)" title="Activate Transporter" onclick="deactivateActivateDeleteTransporter(<?php echo $transporter['id']; ?>,'activate')"><span class="fa fa-sign-in" style="color: #1DAA29;"></span></a>
+                    &nbsp;&nbsp;
+                    <a href="javascript:void(0)" onclick="deactivateActivateDeleteTransporter(<?php echo $transporter['id']; ?>,'delete')" title="Delete Transporter"><span class="fa fa-trash" style="color: red;"></span></a>
+                  <?php } ?>
+                </td>
+              </tr>
+              <?php $i++; } } ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Transporter Modal : START -->
+<div class="modal fade" id="addTransporterModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 class="modal-title">Add Transporter</h3>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <form method="" role="form" id="addtranporterForm">
+
+            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <label for="transporter_name">Transporter Name <span class="mandatory">*</span></label>
+              <input type="text" class="form-control" name="transporter_name" id="transporter_name" placeholder="Transporter Name">
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <label for="contact_person">Contact Person</label>
+              <input type="text" class="form-control" name="contact_person" id="contact_person" placeholder="Transporter Contact Person" oninput="this.value = this.value.replace(/[^a-z A-Z]/g,'')">
+            </div> 
+            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <label for="contact_number">Contact Number</label>
+              <input type="text" class="form-control" name="contact_number" id="contact_number" placeholder="Tansporter Contact Number" oninput="this.value = this.value.replace(/[^0-9]/g,'')">
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <label for="gst_number">GST Number</label>
+              <input type="text" class="form-control" name="gst_number" id="gst_number" placeholder="Transporter GST Number">
+            </div>
+
+            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <button class="btn btn-primary" id="saveTransporter">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add Transporter Modal : END -->
+<script>
+  $(document).ready(function() {
+    $("#transporterListTable").DataTable();
+    $("#saveTransporter").click(function(event) {
+      event.preventDefault();
+      var transporter_name = $("#transporter_name").val();
+      var contact_number = $("#contact_number").val();
+      var gst_number = $("#gst_number").val();
+      if (transporter_name == "") {
+        swal({
+          title : "Transporter Name Missing!",
+          text  : "Please enter transporter name.",
+          icon  : "error"
+        }).then(function(){
+          $("#transporter_name").focus();
+        });
+        return false;
+      } else if (contact_number != "" && (contact_number.length > 10 || contact_number.length < 10)) {
+       swal({
+        title : "Invalid Contact Number!",
+        text  : "Please enter 10 digit valid contact number.",
+        icon  : "error"
+      }).then(function(){
+        $("#contact_number").focus();
+      });
+      return false;
+    } else if (gst_number != "" && (gst_number.length > 15 || gst_number.length < 15)) {
+     swal({
+      title : "Invalid GST Number!",
+      text  : "Please enter 15 digit valid GST number.",
+      icon  : "error"
+    }).then(function(){
+      $("#gst_number").focus();
+    });
+    return false;
+  } else {
+    $("#addTransporterModal").modal('toggle');
+    $("#loading-bg").show();
+    $.ajax({
+      url: '/master/add-transporter',
+      type: 'POST',
+      data: $("#addtranporterForm").serialize(),
+      success:function(data){
+        $("#loading-bg").hide();
+        var data = JSON.parse(data);
+        console.log(data);
+        if (data.flag) {
+          swal({
+            title : data.title,
+            text  : data.message,
+            icon  : "success"
+          }).then(function(){
+            window.location.reload();
+          });
+        } else {
+          swal({
+            title : data.title,
+            text  : data.message,
+            icon  : "error"
+          }).then(function(){
+            $("#addTransporterModal").modal('toggle');
+          });
+          return false;
+        }
+      }
+    });
+
+  }
+});
+  });
+
+  function deactivateActivateDeleteTransporter(id, type) {
+    swal({
+      title : "Are you sure?",
+      text  : "Do you want to "+type+" clicked transporter?",
+      icon  : "warning",
+      buttons : [true, "Yes, "+type],
+      dangerMode : true
+    }).then(function(isConfirm){
+      if (!isConfirm) {
+        return false;
+      } else {
+        $("#loading-bg").show();
+        $.ajax({
+          url  : '/master/activate-deactivate-delete-transporter',
+          type : 'POST',
+          data : {type:type, transporter_id:id},
+          success:function(data){
+            var data = JSON.parse(data);
+            $("#loading-bg").hide();
+            if (data.flag) {
+              swal({
+                title : data.title,
+                text  : data.message,
+                icon  : "success",
+              }).then(function(){
+                location.reload("/master/transporter-list");
+              });
+            } else {
+              swal({
+                title : data.title,
+                text  : data.message,
+                icon  : "error"
+              });           
+            }
+          }
+        });
+      }
+    });
+  }
+</script>
+

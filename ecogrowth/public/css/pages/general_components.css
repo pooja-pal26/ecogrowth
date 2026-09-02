@@ -1,0 +1,47 @@
+/*Progress bars*/
+.progress_lg{
+    height: 20px;
+}
+.progress_sm{
+    height: 10px;
+}
+
+/*Advanced progress bars*/
+#progress_bar6 svg{
+    width: 150px;
+}
+#progress_bar4 .progressbar-text{
+    top:57% !important;
+}
+
+/*Carousel*/
+.carousel_img_height{
+    height: 250px !important;
+    width: 100%;
+}
+
+/*Thumbnail*/
+.thumbnail_img{
+    width: 200px;
+    height: 200px;
+}
+/*End of Advanced progress bars*/
+
+/*pagination*/
+.pagination{
+    display: inline-block;
+}
+.pagination .page-item{
+    display: inline;
+}
+.page-link{
+    float: left;
+    margin-top:10px;
+}
+/*End of pagination*/
+
+/*----badges start---*/
+.badge_size .badge{
+font-size: 100%;
+}
+/*----badges end---*/

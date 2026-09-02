@@ -1,0 +1,96 @@
+<?php 
+    // $record = $this->paginator; 
+    // $totalrec = $this->totalrec;
+    // $get = $this->get;
+    // $params = $this->params;
+    // $GetallUserData = $this->GetallUserData;
+$userList = $this->getUserList;
+?>
+
+<script>
+    function validateVal()
+    {
+        if(document.getElementById('user_staff_code').value=='')
+        {
+            alert('Please select Sales Person');    
+            document.getElementById("user_staff_code").focus();
+            return false;
+        }
+
+    }
+</script>
+
+
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+      <div class="container">
+          <!-- Page-Title -->
+          <div class="row">
+            <div class="col-sm-12">
+                <h4 class="page-title">Track User</h4>
+                <ol class="breadcrumb" style="background: #f4f8fb !important">
+                    <li><a href="#"><i class="ti-home"></i>Home</a></li>
+                    <li class="active">Track User</li>
+                </ol>
+            </div>
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="row">
+                        <form method="post" action="/gmap/index-test" target="iframex" onsubmit="return validateVal();">
+                            
+                            <div class="col-lg-3">
+                                <div class="p-20">
+                                    <div class="form-group">
+                                        <select name="user_staff_code" id="user_staff_code" class="form-control" >
+                                            <option value="">-Select Sale Person-</option>
+                                            <?php 
+                                            foreach($userList as $value){
+                                              ?>
+                                              <option value="<?php echo $value['LoginID'];?>"><?php echo $value['StaffName'];?>(<strong><?php echo $value['LoginID'];?></strong>)</option>
+                                              <?php
+                                          }
+                                          ?>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-lg-3">
+                            <div class="p-20">
+                                <div class="form-group">
+                                    <input type="text" name="dates" class="form-control" 
+                                    value="<?php echo date("m/d/Y")?>" id="datepicker" placeholder="Enter Date" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="p-20">
+                                <div class="form-group">
+                                   <button type="submit" name="submit" value="submit" class="btn btn-primary waves-effect waves-ligh" id="searchbtn"> SEARCH</button>
+                               </div>
+                           </div>
+                       </div>
+                   </form>
+                   
+                   <div class="col-sm-12" style="padding-bottom: 5px; border-bottom: 2px solid rgb(38, 82, 124);">
+                      
+                   </div>
+               </div>
+               <div class="table-rep-plugin">
+                <div class="table-responsive" data-pattern="priority-columns">
+                 <iframe name='iframex' width="100%" height="800" frameborder="0"></iframe>   
+             </div>
+         </div>                            
+     </div>
+ </div>
+</div>
+</div> 
+</div>
+</div>
+
+
+<!-- <div class="container-fluid" style="padding-top:162px;">
+    <div class="row-fluid" style="margin-top:10px;">
+     <iframe name='iframex' width="100%" height="800" frameborder="0"></iframe> 
+    </div>
+  </div> -->

@@ -1,0 +1,257 @@
+.right-side {
+    margin-left: 0;
+    padding-top: 0;
+}
+
+/*page level*/
+.horizontal_menu {
+    background-color: #fff;
+}
+
+.slimmenu .has-submenu .menu-list {
+    font-weight: 200;
+    color: #536973;
+}
+
+ul.slimmenu li a {
+    font-size: 14px;
+    padding: 12px 0 12px 8px;
+}
+
+ul.slimmenu li .sub-toggle > i {
+    font-size: 9px;
+}
+
+.slimmenu .has-submenu .active,.slimmenu .has-submenu ul .active a {
+    background: #f1f1f1;
+    color: #5aca82 !important;
+}
+
+ul.slimmenu > li {
+    width: 14.28%;
+}
+
+ul.slimmenu li > ul {
+    padding-left: 0;
+}
+
+ul.slimmenu li .sub-toggle {
+    background: none;
+}
+
+ul.slimmenu li ul {
+    top: 100%;
+    border: 1px solid #dcdcdc;
+}
+
+ul.slimmenu li ul li a {
+    padding: 12px 16px;
+    width: 100%;
+}
+
+ul.slimmenu li ul li, ul.slimmenu li {
+    background: #fff;
+}
+
+ul.slimmenu li a:hover {
+    background: #f1f1f1;
+    color: #48CFAD;
+}
+
+.slimmenu .has-submenu .sub-list {
+    font-size: 14px !important;
+}
+
+.slimmenu .has-submenu ul li a {
+    font-size: 14px !important;
+}
+
+#navigation .has-submenu ul li {
+    width: 100%;
+    border-bottom: 1px solid #eeeeee;
+}
+
+/*for smaller screens hemburger*/
+.menu-collapser {
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    margin-top: 5px;
+}
+
+ul.collapsed {
+    border: 1px solid #ccc;
+}
+
+.Sample_placehold {
+    width: 100%;
+}
+
+/*start plugin override css*/
+ul.slimmenu li a {
+    color: #536973;
+}
+
+.content-header h4 {
+    padding: 15px 0 15px 0;
+}
+
+.navbar-brand {
+    width: 130px;
+    margin-top: -5px;
+}
+
+/*=======start css for horizontal top icon======== */
+/*.sub-toggle>i*/
+/*{*/
+    /*display: none;*/
+/*}*/
+.menu-list>p>span
+{
+    font-size: 30px;
+}
+/*=======end css for horizontal top icon======== */
+/*end plugin override css*/
+
+@media (min-width: 480px) and (max-width: 576px) {
+    ul.slimmenu {
+        width: 94% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .slimmenu .has-submenu .sub-list {
+        padding-left: 30px;
+    }
+
+    .slimmenu .has-submenu ul li a {
+        padding-left: 50px;
+    }
+
+    /*.collapse-button .icon-bar {*/
+    /*transition: 0.2s;*/
+    /*}*/
+    .rotate45deg {
+        position: absolute;
+        left: 10px;
+        top: 11px;
+        transition: 0.3s;
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    .display-none {
+        transition: 0.01s;
+        visibility: hidden;
+    }
+
+    .rotate-45deg {
+        transition: 0.3s;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    .main-menu:after {
+        content: '';
+        width: 1px;
+        position: absolute;
+        right: 0;
+        background-color: #e5e5e5;
+    }
+
+    ul.slimmenu {
+        width: 97%;
+    }
+
+    .horizontal_menu {
+        border-bottom: 1px solid #ccc;
+        padding-left: 2%;
+    }
+
+    ul.slimmenu > li {
+        width: 20%;
+    }
+}
+
+@media (max-width: 993px) {
+    .slimmenu.collapsed {
+        /*position: absolute;*/
+        z-index: 1;
+    }
+    ul.slimmenu.collapsed li .sub-toggle {
+        width: 100%;
+        text-align: right;
+        padding-right: 17px;
+    }
+}
+
+@media (min-width: 993px) {
+    .main-menu:after {
+        content: '';
+        height: 100%;
+        width: 1px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: #e5e5e5;
+    }
+    .horizontal_menu {
+        border-bottom: 1px solid #ccc;
+    }
+}
+/*.sub-toggle*/
+/*{*/
+    /*display: none;*/
+/*}*/
+@media (max-width: 992px){
+    .right-aside{
+        padding-top: 0!important;
+    }
+    .menu-collapser {
+        margin-top: 60px;
+    }
+    .slimmenu  ul li a{
+        text-align: center;
+    }
+    .icon_hr_menu .main-menu.has-submenu>.sub-toggle i{
+        position: relative;
+        top:22px !important;
+    }
+    .icon_hr_menu .main-menu.has-submenu .sub-toggle i{
+        position: relative;
+        top:5px;
+    }
+    .icon_hr_menu .slimmenu .has-submenu ul li a {
+        padding-left: 0 !important;
+    }
+    .horizontal_menu {
+        padding: 10px 0 15px 0;
+    }
+    .wrapper{
+        padding-top:0 !important;
+    }
+
+}
+@media (max-width: 576px){
+    .navbar .container{
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .navbar-brand {
+        width: 105px;
+
+    }
+    .top_right_nav {
+        margin-top: 0;
+    }
+}

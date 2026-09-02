@@ -1,0 +1,22 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3 class="modal-title">Edit Expense Type</h3>
+    </div>
+    <div class="modal-body">
+      <form class="form-inline" role="form">
+        <div class="row">
+          <div class="form-group col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <label for="updateExpenseType">Expense Type :</label>
+            <input type="text" class="form-control" name="updateExpenseType" id="updateExpenseType" placeholder="Enter Expense Type" value="<?php echo $this->expenseTypeDetails['expense_type']; ?>" style="width: 220px;">
+          </div>
+          <div class="form-group col-xs-12 col-sm-12 col-md-2 col-lg-2">
+            <input type="button" class="btn btn-primary" value="Update" onclick="submitUpdateExpenseTypeForm(<?php echo $this->expenseTypeDetails['id']; ?>)">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer"></div>
+  </div>
+</div>

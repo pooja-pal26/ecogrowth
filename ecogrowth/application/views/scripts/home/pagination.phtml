@@ -1,0 +1,62 @@
+
+          <?php 
+              $record = $this->paginator; 
+              $totalrec = $this->totalrec;
+              if($totalrec){
+              foreach ($record as $key => $value) {
+          ?>
+                <div class="panel">
+                <div class="panel-heading">
+                <h6 class="panel-title" style="margin-bottom: 2px !important;">
+                <a data-toggle="collapse" data-parent="#" href="#overdue<?php echo $key;?>">
+                #<?php echo $value['task_id'];?>
+                <span class="time" style="color: #fff;"><strong>Due Date:-</strong>  <?php echo date('d/m/Y', strtotime($value['due_date']));?></span>
+                </a>
+                </h6>
+                </div>
+                <div id="overdue<?php echo $key;?>" class="panel-collapse collapse">
+                  <div class="panel-body">
+                      <div class="col-12 col-lg-12 col-xl-12">
+                          <div class="row">
+                                          <div class="col-12">
+                                              <table class="table">
+                                                <tr>
+                                                  <th>Task Id </th><td>
+                                                  <a href="javascript:void(0)"  style="width: 64px;" <?php if($value['status'] == '2' || $value['status'] == '3'){?>onclick="viewTask('<?php echo md5($value['id']);?>', '0')"<?php }else{?>onclick="viewTask('<?php echo md5($value['id']);?>', '1')"<?php }?> data-toggle="modal" data-target="#basic_modal3" title=<?php if($value['status'] == '2' || $value['status'] == '3'){?>
+                                                "View Task"<?php }else{?>"Update"<?php }?>> <?php if($value['status'] == '2' || $value['status'] == '3'){?><?php echo $value['task_id']; ?><?php }else{?><?php echo $value['task_id']; ?><?php }?></a>
+                                                </td>
+                                                  </tr>
+                                                  <tr>
+                                                  <th>Title </th><td title="<?php echo $value['title']; ?>"><?php if(strlen($value['title'])>strlen(substr($value['title'],0, 30))){ echo substr($value['title'],0, 30).'...';}else{ echo $value['title']; } ?></td>
+                                                  </tr>
+                                                  <tr>
+                                                  <th>Description </th><td><div style="max-height:80px; overflow:auto;"><?php echo $value['description'];?></div></td>
+                                                  </tr>
+                                                  <tr>
+                                                  <th>Task Type </th><td><?php echo $value['task'];?></td>
+                                                  </tr>
+                                                  <tr>
+                                                  <th>Assignee </th><td><?php echo $value['user'];?></td>
+                                                  </tr>
+                                                  <tr>
+                                                  <th>Priority </th><td><?php echo $value['priority'];?></td>
+                                                  </tr>
+                                                  <tr>
+                                                  <th>Attachment </th><td>
+                                                   <a href="javascript:void(0)" onclick="getImage('<?php echo md5($value['id']);?>')" data-toggle="modal" data-target="#basic_modal2" title="view attachment">
+                                                        <span class="font_text"><i class="fa fa-paperclip" aria-hidden="true"></i></span>
+                                                        </a>
+                                                </td>
+                                                  </tr>
+                                              </table>
+                                          </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of panel -->
+            <?php } }else{ ?>
+          <span class="col-sm-12 hvr-pulse btn btn-primary text-left">No overdue assignment found.</span>
+            <?php } ?>          
+       <?php if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'ajax-pagination.phtml'); } ?>

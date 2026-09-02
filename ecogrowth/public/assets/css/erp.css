@@ -1,0 +1,247 @@
+/*---
+///Teacher-Appointement
+   css
+///
+---*/
+.button-4{
+  width:140px;
+  height:50px;
+  border:2px solid #34495e;
+  float:left;
+  text-align:center;
+  cursor:pointer;
+  position:relative;
+  box-sizing:border-box;
+  overflow:hidden;
+  margin: 0 0 10px 15px;
+}
+.button-4 a{
+  font-family:arial;
+  font-size:16px;
+  color:#34495e;
+  text-decoration:none;
+  line-height:50px;
+  transition:all .5s ease;
+  z-index:2;
+  position:relative;
+}
+.eff-4{
+  width:140px;
+  height:50px;
+  left:-140px;
+  background:#34495e;
+  position:absolute;
+  transition:all .5s ease;
+  z-index:1;
+}
+.button-4:hover .eff-4{
+  left:0;
+}
+.button-4:hover a{
+  color:#fff;
+}
+
+.all-from-bg .form-control { 
+	height: auto;
+	padding: 15px;
+	border: 1px solid #ccc;
+	border-radius: 0px;
+	margin-bottom: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	font-family: montserrat;
+	color: #2C3E50;
+	font-size: 13px;
+}
+.all-from-bg {
+	background: white;
+	border: 0 none;
+	border-radius: 0px;
+	box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+	padding: 15px 10px 10px 10px;
+	box-sizing: border-box;
+}
+/*----///
+Dasboard
+///-----*/
+.top-padding.fst {
+  padding: 34px;
+  background: #f00;
+  position: relative;
+}
+.padd-r0 {
+  padding-right: 0px;
+}
+.img-total {
+  position: absolute;
+  top: 25px;
+  left: 18px;
+  right: 0;
+  margin: 0px auto;
+}
+.total-section {
+  padding: 25px 0px 10px 0px;
+  background:#fff;
+  margin-bottom:10px;
+}
+.all-count {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 0px;
+}
+.all-filds {
+  font-size: 20px;   
+}
+/* pi chart css new  */
+.inner-pi {
+  background: #fff;
+}
+.inner-pi h3 {
+  margin: 0px;
+  padding: 12px 20px;
+}
+
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #fff;
+}
+.all-roms-inner.flex-container.bg-col-w {
+  min-height: 370px;
+  max-height: 370px;
+  display: inline-flex;
+  overflow-y: scroll;
+}
+.next-row {
+  margin-bottom: 10px;
+}
+.faceb {
+  font-size: 20px;
+  text-align: center;
+  background: #f00;
+  padding: 10px 0px 30px;
+  color:#fff;
+  position:relative;
+}
+.all-icon-soce {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0px auto;
+  top: 45px;
+}
+.left-lick {
+ width: 50%;
+ float: left;
+ background: #fff;
+ text-align: right;
+ border-right: 1px solid #cbd1d8;
+ padding-right: 25px;
+ margin:20px 0px 0px;	
+}
+.right-lick {
+  width: 50%;
+  float: left;
+  background: #fff;
+  padding-left: 25px;
+  margin:20px 0px 0px ;
+}
+.liek-section {
+  padding: 35px 0px;
+  background: #fff;
+}
+.left-lick h3, .left-lick p {
+  margin: 0px;
+}
+.right-lick h3,.right-lick p {
+  margin: 0px;
+}
+
+.card-box {
+  background: #fff;
+  min-height: 50px;
+  box-shadow: none;
+  position: relative;
+  margin-bottom: 20px;
+  transition: .5s;
+  border: 1px solid #f2f2f2;
+  border-radius: 0;
+}
+.card-head {
+  border-radius: 2px 2px 0 0;
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+  padding: 2px;
+  /* text-transform: uppercase; */
+  color: #3a405b;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 40px;
+  min-height: 40px;
+}
+.card-head header {
+  display: inline-block;
+  padding: 11px 20px;
+  vertical-align: middle;
+  line-height: 17px;
+  font-size: 20px;
+}
+.card-head .tools {
+  padding-right: 16px;
+  float: right;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  margin-left: 24px;
+  line-height: normal;
+  vertical-align: middle;
+}
+
+.card-head > div {
+  display: inline-block;
+}
+.card-body:last-child {
+  border-radius: 0 0 2px 2px;
+}
+
+.card-body {
+  padding: 10px 24px 14px 24px;
+  position: relative;
+}
+.rooms-home .panel-body {
+  min-width: 390px;
+  max-height: 390px;
+  overflow-y: scroll;
+}
+.bg2 {
+  background: url(./assets/images/rooms.png);
+  max-width: 100px;
+  margin: 0px;
+  text-align: center;
+  line-height: 100px;
+  font-size: 30px;
+  background-size: cover;
+  width: 100%;
+  height: auto;
+  color: #fff;
+}
+#gross_total_fees {
+  font-size: 16px;
+  font-weight: bold;
+}
+span#discounted_amount {
+	font-size: 16px;
+  font-weight: bold;
+  color: green;
+}
+span#discounted_reference {
+	font-size: 16px;
+  font-weight: bold;
+}
+
+
+
+
+
+
+
+

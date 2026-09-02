@@ -1,0 +1,16 @@
+.animate .card
+{
+    background: linear-gradient(to bottom,rgba(0,0,0,0) 10%,#9CE3F4 100%);
+    border-top: 4px solid #2dc3e8;
+
+}
+.ti-control-play
+{
+    font-weight: bolder;
+    font-size: 20px;
+    color: #536973;
+    padding: 5px;
+    border: 2px solid #536973;
+    border-radius: 20px;
+    cursor: pointer;
+}

@@ -1,0 +1,237 @@
+ <link rel="stylesheet" href="/assets/css/select2.min.css">
+ <script src="/assets/js/select2.min.js"></script>
+ <div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Incidents Report
+          <div class="pull-right">
+            <a href="/manage-po-site/report-new-incident" class="btn btn-success">Report Incident</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="row">
+           <form action="/manage-po-site/site-incidents-report" method="POST" class="form-inline" role="form" id="searchIncidentTypeForm">
+             <div class="col-xs-12 col-sm-12 col-md-11 col-lg-11">
+               <div class="form-group" style="margin-right: 20px;">
+                <label for="po_no">Incident Type <span id="mandatory">*</span></label>
+                <select name="incident_type" id="incident_type" class="form-control select2" style="width: 200px;">
+                  <option value="">Select Incident Type</option>
+                  <option value="1">Office Incident</option>
+                  <option value="2">Site Incident</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary" id="submitSearchTypeForm">Show</button>
+            </div>
+          </form><br><br>
+          <form action="/manage-po-site/get-incident-list-by-search-key" method="POST" class="form-inline" role="form" id="searchIncidentForm">
+            <div class="col-xs-12 col-sm-12 col-md-11 col-lg-11">
+              <div class="form-group" style="margin-right: 20px;">
+               <label for="po_no">PO Number <span id="mandatory">*</span></label>
+               <select name="po_no" id="po_no" class="form-control select2" onchange="getSitesByPoNumber()" style="width: 200px;">
+                <option value="">Select PO Number</option>
+                <?php foreach ($this->poNumbers as $poNumber): ?>
+                  <option value="<?php echo $poNumber['po_no']; ?>"><?php echo $poNumber['po_no']; ?></option>
+                <?php endforeach ?>
+              </select>
+            </div>
+            <div class="form-group" style="margin-right: 20px;">
+              <label for="site_id">Site ID<span id="mandatory">*</span></label>
+              <select name="site_id" id="site_id" class="form-control select2" style="width: 200px;">
+                <option value="">Select Site ID</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-right: 20px;">
+              <label for="user_id">Employee Name :</label>
+              <select class="form-control select2" name="user_id" id="user_id" style="width: 200px;">
+                <option value="">Please Select</option>
+                <?php foreach ($this->userList as $user): ?>
+                  <option value="<?php echo $user['id']; ?>"><?php echo ucwords(strtolower($user['name'])); ?></option>                      
+                <?php endforeach ?>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submitSearchForm">Search</button>
+          </div>
+        </form>
+        <div class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
+          <a href="javascript:void(0)" title="Clear Search" id="clearSearchButton"><i class="fa fa-refresh fa-2x" style="color: #D48611;"></i></a>
+        </div>
+      </div>
+      <br clear="all">
+      <div id="incidentsDiv">
+        <div class="table-responsive" id="incident-list">
+          <table class="display" width="100%" id="incidentsReportTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th style="white-space: nowrap;">PO Number</th>
+                <th style="white-space: nowrap;">Site ID</th>
+                <th style="white-space: nowrap;">Incident Date</th>
+                <th style="white-space: nowrap;">Staff Name</th>
+                <th style="white-space: nowrap;">Vendor Name</th>
+                <!-- <th style="white-space: nowrap;">Company Vendor</th> -->
+                <th style="white-space: nowrap;">Date of Reporting</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if($this->incidentsList){ 
+                $i = 1;
+                foreach($this->incidentsList as $incident) { ?>
+                  <tr>
+                    <td><?php echo $i;?>.</td>
+                    <td style="white-space: nowrap;"><?php echo $incident['po_no']; ?></td>
+                    <td style="white-space: nowrap;"><?php echo $incident['site_id']; ?></td>
+                    <td style="white-space: nowrap;"><?php echo date('d/m/Y', strtotime($incident['incident_date'])); ?></td>
+                    <td style="white-space: nowrap;"><?php echo $incident['responsible_staff']; ?></td>
+                    <td style="white-space: nowrap;"><?php echo $incident['responsible_vendor'] ? rtrim($incident['responsible_vendor'],", "):"-"; ?></td>
+                    <!-- <td style="white-space: nowrap;"><?php echo $incident['company_vendor_id'] ? $incident['company_vendor_id']:"-"; ?></td> -->
+                    <td style="white-space: nowrap;"><?php echo date('d/m/Y', strtotime($incident['created_at'])); ?></td>
+                    <td><a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" title="View Details" onclick="getIncidentDetails(<?php echo $incident['id']; ?>)"><i class="fa fa-eye fa-2x" style="color: green;"></i></a></td>
+                  </tr>
+                  <?php  $i++; } } ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal modal-success fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3 class="modal-title">Incident Details</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="table-responsive">
+              <table border="1">
+                <tr>
+                  <th width="50%" style="text-align: center;">Incident Report</th>
+                  <th width="50%" style="text-align: center;">Incident Consequence</th>
+                </tr>
+                <tr>
+                  <td id="incident_report_detail" style="padding: 10px 10px 10px 10px; font-size: 20px;"></td>
+                  <td id="incident_effect_detail" style="padding: 10px 10px 10px 10px; font-size: 20px;"></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      $("#incidentsReportTable").DataTable();
+      $(".select2").select2();
+      $(".datepicker").datepicker({ dateFormat: "dd/mm/yy", changeYear:true, changeMonth:true, maxDate:0 });
+      $("#submitSearchForm").click(function(event) {
+        event.preventDefault();
+        var user_id = $("#user_id").val();
+        var po_no = $("#po_no").val();
+        var site_id = $("#site_id").val();
+        if (user_id == "" && po_no == "" && site_id == "") {
+          swal({
+            title : "Search Value Missing!",
+            text  : "Please select at least one search criteria.",
+            icon  : "error"
+          });
+          return false;
+        } else {
+          $("#loading-bg").show();
+          $.ajax({
+            url: $('#searchIncidentForm').attr('action'),
+            type: 'POST',
+            data: $("#searchIncidentForm").serialize(),
+            success:function(data){
+              $("#loading-bg").hide();
+              $("#incidentsDiv").empty();
+              $("#incidentsDiv").html(data);
+              $("#incidentsReportTable").DataTable();
+            }
+          });
+        }
+      });
+      $("#clearSearchButton").click(function(event) {
+        event.preventDefault();
+        window.location.reload();
+      });
+    });
+    function getSitesByPoNumber() {
+      var po_number = $("#po_no").val();
+      if (po_number != "") {
+        $.ajax({
+          url: '/siteallocation/get-allocated-sites-by-po-number',
+          type: 'POST',
+          data: {po_number: po_number},
+          success:function(data){
+            var data = JSON.parse(data);
+            console.log(data);
+            if (data.flag) {
+              $("#site_id").html(data.allocated_sites);
+            } else {
+              swal({
+                title : data.title,
+                text  : data.message,
+                icon  : 'error'
+              });
+            }
+          }
+        });
+      } else {
+        $("#siteId").html("<option>Select Site ID</option>");
+      }
+    }
+    function getIncidentDetails(incident_id) {
+      if (incident_id == "") {
+
+      } else {
+        $("#loading-bg").show();
+        $.ajax({
+          url: '/manage-po-site/view-incident-report-details',
+          type: 'POST',
+          data: {incident_id: incident_id},
+          success:function(data){
+           $("#loading-bg").hide();
+           var data = JSON.parse(data);
+           if (data.flag) {
+            $("#incident_report_detail").html(data.incident_report);
+            $("#incident_effect_detail").html(data.incident_effect);
+          } else {
+            swal({
+              title : data.title,
+              text  : data.message,
+              icon  : 'error'
+            }).then(function(){
+              return false;
+            });
+          }
+        }
+      });
+
+      }
+    }
+  </script>
+

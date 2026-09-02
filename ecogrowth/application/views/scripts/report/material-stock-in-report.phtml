@@ -1,0 +1,97 @@
+<?php
+
+?>
+<style>
+
+	.modal-header .close {
+		color: #000000 !important;
+	</style>
+	<script type="text/javascript">
+
+		function closeModal() {
+			$("#myModal").modal("toggle");
+		}
+		function getStockinRecords(id) {
+			$.ajax({
+				url: "/report/view-stockin/id/"+id,
+				context: document.body,
+				success: function(responseText) {
+					console.log(responseText);
+					$("#myModal").html(responseText);
+					// $("#myModal").modal("toggle");
+				}
+
+			});
+		}
+	</script>
+
+	<div id="page-wrapper">
+		<div class="main-page">
+			<?php if ($this->messages): ?>
+				<?php foreach ($this->messages as $message): ?>
+					<?php if ($message['success']){ ?>
+						<div class="alert alert-success">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							<strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+						</div>
+					<?php } else if ($message['error']) { ?>
+						<div class="alert alert-danger">
+							<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+							<strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+						</div>
+					<?php } ?>
+				<?php endforeach ?>
+			<?php endif ?>
+			<div class="panel panel-primary">
+				<div class="panel panel-heading">
+					<h3>Material Stock In Report
+						<div class="pull-right">
+							<!-- <a href="/user/create-user" class="btn btn-success">Download</a> -->
+						</div></h3>
+					</div>
+					<div class="panel panel-body">
+						<div class="table-responsive" id="user-list">
+							<table id="materialStockInReportTable"  class="display" width="100%">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Stock In Date</th>
+										<th>Supplier</th>
+										<th>Received By</th>
+										<th>Bill Number</th>
+										<th>Bill Date</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php if($this->stockinlist){ 
+										$i = 1; 
+										foreach($this->stockinlist as $stockin){   
+											?>
+											<tr>
+												<td> <?php echo $i; ?></td>
+												<td> <?php echo date("d/m/Y",strtotime($stockin['stock_in_date'])); ?></td>
+												<td><?php echo $stockin['supplier_name']; ?></td>
+												<td><?php echo $stockin['receiver_name']; ?></td>
+												<td><?php echo $stockin['bill_number']; ?></td>
+												<td><?php echo date("d/m/Y",strtotime($stockin['bill_date'])); ?></td>
+												<td> <a href="javascript:void(0)" data-toggle="modal" data-target="#myModal" title="view" onclick="getStockinRecords(<?php echo $stockin['id'];?>)"><i class="fa fa-eye"></i></a> &nbsp;
+													<a href="/material-stock/edit-material-stock-details/stockID/<?php echo ($stockin['id']); ?>" title="Edit "><i class="fa fa-pencil" style="color: green;"></i></a> 
+												</td>
+												<?php $i++; } } ?>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal modal-success fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+					</div>
+					<script>
+						$(document).ready(function() {
+							$("#materialStockInReportTable").DataTable();
+						});
+					</script>

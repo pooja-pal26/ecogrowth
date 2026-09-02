@@ -1,0 +1,337 @@
+<?php
+$getalldepartment = $this->getalldepartment;
+$getRoletype = $this->getRoletype;
+$params = $this->params;
+$getUserRecord = $this->getUserRecord;
+?>
+<link rel="stylesheet" href="/assets/css/select2.min.css">
+<script src="/assets/js/select2.min.js"></script>
+<style>
+    .select2.select2-container {
+        width: 100% !important;
+    }
+    .mainDiv {
+      background-color: #DCF2FE;
+      border-radius: 5px;
+  }
+  form {
+      padding: 5px;
+  }
+  #mandatory {
+      color: red;
+      font-size: 16px;
+  }
+  .table-bordered {
+    border: 2px solid #1b1a1a !important;
+}
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr, .table-bordered > tbody > tr > td {
+    border: 1px solid #1b1a1a !important;
+}
+</style>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#role_type").change(function(e) {
+            $.get( "/user/get-all-role", { role_type_id: $( "#role_type" ).val() }, "json" )
+            .done(function( data ) {
+              select = document.getElementById('role');
+              select.options.length = 0;
+            options = data.options; // Or whatever source information you're working with
+            for (index = 0; index < options.length; ++index) 
+            {
+              option = options[index];
+              select.options.add(new Option(option.text, option.value));
+          }
+      });
+        });
+    });
+</script>
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+        </div>
+    <?php } else if ($message['error']) { ?>
+      <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+    </div>
+<?php } ?>
+<?php endforeach ?>
+<?php endif ?>
+<div class="panel panel-primary">
+  <div class="panel panel-heading">
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <h3>Material Stock In</h3>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        <!-- <a href="/user" class="btn btn-success pull-right">View Users</a> -->
+    </div>
+</div>
+</div>
+<div class="panel panel-body">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mainDiv">
+        <form action="/material-stock/material-stock-in" method="POST" role="form" enctype="multipart/form-data" onsubmit="return validateUser()">
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <span style="font-weight: bold; font-size: 16px; color: #D60019;">*&nbsp;Fields are mandatory.</span>
+            </div>
+        </div>
+        <br clear="all">
+        <div class="row">
+          <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label for="dateOfStockIn">Date of Stock In<span id="mandatory">*</span></label>
+            <input type="email" class="form-control datepicker" name="dateOfStockIn" id="dateOfStockIn" placeholder="Select Date" readonly="">
+        </div>
+        <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label for="supplier" class="col-form-label">Supplier <span id="mandatory">*</span></label>
+            <select name="supplier" style="width: 300px;" id="supplier"  value="" class="form-control select2">
+                <option value="">Select Supplier</option>
+                <?php foreach ($this->supplierDetails as $supplierList) {?>
+                    <option value="<?php echo $supplierList['id']; ?>"><?php echo $supplierList['name']; ?></option><?php } ?>
+                </select>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                <label for="recieved_by" class="col-form-label">Recieved By<span id="mandatory">*</span></label>
+                <select name="recieved_by" id="recieved_by" class="form-control select2">
+                    <option value="">Select Reciever</option>
+                    <?php foreach ($this->users as $user) { ?>
+                      <option value="<?php echo $user['id']; ?>"><?php echo $user['name']; ?></option>
+                  <?php } ?>
+              </select>
+          </div>
+          <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label for="bill_no" class="col-form-label">Bill/Challan Number<span id="mandatory">*</span></label>
+            <input type="text" name="bill_no" id="bill_no" placeholder="Enter Challan Number" class="form-control">
+        </div>
+    </div>
+    <br clear="all">
+    <div class="row">
+        <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3">
+            <label for="bill_date">Bill/Challan Date<span id="mandatory">*</span></label>
+            <input type="text" name="bill_date" id="bill_date" placeholder="Select Date" class="form-control datepicker" readonly="">
+        </div>
+        <div class="form-group col-xs-12 col-sm-12 col-md-3 col-lg-3" id="permanentAddressDiv">
+            <label for="remarks" class="col-form-label">Remarks (if any)</label>
+            <textarea type="text" name="remarks" id="remarks" placeholder="Enter remarks here"  class="form-control"></textarea>
+        </div>
+    </div>
+    <br clear="all">
+    <div class="row" style="overflow: auto; padding: 8px 15px;">
+        <table class="table table-bordered" id="productDetailsTable">
+            <thead>
+                <th>Product Type</th>
+                <th>Product Name</th>
+                <th>Brand</th>
+                <th>Unit</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+                <tr id="row_1">
+                    <td>
+                        <select name="product_category[]" id="product_category_1" class="form-control select2" onchange="showProductList(1)">
+                            <option value="">Select Product Category</option>
+                            <?php foreach ($this->productType as $productTypeList) {?>
+                                <option value="<?php echo $productTypeList['id']; ?>"><?php echo $productTypeList['product_type_name']; ?></option><?php }  ?>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="product_id[]" id="product_id_1" class="form-control select2" onchange="setUnitOfProduct(1)">
+                                <option value="">Select Product </option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="brand[]" id="brand_1" class="form-control select2">
+                                <option value="">Select Product Brand</option>
+                                <?php foreach ($this->materialBrand as $brands) {?>
+                                    <option value="<?php echo $brands['id']; ?>"><?php echo $brands['brand_name']; ?></option><?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="unit[]" id="unit_1" readonly="" size="4">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="quantity[]" id="quantity" required="" size="3">
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br clear="all">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <button type="button" name="addRow" class="btn btn-responsive layout_btn_prevent btn-success" onclick="addMoreRow();">Add More Product</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <button type="submit" class="btn btn-success pull-right">Save</button>
+              </div>
+          </div>
+      </form>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".datepicker").datepicker({ 
+            dateFormat: "dd/mm/yy",
+            changeMonth: true,
+            changeYear: true,
+            autoclose: true,
+            maxDate : 0 
+        });
+        $(".select2").select2();
+    }); 
+
+    function addMoreRow() {
+        var row_count = $('#productDetailsTable tr').length;
+        var html_content = `<tr id="row_`+row_count+`">
+        <td>
+        <select name="product_category[]" id="product_category_`+row_count+`" class="form-control select2" onchange="showProductList(`+row_count+`)">
+        <option value="">Select Product Category</option>
+        <?php foreach ($this->productType as $productTypeList) {?>
+            <option value="<?php echo $productTypeList['id']; ?>"><?php echo $productTypeList['product_type_name']; ?></option><?php }  ?>
+            </select>
+            </td>
+            <td>
+            <select name="product_id[]" id="product_id_`+row_count+`"class="form-control select2" onchange="setUnitOfProduct(`+row_count+`)">
+            <option value="">Select Product </option>
+            </select>
+            </td>
+            <td>
+            <select name="brand[]" id="brand_`+row_count+`" class="form-control select2">
+            <option value="">Select Product Brand</option>
+            <?php foreach ($this->materialBrand as $brands) {?>
+                <option value="<?php echo $brands['id']; ?>"><?php echo $brands['brand_name']; ?></option><?php } ?>
+                </select>
+                </td>
+                <td>
+                <input type="text" class="form-control" name="unit[]" id="unit_`+row_count+`" size="4" readonly>
+                </td>
+                </td>
+                <td>
+                <input type="text" class="form-control" name="quantity[]" id="quantity" required="" size="3">
+                </td>
+                <td><a href="javascript:void(0)" onclick="deleteRow(`+row_count+`)"><i class="fa fa-trash fa-2x" style="color:red;"></i></a></td>
+                </tr>`;
+                $("#productDetailsTable").append(html_content);   
+                $(".select2").select2();
+            } 
+
+            function showProductList(count) {
+               var productTypeId = $("#product_category_"+count).val();
+               if (productTypeId == "") {
+                $("#product_id_"+count).empty();
+                $("#product_id_"+count).append('<option value="">Select Product </option>');
+                $("#unit_"+count).val("");
+            } else {
+                $.ajax({
+                    url: '/material-stock/get-products-by-product-category/product_type_id/'+productTypeId,
+                    type: 'POST',
+                    success:function (data) {
+                        var data = JSON.parse(data);
+                        $("#product_id_"+count).empty();
+                        $("#product_id_"+count).append(data);
+                    }
+                });
+
+            }
+        } 
+        function setUnitOfProduct(count) {
+            var productId = $("#product_id_"+count).val();
+            var productType = $("#product_category_"+count).val();
+            if (productId != '') {
+                $.ajax({
+                    url: '/material-stock/get-product-unit-and-quantity-by-product-id',
+                    type: 'POST',
+                    data:{productId:productId, productTypeId:productType},
+                    success:function(data){
+                        console.log(data);
+                        var data = JSON.parse(data);
+                        $("#unit_"+count).val(data.unit);
+                    }
+                });
+            } else {
+                $("#unit_"+count).val('');
+            }         
+        }     
+        function deleteRow(count) {
+           $("#row_"+count).remove();
+       } 
+
+       function validateData() {
+        var n = $("select[name^='product_category']").length;
+        var array = $("select[name^='product_category']");
+        var dop             = $("#dop").val();
+        var supplierId      = $("#supplier").val();
+        var recievedBy      = $("#recieved_by").val();
+        var billNo          = $("#bill_no").val();
+        var billDate        = $("#bill_date").val();
+        if (dop == '') {
+            swal('Missing','Please select date of stock in.','info');
+            return false;
+        } else if(supplierId == '') {
+            swal('Missing','Please select supplier.','info');
+            return false;
+        } else if (recievedBy == '') {
+            swal('Error','Please enter reciever name.','error');
+            return false;
+        } else if (billNo == '') {
+            swal('Error','Please enter bill number.','error');
+            return false;
+        } else if (billDate == '') {
+            swal('Missing','Please select bill date.','info');
+            return false;
+        }
+    }
+
+
+    function onlyAlphabets(e,t) {
+
+
+        try {
+
+            if (window.event) {
+
+                var charCode = window.event.keyCode;
+
+            }
+
+            else if (e) {
+
+                var charCode = e.which;
+
+            }
+
+            else { return true; }
+
+            if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123))
+
+                return true;
+
+            else
+
+                return false;
+
+        }
+
+        catch (err) {
+
+            alert(err.Description);
+
+        }
+
+    }
+
+</script>
+

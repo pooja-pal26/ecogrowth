@@ -1,0 +1,39 @@
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title">System Assets Details</h3>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">	
+						<div class="table table-responsive">
+							<table class="table table-bordered" border="1px" width="100%">
+								<thead>
+									<tr>
+										<th>Asset Type</th>
+										<th>Asset Name</th>
+										<th>Asset Code</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php foreach ($this->systemAssetDetails as $systemAssets): ?>
+										<tr>
+
+											<td><?php echo $systemAssets['type']; ?></td>
+											<td><?php echo $systemAssets['name']; ?></td>
+											<td><?php echo $systemAssets['code']; ?></td>
+										</tr>
+									<?php endforeach ?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

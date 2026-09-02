@@ -1,0 +1,122 @@
+<?php
+$params = $this->params;
+?>
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#type").select2();
+	});
+</script>
+<script type="text/javascript">
+	function validateUser(){ 
+
+		if(document.getElementById("type").value==""){
+			swal("Please Select Type");
+			document.getElementById("type").focus();
+			return false;
+		}
+
+		if(document.getElementById("asset").value==""){
+			swal("Please Enter asset");
+			document.getElementById("asset").focus();
+			return false;
+		}
+
+	}
+</script>
+
+<div class=" view-port-height">
+	<!-- Content Header (Page header) -->
+	<div class="content-header container-fluid bg-white">
+		<div class="row">
+			<div class="col-sm-4">
+				<h4><i class="ti-user"></i> Create Asset </h4>
+			</div>
+		</div>
+	</div>
+	<!-- Main content -->
+	<div class="content">
+
+		<?php if ($this->messages): ?>
+			<div class="alert alert-success alert-dismissable">
+				<?php foreach ($this->messages as $message): ?>
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php echo $message ?>
+				<?php endforeach ?>
+			</div>
+		<?php endif ?>
+		<?php if($this->errorMessage) { ?>
+			<br clear="all">
+			<div class="alert alert-danger alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php  echo $this->errorMessage;   ?>                                             
+			</div>
+		<?php } ?>
+
+
+		<div class="row">
+			<div class="col-12">
+				<div class="card  profile2_aboutme">
+					<div class="card-header card-info text-white">
+
+						<p style="float: left; margin: 0px;"></p> <a href="/assets/asset/"  style="float: right; margin: 0px;" class="btn btn-success btn_width m-t-10 m-r-10">View All Assets</a>
+					</div>
+
+					<div class="card-block ">
+						<div class="row m-t-10">
+							<div class="col-lg-12">
+								<form name="my_form" method="post" action="" enctype="multipart/form-data" onsubmit="return validateUser();">
+									<div class="form-group row">
+										<div class="col-lg-2">
+											<label for="type" class="col-form-label">
+												Select Type*
+											</label>
+											<div class="input-group">
+												<select name="type" id="type" value="" style="width:100%;" class="form-control">
+													<option value="">---Select Type---</option>
+													<option value="1">IT Assets</option>
+													<option value="2">Infra Assets</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-lg-2">
+											<label for="caddress" class="col-form-label">
+												Enter Code*
+											</label>
+											<div class="input-group">
+												<input type="text" name="code" id="code"
+												placeholder="Enter Code" class="form-control" />
+											</div>
+										</div> 
+
+										<div class="col-lg-3">
+											<label for="caddress" class="col-form-label">
+												Enter Name*
+											</label>
+											<div class="input-group">
+												<input type="text" name="name" id="name"
+												placeholder="Enter Asset" class="form-control" />
+											</div>
+										</div> 
+										<div class="col-lg-2">
+											<label for="caddress" class="col-form-label">
+												Warranty Date*
+											</label>
+											<div class="input-group">
+												<input type="text" name="date" id="date" value="" placeholder="DueDate" data-date-format="dd/mm/yyyy" name="date" class="form-control  datepick" >
+											</div> 
+										</div>
+
+										<div class="col-lg-3" style="margin-top: 40px">
+											<button type="submit" name="submit" class="btn btn-responsive layout_btn_prevent btn-info">Save</button>
+										</div>
+									</div>                                      
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.content -->
+</div>
+</div>

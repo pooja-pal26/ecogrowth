@@ -1,0 +1,32 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" onclick="closeModal()">Close</span></button>
+      <h4 class="modal-title" id="myModalLabel"></h4>
+    </div>
+    <div class="modal-body" >
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Assigned Assets</h3>
+        </div>
+        <div class="panel-body">
+
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Asset</th>
+              </tr>
+            </thead>
+            <?php 
+            foreach ($this->system_assets as $asset) {  ?>
+              <tr>
+                <td><?php echo $asset['name']; ?></td>
+              </tr>
+            <?php } ?>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

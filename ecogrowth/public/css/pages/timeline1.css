@@ -1,0 +1,398 @@
+.timeline {
+    list-style: none;
+    position: relative;
+}
+
+.vertical-tl .timeline:before {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    content: " ";
+    width: 1px;
+    background-color: #b1b0af;
+    left: 50%;
+    margin-left: -1.5px;
+}
+
+.timeline > li {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.timeline > li:before,
+.timeline > li:after {
+    content: " ";
+    display: table;
+}
+
+.timeline > li:after {
+    clear: both;
+}
+
+.timeline > li > .timeline-panel {
+    width: 45%;
+    padding: 20px;
+    position: relative;
+    border-radius:10px;
+    background-color: #F5F9FB;
+}
+
+.timeline > li > .timeline-badge {
+    color: #000;
+    width: 45px;
+    height: 45px;
+    line-height: 50px;
+    font-size: 1.4em;
+    text-align: center;
+    position: absolute;
+    top: 36%;
+    left: 50%;
+    margin-left: -23px;
+    z-index: 100;
+    border-radius: 50%;
+    cursor: default;
+}
+
+.timeline > li.timeline-inverted > .timeline-panel {
+    float: right;
+}
+
+.timeline > li.timeline-inverted > .timeline-panel:after {
+    border-left-width: 0;
+    border-right-width: 14px;
+    left: -14px;
+    right: auto;
+
+}
+
+
+.timeline-body > p,
+.timeline-body > ul {
+    margin-bottom: 0;
+}
+
+.timeline-body > p + p {
+    margin-top: 5px;
+}
+
+.timeline h5{
+    margin-bottom: 0;
+}
+.timeline-badge i{
+    position: relative;
+    top:-1px;
+}
+@media  (min-width: 768px) and (max-width: 992px) {
+    .timeline > li > .timeline-panel {
+        width: 43%;
+    }
+}
+
+@media (max-width: 767px) {
+    .timeline > li > .timeline-panel {
+        width: 40%;
+    }
+}
+@media (max-width: 550px) {
+    .vertical-tl .timeline > li > .timeline-panel {
+        width: 36%;
+        padding: 20px 5px;
+    }
+    .vertical-tl .timeline > li > .timeline-badge{
+        top:41%;
+    }
+    .horizontal-tl-top .timeline-badge,.horizontal-tl-bottom .timeline-badge{
+        left:51% !important;
+    }
+    .horizontal-tl .timeline > li > .timeline-panel{
+        padding: 20px 5px;
+    }
+
+}
+
+.timeline > li > .timeline-badge {
+    color: #ffffff;
+    transition: ease 500ms;
+}
+
+
+.tl-list1 .timeline-badge{
+    background-color: #0083FE !important;
+    border:1px solid #0083FE;
+}
+.tl-list1 .timeline-badge:hover{
+    background-color: #fff !important;
+    color: #0083FE ;
+}
+
+.tl-list2 .timeline-badge{
+    background-color: #fcb410 !important;
+    border:1px solid #fcb410;
+}
+.tl-list2 .timeline-badge:hover{
+    background-color: #fff !important;
+    color: #fcb410 ;
+}
+
+.tl-list3 .timeline-badge{
+    background-color: #31d0d6 !important;
+    border:1px solid #31d0d6;
+}
+.tl-list3 .timeline-badge:hover{
+    background-color: #fff !important;
+    color: #31d0d6 ;
+}
+
+.tl-list4 .timeline-badge{
+    background-color: #f86a67 !important;
+    border:1px solid #f86a67;
+}
+.tl-list4 .timeline-badge:hover{
+    background-color: #fff !important;
+    color: #f86a67 ;
+}
+
+.tl-list4 .timeline-badge{
+    background-color: #937eff !important;
+    border:1px solid #937eff;
+}
+.tl-list4 .timeline-badge:hover{
+    background-color: #fff !important;
+    color: #937eff ;
+}
+
+.tl-list5 .timeline-badge{
+    background-color: #5aca82 !important;
+    border:1px solid #5aca82;
+}
+.tl-list5 .timeline-badge:hover{
+    background-color: #fff !important;
+    color: #5aca82 ;
+}
+
+.tl-list6 .timeline-badge{
+    background-color: #f86a67 !important;
+    border:1px solid #f86a67;
+}
+.tl-list6 .timeline-badge:hover{
+    background-color: #fff !important;
+    color: #f86a67 ;
+}
+.tl-list1 .timeline-panel{
+    border:1px solid #0083FE;
+}
+.tl-list1 .arrow-right:after{
+    border-left-color: #0083FE;
+}
+.tl-list2 .timeline-panel{
+    border:1px solid #fcb410;
+}
+.tl-list2 .arrow-left:after{
+    border-right: 10px solid #fcb410;
+}
+
+.tl-list3 .timeline-panel{
+    border:1px solid #31d0d6;
+}
+.tl-list3 .arrow-right:after{
+    border-left-color: #31d0d6;
+}
+
+.tl-list4 .timeline-panel{
+    border:1px solid #937eff;
+}
+.tl-list4 .arrow-left:after{
+    border-right: 10px solid #937eff;
+}
+
+.tl-list5 .timeline-panel{
+    border:1px solid #5aca82;
+}
+.tl-list5 .arrow-right:after{
+    border-left-color: #5aca82;
+}
+
+
+.tl-list6 .timeline-panel{
+    border:1px solid #f86a67;
+}
+.tl-list6 .arrow-left:after{
+    border-right: 10px solid #f86a67;
+}
+/*--------------------------*/
+
+.arrow-right:after{
+    content: ' ';
+    height: 0;
+    position: absolute;
+    width: 0;
+    border: 10px solid transparent;
+    top:44%;
+    right:-21px;
+}
+.arrow-left:after{
+    content: ' ';
+    height: 0;
+    position: absolute;
+    width: 0;
+    border: 10px solid transparent;
+    top:44%;
+    left:-21px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid transparent;
+}
+.vertical-tl .timeline-time{
+    position: absolute;
+    top:45%;
+    left: 50%;
+    margin-left: 35px;
+}
+.timeline-time-left{
+    position: absolute;
+    top:45%;
+    right: 50%;
+    left:auto;
+    margin-right: 35px;
+    margin-left: 0;
+}
+/*-------------------*/
+.timeline-img{
+    width: 35px;
+    height: 35px;
+    display: block;
+    border-radius: 50px;
+    overflow: hidden;
+    vertical-align: middle;
+    float: left;
+}
+.timeline-heading{
+    display: block;
+    padding: 0 0 0 46px;
+}
+.timeline-heading h5,.timeline-heading p{
+    margin-bottom: 5px;
+}
+@media (max-width: 570px){
+    .timeline-heading{
+        display: inline-block;
+        padding: 0 0 0 0;
+    }
+}
+.timeline-heading img{
+    width: 100px;
+    height: 100px;
+    margin: 8px;
+}
+
+/*---------------------horizontal timeline--------*/
+.horizontal-tl .timeline:before {
+    bottom: 10px;
+    position: absolute;
+    content: " ";
+    background-color: #b1b0af;
+    margin-left: -1.5px;
+    top: 49%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border: 0
+}
+.horizontal-tl .timeline-badge{
+    transition:  ease 500ms;
+}
+.horizontal-tl-bottom .caret:before{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 46%;
+    bottom: 100%;
+    width: 0;
+    height: 0;
+    border-bottom: 10px solid #fcb410;
+    border-top: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+}
+.horizontal-tl-top .caret:before{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 46%;
+    top: 100%;
+    width: 0;
+    height: 0;
+    border-top: 10px solid #0083FE;
+    border-right: 10px solid transparent;
+    border-bottom: 0 solid transparent;
+    border-left: 10px solid transparent;
+}
+.horizontal-tl-top .timeline-time{
+    position: absolute ;
+    bottom:-130px ;
+    left:39% ;
+}
+.horizontal-tl-bottom .timeline-time{
+    position: absolute;
+    top:-130px;
+    left:39%;
+}
+.horizontal-tl-top .timeline-badge {
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    line-height: 50px;
+    font-size: 1.4em;
+    text-align: center;
+    position: absolute;
+    bottom: -90px;
+    left: 48%;
+    margin-left: -23px;
+    z-index: 100;
+    border-radius: 50%;
+    cursor: default;
+
+}
+
+.horizontal-tl-bottom .timeline-badge {
+    color: #fff;
+    width: 45px;
+    height: 45px;
+    line-height: 50px;
+    font-size: 1.4em;
+    text-align: center;
+    position: absolute;
+    top: -100px;
+    left: 48%;
+    margin-left: -23px;
+    z-index: 100;
+    border-radius: 50%;
+    cursor: default;
+}
+.horizontal-tl-top .timeline-panel{
+    margin-bottom: 40px;
+}
+.horizontal-tl-bottom .timeline-panel{
+    margin-top: 40px;
+}
+@media (max-width:425px){
+    .horizontal-tl-top .timeline-time{
+        left:25% !important;
+        bottom:-120px !important;
+    }
+    .horizontal-tl-top .timeline-badge{
+        bottom: -86px;
+    }
+    .horizontal-tl-bottom .timeline-badge{
+        top: -100px;
+    }
+    .horizontal-tl-bottom .timeline-time{
+        left:25% !important;
+        top:-125px !important;
+    }
+}
+@media (max-width:767px){
+    .horizontal-tl-top .timeline-time, .horizontal-tl-bottom .timeline-time{
+        left:31% ;
+    }
+}

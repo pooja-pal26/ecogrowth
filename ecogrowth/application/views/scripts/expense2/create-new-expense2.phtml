@@ -1,0 +1,561 @@
+<?php 
+$auth               = Zend_Auth::getInstance();
+$authStorage        = $auth->getStorage();
+$this->WebLoginID   = $authStorage->read()->WebLoginID;
+$this->id           = $authStorage->read()->id;
+$this->Role         = $authStorage->read()->Role; 
+$this->access_token = $authStorage->read()->access_token;
+?>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+function selectSource(){
+var source = $('#expenses_source').val();
+if(source==''){ $('#site_expenses').hide(); $('#office_expenses').hide(); }
+if(source=='site_expenses'){  $('#site').show(); $('#office').hide();  }
+if(source=='office_expenses'){  $('#site').hide(); $('#office').show(); }
+}
+</script>
+
+<script type="text/javascript">
+function validateFile(){
+var filename  = $('#attachment').get(0).files[0].name;
+var filesize  = $('#attachment').get(0).files[0].size;
+var fileext   = $('#attachment').get(0).files[0].name.split('.').pop().toLowerCase(); 
+var extArryay = new Array('xls' ,'xlsx' , 'pdf' , 'png' , 'jpeg' , 'jpg');             
+var isValidFileExt = $.inArray(fileext, extArryay);  
+if (isValidFileExt == -1) {
+swal('Invalid File Extension , Upload Only .xls or .xlsx File');
+$('#attachment').replaceWith($('#attachment').val('').clone(true));
+} else {
+if (filesize > 4000000) { 
+swal('Invalid File Size , Size Should be below 4Mb');
+$('#attachment').replaceWith($('#attachment').val('').clone(true));
+ } else { 
+//swal('Valid File , You Can Proceed');
+ }  
+   }
+      }  
+
+function validateFile2(){
+var filename  = $('#attachment2').get(0).files[0].name;
+var filesize  = $('#attachment2').get(0).files[0].size;
+var fileext   = $('#attachment2').get(0).files[0].name.split('.').pop().toLowerCase(); 
+var extArryay = new Array('xls' ,'xlsx' , 'pdf' , 'png' , 'jpeg' , 'jpg');             
+var isValidFileExt = $.inArray(fileext, extArryay);  
+if (isValidFileExt == -1) {
+swal('Invalid File Extension , Upload Only .xls or .xlsx File');
+$('#attachment2').replaceWith($('#attachment2').val('').clone(true));
+} else {
+if (filesize > 4000000) { 
+swal('Invalid File Size , Size Should be below 4Mb');
+$('#attachment2').replaceWith($('#attachment2').val('').clone(true));
+ } else { 
+//swal('Valid File , You Can Proceed');
+ }  
+   }
+      }  
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+        $("#po_no").select2();
+        $("#site_id").select2();
+        $("#expenses_source").select2();
+        $("#transfer_for").select2();
+        $("#transfer_for2").select2();
+        $("#transfered_to").select2();
+        $("#transfered_to2").select2();
+        $("#state_for2").select2();
+        $('#office').hide();
+        $("#transfer_date").datepicker( { dateFormat: "dd/mm/yy" , maxDate : 0, numberOfMonths: 1, } );
+        $("#transfer_date2").datepicker( { dateFormat: "dd/mm/yy" , maxDate : 0, numberOfMonths: 1, } );
+          });
+
+$(document).ready(function () {
+$("#amount").keypress(function (e) {
+if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) { 
+swal("Enter Only Digits");
+return false;
+}
+});
+});
+
+$(document).ready(function () {
+$("#amount2").keypress(function (e) {
+if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) { 
+swal("Enter Only Digits");
+return false;
+}
+});
+});
+</script>
+
+<!--<script type="text/javascript">
+    $(document).ready(function() {
+        $("#po_no").change(function(e) { 
+        $.get( "/expense/get-all-site", { site_type_id: $("#po_no").val() }, "json" )
+        .done(function( data ) {
+        	//alert(data);
+            select = document.getElementById('site_id');
+            select.options.length = 0;
+            options = data.options; 
+            for (index = 0; index < options.length; ++index) {
+              option = options[index];
+              select.options.add(new Option(option.text, option.value));
+            }
+        });
+           });
+              });
+</script>-->
+
+<script type="text/javascript">
+    $(document).ready(function() { 
+        $("#site_id").change(function(e) { //var x = $("#site_id").val(); alert(x);
+        $.get( "/expense/get-all-po", { site_type_id: $("#site_id").val() }, "json" )
+        .done(function( data ) {
+          //alert(data);
+            select = document.getElementById('po_no');
+            select.options.length = 0;
+            options = data.options; 
+            for (index = 0; index < options.length; ++index) {
+              option = options[index];
+              select.options.add(new Option(option.text, option.value));
+            }
+        });
+           });
+              });
+</script>
+
+<script type="text/javascript">
+	function clearAll(){
+	 $.ajax({ 
+        success : function(){ 
+        	 $("#changePassword")[0].selectedIndex = 0;
+             dropDown.selectedIndex = 0;
+            $('#changePassword')[0].reset();
+        },
+	 });
+	}
+
+    function validateUser(){ 
+
+           var expenses_source = $('#expenses_source').val();
+           
+
+           if(expenses_source == 'site_expenses'){
+
+            if(document.getElementById("site_id").value==""){
+            swal("Please Select Site ID");
+            document.getElementById("site_id").focus();
+            return false;
+            }
+
+           if(document.getElementById("po_no").value==""){
+            swal("Please Select PO No.");
+            document.getElementById("po_no").focus();
+            return false;
+           }
+
+            if(document.getElementById("transfer_for").value==""){
+            swal("Please Select Transfer For");
+            document.getElementById("transfer_for").focus();
+            return false;
+            }
+
+            if(document.getElementById("amount").value==""){
+            swal("Please Enter Amount");
+            document.getElementById("amount").focus();
+            return false;
+            } 
+
+            if(document.getElementById("transfer_date").value==""){
+            swal("Please Select Transfer Date");
+            document.getElementById("transfer_date").focus();
+            return false;
+            } 
+
+            if(document.getElementById("transfered_to").value==""){
+            swal("Please Select Transfer To");
+            document.getElementById("transfered_to").focus();
+            return false;
+            }  
+
+           }
+
+
+           if(expenses_source == 'office_expenses'){
+
+            if(document.getElementById("transfer_for2").value==""){
+            swal("Please Select Transfer For");
+            document.getElementById("transfer_for2").focus();
+            return false;
+            }
+
+            if(document.getElementById("amount2").value==""){
+            swal("Please Enter Amount");
+            document.getElementById("amount2").focus();
+            return false;
+            } 
+
+            if(document.getElementById("transfer_date2").value==""){
+            swal("Please Select Transfer Date");
+            document.getElementById("transfer_date2").focus();
+            return false;
+            } 
+
+            if(document.getElementById("transfered_to2").value==""){
+            swal("Please Select Transfer To");
+            document.getElementById("transfered_to2").focus();
+            return false;
+            }  
+
+           }
+
+
+}
+</script>
+
+
+
+<div class=" view-port-height">
+
+<!-- Content Header (Page header) -->
+
+        <div class="content-header container-fluid bg-white">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4><i class="ti-list"></i> Expense Module </h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+
+        <div class="content">
+
+                  <?php if ($this->messages): ?>
+            <div class="alert alert-success alert-dismissable">
+            <?php foreach ($this->messages as $message): ?>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php echo $message ?>
+            <?php endforeach ?>
+            </div>
+
+            <?php endif ?>
+            <?php if($this->errorMessage) { ?>
+            <br clear="all">
+            <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><?php  echo $this->errorMessage;   ?>                                             
+            </div>
+            <?php } ?>
+        
+
+            <div class="row">
+                <div class="col-12">
+
+            <div class="card  profile2_aboutme">
+                <div class="card-header card-primary text-white">
+                  <p style="float: left; margin: 0px;">Create New Expense</p> 
+                    <a href="/expense/"  style="float: right; margin: 0px;" class="btn btn-success btn_width m-t-10 m-r-10">Back</a>
+                           </div>
+
+        <div class="card-block ">
+            <div class="row m-t-10">
+              <div class="col-lg-12">
+       <!--onsubmit="return validateUser();"-->
+
+                 <form name="changePassword" id="changePassword" method="post"   
+                 action="/expense/create-new-expense" enctype="multipart/form-data"  onsubmit="return validateUser();">
+
+               <div class="row">
+                
+                      <div class="col-md-2"> 
+            <div class="input-group">
+                  <select name="expenses_source" id="expenses_source" value="" 
+                  style="width:100%;" class="form-control" onchange="selectSource()">
+                            <option value="site_expenses">---Site Expenses---</option>
+                              <option value="office_expenses">---Office Expenses---</option>
+                                        </select>
+                                            </div>
+                            </div>
+                    <div class="col-md-5"></div>
+                      <div class="col-md-5"></div>
+                    </div>
+
+                 <input type="hidden" name="local_token" id="local_token" value="<?php echo $this->access_token; ?>" />
+
+
+
+
+
+                     <div class="form-group row" id="site">
+
+                      <div class="col-lg-3"></div>
+
+  <div class="col-lg-3">
+    <label for="site_id"  style="color:black; font-weight:bold;" class="col-form-label"> Select Site ID * </label>
+                    <div class="input-group">
+                        <select name="site_id" id="site_id" value="" style="width:100%;" class="form-control">
+                            <option value="">---Select Site ID---</option>
+                              <?php foreach ($this->list_of_site_ids as $value) { ?>
+                                 <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+                                     <?php } ?>
+                                        </select>
+                                            </div>
+                                      </div>   
+
+<div class="col-lg-3">
+   <label for="po_no"  style="color:black; font-weight:bold;" class="col-form-label"> Select PO Number *
+                 </label>
+                    <div class="input-group">
+                       <select name="po_no"  style="width:100%;" id="po_no"  class="form-control">
+                         <option value="">---Select PO Number---</option>
+                            </select>
+                               </div>
+                                   </div>
+
+
+                      <!--<div class="col-lg-3">
+                      	 <label for="po_no"  style="color:black; font-weight:bold;" class="col-form-label"> Select PO Number * </label>
+                    <div class="input-group">
+                        <select name="po_no"  style="width:100%;" id="po_no" value=""  class="form-control">
+                            <option value="">---Select PO Number---</option>
+                              <?php foreach ($this->po_list as $value) { ?>
+                                 <option value="<?php echo $value; ?>"><?php echo $value; ?></option>
+                                     <?php } ?>
+                                        </select>
+                                            </div>
+                                      </div>-->
+
+
+                     <!-- <div class="col-lg-3">
+                      	 <label for="site_id"  style="color:black; font-weight:bold;" class="col-form-label"> Select Site ID *
+                 </label>
+                    <div class="input-group">
+                       <select name="site_id"  style="width:100%;" id="site_id"  class="form-control">
+                         <option value="">---Select Site ID---</option>
+                            </select>
+                               </div>
+                      </div>-->
+
+
+                      <div class="col-lg-3"></div>
+
+                      <br clear="all">
+
+                        <div class="col-lg-3"></div>
+
+                         <div class="col-lg-3">
+                             <label for="transfer_for"  style="color:black; font-weight:bold;" class="col-form-label"> Transfer For *
+                </label>
+                   <div class="input-group">
+                      <select name="transfer_for"  style="width: 300px;" id="transfer_for" class="form-control">
+                        <option value="">---Select Transfer For---</option>
+                          <?php foreach ($this->transfer_for_list as $value) { ?>
+                             <option value="<?php echo $value['id']; ?>"><?php echo $value['transfer_for']; ?></option>
+                                <?php } ?>
+                                  </select>
+                                      </div>
+                         </div>
+
+          <div class="col-lg-3">
+            <label for="amount"  style="color:black; font-weight:bold;" class="col-form-label"> Enter Amount * </label>
+              <input type="text" name="amount" id="amount"  value="" placeholder="Enter Amount Here*" 
+              class="form-control" />
+                </div>
+
+                             <div class="col-lg-3"></div>
+
+                             <br clear="all">
+
+                              <div class="col-lg-3"></div>
+                               <div class="col-lg-3">
+                  <label for="transfer_date" style="color:black; font-weight:bold;"  class="col-form-label">
+                   Select Transfer Date * </label>
+                      <input type="text" name="transfer_date" id="transfer_date"  value="<?php echo date('d/m/Y')?>"
+                          placeholder="Select Transfer Date*" class="form-control datepick datePickStart" 
+                          data-date-format="dd/mm/yyyy" data-grp="1" readonly="" />
+                               </div>
+
+        <div class="col-lg-3">
+          <label for="transfered_to"  style="color:black; font-weight:bold;" class="col-form-label"> Transfer To * </label>
+              <div class="input-group">
+                  <select name="transfered_to"  style="width: 300px;" id="transfered_to" class="form-control">
+                      <option value="">---Select Transfer To---</option>
+                          <?php foreach ($this->user_list as $value) { ?>
+                           <option value="<?php echo $value['id']; ?>">
+                            <?php echo $value['name']." - ".$value['account_number']; ?></option>
+                             <?php } ?>
+                                </select>
+                                    </div>
+                                </div>
+                                 <div class="col-lg-3"></div>
+
+                                 <br clear="all">
+
+                                 <div class="col-lg-3"></div>
+                                 <div class="col-lg-3">
+                                 <label for="remark"  style="color:black; font-weight:bold;" 
+                                 class="col-form-label"> Remark </label>
+                                 <div class="input-group">
+                                 <textarea class="form-control" name="remark" id="remark" placeholder="Enter Remark Here"></textarea>
+                                 </div>
+                                 </div>
+
+                                 <div class="col-lg-3">
+                                   <label for="remark"  style="color:black; font-weight:bold;" 
+                                 class="col-form-label"> Upload Attachment </label>
+                                 <div class="input-group">
+                                 <input type="file" name="attachment" id="attachment" class="form-control" 
+                                 onchange="validateFile()" />
+                                 </div>
+                                 </div>
+                                 <div class="col-lg-3"></div>
+
+                              
+
+                                 <br clear="all">
+
+
+
+            <div class="col-lg-3"></div>
+               <div class="col-lg-3"><br/>
+              <button type="submit" name="submit" class="btn btn-responsive layout_btn_prevent btn-info">Save</button>
+                </div>
+
+                       <div class="col-lg-3"></div>
+                           <div class="col-lg-3"></div>
+                                    </div>
+
+
+
+
+
+
+
+
+            <div class="form-group row" id="office">
+          <div class="col-lg-3"></div>
+  <div class="col-lg-3">
+                         <label for="state_for2"  style="color:black; font-weight:bold;" class="col-form-label"> Select state For * </label>
+                    <div class="input-group">
+                        <select name="state_for2"  style="width:100%;" id="state_for2" value=""  class="form-control">
+                            <option value="">---Select State For---</option>
+                              <?php foreach ($this->state_for_list as $val) { ?>
+                                 <option value="<?php echo $val['id']; ?>"><?php echo $val['state_for']; ?></option>
+                                     <?php } ?>
+                                        </select>
+                                            </div>
+                                      </div> 
+
+                    <div class="col-lg-3">
+                              <label for="transfer_for2"  style="color:black; font-weight:bold;" class="col-form-label"> Transfer For *
+                </label>
+                   <div class="input-group">
+                      <select name="transfer_for2"  style="width: 300px;" id="transfer_for2" class="form-control">
+                        <option value="">---Select Transfer For---</option>
+                          <?php foreach ($this->transfer_for_list2 as $value) { ?>
+                             <option value="<?php echo $value['id']; ?>"><?php echo $value['transfer_for']; ?></option>
+                                <?php } ?>
+                                  </select>
+                                      </div>
+                    </div>
+
+                      <div class="col-lg-3"></div>
+
+                      <br clear="all">
+
+                        <div class="col-lg-3">
+                          
+                        </div>
+
+                         <div class="col-lg-3">
+                          <label for="amount2"  style="color:black; font-weight:bold;" class="col-form-label"> Enter Amount * </label>
+              <input type="text" name="amount2" id="amount2"  value="" placeholder="Enter Amount Here*" 
+              class="form-control" />
+                         </div>
+
+          <div class="col-lg-3">
+          <label for="transfer_date2" style="color:black; font-weight:bold;"  class="col-form-label">
+                   Select Transfer Date * </label>
+                      <input type="text" name="transfer_date2" id="transfer_date2"  value="<?php echo date('d/m/Y')?>"
+                          placeholder="Select Transfer Date*" class="form-control datepick datePickStart" 
+                          data-date-format="dd/mm/yyyy" data-grp="1" readonly="" />
+                </div>
+
+                             <div class="col-lg-3"></div>
+
+                             <br clear="all">
+
+                              <div class="col-lg-3"></div>
+                               <div class="col-lg-3">
+                                 <label for="transfered_to"  style="color:black; font-weight:bold;" class="col-form-label"> Transfer To * </label>
+              <div class="input-group">
+                  <select name="transfered_to2"  style="width: 300px;" id="transfered_to2" class="form-control">
+                      <option value="">---Select Transfer To---</option>
+                          <?php foreach ($this->user_list as $value) { ?>
+                           <option value="<?php echo $value['id']; ?>">
+                            <?php echo $value['name']." - ".$value['account_number']; ?></option>
+                             <?php } ?>
+                                </select>
+                                    </div>
+                               </div>
+
+         <div class="col-lg-3">
+             <label for="attachment2"  style="color:black; font-weight:bold;" 
+                                 class="col-form-label"> Upload Attachment </label>
+                                 <div class="input-group">
+                                 <input type="file" name="attachment2" id="attachment2" class="form-control" 
+                                 onchange="validateFile2()" />
+                                 </div>
+                                      </div>
+
+                                 <div class="col-lg-3"></div>
+
+                                 <br clear="all">
+
+                                 <div class="col-lg-3"></div>
+                                 <div class="col-lg-3">
+                                 <label for="remark2"  style="color:black; font-weight:bold;" 
+                                 class="col-form-label"> Remark </label>
+                                 <div class="input-group">
+                                 <textarea class="form-control" name="remark2" id="remark2" placeholder="Enter Remark Here"></textarea>
+                                 </div>
+                                 </div>
+
+                                 <div class="col-lg-3">
+                                
+                                 </div>
+                                 <div class="col-lg-3"></div>
+
+                              
+
+          <br clear="all">
+
+            <div class="col-lg-3"></div>
+               <div class="col-lg-3">
+                <br/>
+              <button type="submit" name="submit" class="btn btn-responsive layout_btn_prevent btn-info">Save</button>
+                    </div>
+
+                                 <div class="col-lg-3"></div>
+                                 <div class="col-lg-3"></div>
+                                    </div>
+
+
+
+
+
+                                    </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                 </div>
+              </div>
+        <!-- /.content -->
+    </div>
+</div>

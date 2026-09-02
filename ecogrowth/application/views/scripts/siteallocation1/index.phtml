@@ -1,0 +1,181 @@
+<?php
+    $user_list = $this->user_list;
+    $record = $this->paginator; 
+    $totalrec = $this->totalrec;
+?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+   $('th').attr("nowrap","nowrap");
+   $('td').attr("nowrap","nowrap");
+   $('th').attr("class","text-center");
+   $('td').attr("class","text-center");
+    });
+// function getPage(page){
+//       var url   = '/vendor/user-list/page/'+page;
+//       var id    = 'user-list';
+//       $("#"+id).html('<div class="loading">Loading&#8230;</div>');
+//       $.ajax({
+//           url: url,
+//           context: document.body,
+//           success: function(responseText) {
+//               $("#"+id).html(responseText);
+//               $("#"+id).find("script").each(function(i) {
+//                   eval($(this).text());
+//               });
+//           }
+//       });
+// };
+</script>
+<div class="right-aside view-port-height">
+<!-- Content Header (Page header) -->
+        <div class="content-header container-fluid bg-white">
+            <div class="row">
+                <div class="col-sm-4">
+                    <h4><i class="ti-user"></i> Site Allocation List Data</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        
+
+            <?php if ($this->messages): ?>
+                <div class="card  ">
+                        <div style="background-color: lightgrey;color: #3a4c57" class="card-header   text-black">
+                <div class="alert alert-success alert-dismissible fade show m-t-10" role="alert">rtyrtyrtyrty   
+                    
+                </div>
+                </div>
+                </div>
+            <?php endif ?>
+
+
+            <div class="row  ">
+                <div class="col-12   btn-ptimary" style="margin-bottom: 4px;">
+                    <div class="card  ">
+                        <div style="background-color: lightgrey;color: #3a4c57" class="card-header   text-black">
+                            <form name="import-excel" method="post" action="/siteallocation" enctype="multipart/form-data">
+                                <div class="row form-group">
+                                    <div class="img-responsive">
+                                        <label>Import Site Allocation Data From Excel&nbsp&nbsp</label>
+                                        <div class="fix-btns" style="display: flex;width:150%">
+                                            <div class="input-group">
+                                                <input style="margin-right: 10px;" type="file" name="importxl" id="importxl" placeholder="" value="" class="form-control" required="required">
+                                            </div>
+                                            <div class="input-group">
+                                                <input  type="submit" value="Import" class=" btn btn-primary">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card  profile2_aboutme">
+                   <div class="card-header card-info text-white">
+                                   <p style="float: left; margin: 3px;">Site Allocation Data</p> 
+                                   <!-- <a href="/vendor/create-vendor" type="button" class="btn btn-success btn_lg_width m-t-10 m-r-10" style="float: right; margin-top: 0px;margin-left: 10px">
+                                        <i class="ti-user"></i> Import Site Allocation Data From Excel
+                                        </a> -->
+
+                                 
+
+                                    </div>
+                                    <style>
+                                        th{
+                                            color:black;
+                                            font-weight: 10%
+                                        }
+                                    </style>
+                        <div class="card-block">
+                           
+                            <div class="row basic_tables">
+                                <div class="col-12 m-t-20">
+                                    <div class="table-responsive mt-1" id="user-list">
+                                        <table border="1" style="border-top: 2px solid;" class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <strong>
+                                                <th>#</th>
+                                                <th>Requisition</th>
+                                                <th>SO</th>
+                                                <th>Created Date</th>
+                                                <th>RFI Date</th>
+                                                <th>OPCO Name</th>
+                                                <th>SR Type OPCO</th>
+                                                <th>Supplier</th>
+                                                <th>PO</th>
+                                                <th>Line</th>
+                                                <th>Requisition Description</th>
+                                                <th>Deliver-To</th>
+                                                <th>District</th>
+                                                <th>Zone</th>
+                                                <th>Cluster</th>
+                                                <th>Technical Site ID</th>
+                                                <th>A</th>
+                                                <th>Item</th>
+                                                <th>Rev</th>
+                                                <th>Category</th>
+                                                <th>Item Description</th>
+                                                <th>Action</th>
+                                                </strong>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php 
+                                            if($totalrec){ 
+                                            $totalnum = $this->totalnum?$this->totalnum:1;
+                                            $istart = ($totalnum-1) * 10;
+                                            $i=$istart;
+                                            foreach($record as $user)
+                                            { ?>
+                                            <tr>
+                                                <td ><?php echo $i+1;?>.</td>
+                                                <td><?php echo $user['requisition']; ?></td>
+                                                <td><?php echo $user['so']; ?></td>
+                                                <td><?php echo $user['create_date']; ?></td>
+                                                <td><?php echo $user['rfi_date']; ?></td>
+                                                <td><?php echo $user['opco_name']; ?></td>
+                                                <td><?php echo $user['sr_type_opco']; ?></td>
+                                                <td><?php echo $user['supplier']; ?></td>
+                                                <td><?php echo $user['po']; ?></td>
+                                                <td><?php echo $user['line']; ?></td>
+                                                <td><?php echo $user['requisition_description'];?></td>
+                                                <td><?php echo $user['deliver_to']; ?></td>
+                                                <td><?php echo $user['district']; ?></td>
+                                                <td><?php echo $user['zone']; ?></td>
+                                                <td><?php echo $user['cluster']; ?></td>
+                                                <td><?php echo $user['technical_site_iD']; ?></td>
+                                                <td><?php echo $user['a']; ?></td>
+                                                <td><?php echo $user['item']; ?></td>
+                                                <td><?php echo $user['rev']; ?></td>
+                                                <td><?php echo $user['category']; ?></td>
+                                                <td><?php echo $user['item_des']; ?></td>
+                                                <td><?php echo '-'; ?></td>
+                                            </tr>
+                                            <?php  $i++;} } else{  ?>
+                                                            <tr><td colspan="7"><p style="color:red; font-size:16px;">No User Found !</p></td></tr>
+                                                <?php  } ?>
+                                            </tbody>
+                                        </table>
+                                        <div id="leftpag" style="float: right !important;">
+                                <!-- START PAGINATION -->
+                                <?php if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml'); } ?>  
+                                <!-- END PAGINATION -->
+                                </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.content -->
+    </div>
+</div>

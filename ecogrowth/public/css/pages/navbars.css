@@ -1,0 +1,114 @@
+.scrollspy-example{
+    height: 300px;
+    position: relative;
+    overflow-y: scroll;
+}
+@media (max-width:420px){
+    .navbar-brand img{
+        width:95px;
+        margin-left: 0 !important;
+        margin-right: auto; !important;
+    }
+    .navbar-brand{
+
+        margin-left: 0 !important;
+        margin-right: auto; !important;
+    }
+    .header_tp1 i{
+        padding:0 1px !important;
+    }
+
+}
+.navbar-toggler{
+    border: none;
+}
+/* Add fade animation to dropdown menus */
+.dropdown-menu {
+    animation-name: fadeAnimation;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    -webkit-animation-name: fadeAnimation;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-name: fadeAnimation;
+    -moz-animation-duration: 1s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease;
+    -moz-animation-fill-mode: forwards;
+    overflow: hidden; }
+
+@keyframes fadeAnimation {
+    from {
+        max-height: 0; }
+    to {
+        max-height: 550px; }
+}
+
+.tp-header{
+    background-color: #1c2225;
+}
+.header_tp1 i{
+    padding:0 5px;
+}
+.header_dark_bg{
+    background: linear-gradient(40deg, #637c8a, #79919f, #637c8a, #79919f, #637c8a, #79919f, #637c8a, #79919f, #637c8a, #79919f);
+}
+.header_dark_bg .nav-item .nav-link{
+    color:#fff;
+}
+.advanced_tp_nav{
+    padding: 15px;
+}
+.advanced_nav_admin{
+    width:45px;
+}
+.advanced_tp_nav i{
+    font-size: 16px;
+}
+
+.messages_badge_top,
+.notifications_badge_top {
+    margin-top: -42px;
+    margin-left: 15px;
+}
+@media (min-width: 300px){
+    .advanced_tp_nav.navbar-toggleable-md .navbar-nav{
+        flex-direction: row;
+    }
+    .advanced_tp_nav.navbar-toggleable-md .navbar-collapse{
+        display: flex !important;
+        width: 100%;
+    }
+    .advanced_tp_nav.navbar-toggleable-md .navbar-nav .nav-link{
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+.navbar_page .navbar-brand{
+    width:auto;
+}
+
+.navbar_page .navbar-light .navbar-nav .nav-link:focus, .navbar_page .navbar-light .navbar-nav .nav-link:hover{
+    color:#fff;
+}
+
+.navbar_page .menu_search{
+    margin-left: 0 !important;
+}
+@media (max-width:767px){
+    .container_nav{
+        padding: 15px 0;
+    }
+}
+.navbar-inverse .navbar-nav .nav-link{
+    color:#fff;
+}
+@media (max-width: 340px) {
+    .menu_search input{
+        width: 160px;
+    }
+}

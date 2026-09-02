@@ -1,0 +1,14 @@
+/*breadcrumb description*/
+.breadcrumb_desription .content-header h4 {
+    padding: 15px 0 5px;
+}
+.breadcrumb_desription .breadcrumb_description_text{
+    font-size: 12px;
+    color: #888;
+}
+/*End of breadcrumb description*/
+/*breadcrumb search*/
+.breadcrumb{
+    margin-bottom: -22px !important;
+}
+/*End of breadcrumb search*/

@@ -1,0 +1,100 @@
+<style>
+	#attendanceTable > tbody {
+		display:block;
+		max-height:250px;
+		overflow-y:scroll;
+	}
+	#attendanceTable > thead > tr, #attendanceTable > tbody > tr {
+		display:table;
+		width:100%;
+		table-layout:fixed;
+	}
+</style> 
+<div class="modal-dialog" style="width: 60%;">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			<h3 class="modal-title">Attendance Details - <?php echo ucwords(strtolower($this->employeeName['name'])); ?></h3>
+		</div>
+		<div class="modal-body">
+			<!-- <div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<form action="" method="POST" class="form-inline" role="form">
+						<div class="form-group col-xs-12 col-sm-12 col-md-2 col-lg-2">
+							<select name="month" id="month" class="form-control select2">
+								<?php for($i=1;$i<13;$i++)
+								print("<option value=".date('m',strtotime('01.'.$i.'.2018')).">".date('F',strtotime('01.'.$i.'.2018'))."</option>"); ?>
+							</select>
+						</div>
+						<div class="form-group col-xs-12 col-sm-12 col-md-2 col-lg-2">
+							<select name="year" id="year" class="form-control select2">
+								<?php $years = range(date('Y'), 2018);
+								foreach ($years as $year) { ?>
+									<option value="<?php echo $year; ?>"><?php echo $year; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<button type="submit" class="btn btn-primary">Show</button>
+					</form>
+				</div>
+			</div> -->
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="table table-responsive">
+						<table class="table-striped" style="width: 100%;" id="attendanceTable">
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>In Time</th>
+									<th>Out Time</th>
+									<th>Working Hours</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php for ($i=1; $i <= $this->month_days ; $i++) { ?>
+									<?php if ($i < 10) {
+										if ($this->month < 10) {
+											$date = $this->year.'-0'.$this->month.'-0'.$i;
+											// '0'.$i.'/0'.$this->month.'/'.$this->year;
+										} else {
+											$date = $this->year.'-0'.$this->month.'-'.$i;
+											// echo '0'.$i.'/'.$this->month.'/'.$this->year;
+										}
+									} else {
+										if ($this->month < 10) {
+											$date = $this->year.'-0'.$this->month.'-'.$i;
+											// echo $i.'/0'.$this->month.'/'.$this->year;
+										} else {
+											$date = $this->year.'-'.$this->month.'-'.$i;
+											// echo  $i.'/'.$this->month.'/'.$this->year;
+										} 
+									} ?>
+									<?php if ($date <= date('Y-m-d')): ?>
+										<tr>
+											<td><?php echo date('d/m/Y', strtotime($date)); ?></td> 
+											<?php
+											if(!$this->controller->checkSunday($date)){
+												if($this->controller->checkAttendance($this->employeeName['id'],$date)){ 
+													$attendacneData = $this->controller->checkAttendance($this->employeeName['id'],$date);
+													echo '<td>'.$attendacneData['start_time'].'</td>
+													<td>'.$attendacneData['end_time'].'</td>
+													<td>'.$attendacneData['working_hours'].'</td>';
+												} else {
+													echo '<td colspan=3 style="text-align: center; background-color: #E60A2E;"><b>ABSENT</b></td>';
+												} 
+											} else{ 
+												echo  '<td colspan=3 style="text-align: center; background-color: #B8832E;"><b>SUNDAY</b></td>';
+											} ?>
+										</tr>
+									<?php endif ?>
+								<?php } ?>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+		</div>
+	</div>
+</div>

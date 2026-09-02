@@ -1,0 +1,339 @@
+<link rel="stylesheet" href="/assets/css/select2.min.css">
+<script src="/assets/js/select2.min.js"></script>
+</style>
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>Expense Transfer For List
+          <div class="pull-right">
+            <a href="javascript:void(0)" data-toggle="modal" data-target="#addExpenseTransferForModal" class="btn btn-success">Add Expense Transfer For</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive" id="transfer-type-list">
+            <table class="display" width="100%" id="expenseTransferForTable">
+             <thead>
+              <tr>
+                <strong>
+                  <th>#</th>
+                  <th>Expense Type</th>
+                  <th>Expense In</th>
+                  <th>Expense For</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </strong>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if($this->expenseTransferForList){
+                $i = 1;
+                foreach ($this->expenseTransferForList as $expenseTransferFor) { ?>
+                 <tr>
+                  <td > <?php echo $i; ?></td>
+                  <td ><?php echo $expenseTransferFor['expense_type']; ?></td>
+                  <td ><?php echo $expenseTransferFor['expense_in_type']; ?></td>
+                  <td ><?php echo $expenseTransferFor['expense_transfer_for']; ?></td>
+                  <td><?php echo $expenseTransferFor['status'] == "1" ? "Active":"Deactive"; ?></td>
+                  <td>
+                    <?php if ($expenseTransferFor['status'] == "1") { ?>
+                      <a href="javascript:void(0)" title="Edit Expense Type" onclick="editDeactivateActivateDeleteExpenseTransferFor(<?php echo $expenseTransferFor['id']; ?>,'edit')"><span class="fa fa-pencil" style="color: #1DAA29;"></span></a>
+                      &nbsp;&nbsp;
+                      <a href="javascript:void(0)" onclick="editDeactivateActivateDeleteExpenseTransferFor(<?php echo $expenseTransferFor['id']; ?>,'deactivate')" title="Deactivate Expense Type"><span class="fa fa-ban" style="color: #D66F00;"></span></a>
+                    <?php } else { ?>
+                      <a href="javascript:void(0)" title="Activate Expense Type" onclick="editDeactivateActivateDeleteExpenseTransferFor(<?php echo $expenseTransferFor['id']; ?>,'activate')"><span class="fa fa-sign-in" style="color: #1DAA29;"></span></a>
+                      &nbsp;&nbsp;
+                      <a href="javascript:void(0)" onclick="editDeactivateActivateDeleteExpenseTransferFor(<?php echo $expenseTransferFor['id']; ?>,'delete')" title="Delete Expense Type"><span class="fa fa-trash" style="color: red;"></span></a>
+                    <?php } ?>
+                  </td>
+                </tr>
+                <?php $i++; } } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Expense Transfer For Modal : Start -->
+  <div class="modal fade" id="addExpenseTransferForModal">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Add Expense Transfer For</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <form role="form">
+              <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="expenseTypeId">Expense Type :</label>
+                <select name="expenseTypeId" id="expenseTypeId" class="form-control select2" style="width: 100% !important;" onchange="showExpenseInOptions()">
+                  <option value="">Please Select</option>
+                  <?php foreach ($this->expenseTypeList as $expenseType): ?>
+                    <option value="<?php echo $expenseType['id']; ?>"><?php echo $expenseType['expense_type']; ?></option>
+                  <?php endforeach ?>
+                </select>
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="expenseInType">Expense In Type :</label>
+                <select name="expenseInId" id="expenseInId" class="form-control select2" style="width: 100% !important;">
+                  <option value="">Please Select</option>
+                </select>
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="expenseTransferfor">Expense Transfer For :</label>
+                <input type="text" class="form-control" name="expenseTransferfor" id="expenseTransferfor" placeholder="Enter Expense Transfer For">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <input type="button" class="btn btn-primary" id="submitExpenseForFormButton" value="Save">
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Expense Transfer For Modal : End -->
+
+  <!-- Edit Bank Modal : Start -->
+  <div class="modal fade" id="editExpenseTransferForModal"></div>
+  <!-- Edit Bank Modal : End -->
+  <script>
+    $(document).ready(function() {
+      $("#expenseTransferForTable").DataTable();
+      $(".select2").select2();
+      $("#submitExpenseForFormButton").click(function(event) {
+        event.preventDefault();
+        var expenseTypeId       = $("#expenseTypeId").val();
+        var expenseInId         = $("#expenseInId").val();
+        var expenseTransferFor  = $("#expenseTransferfor").val();
+        if (expenseTypeId == "") {
+          swal({
+            title : "Expense Type Missing!",
+            text  : "Please select expense type.",
+            icon  : "error",
+          });
+          return false;
+        } else if (expenseInId == "") {
+          swal({
+            title : "Expense In Missing!",
+            text  : "Please select expense in.",
+            icon  : "error",
+          });
+          return false;
+        } else if (expenseTransferFor == "") {
+          swal({
+            title : "Transfer For Missing!",
+            text  : "Please enter expense transfer for.",
+            icon  : "error"
+          }).then(function(){
+            $("#expenseTransferfor").focus();
+          });
+          return false;
+        } else {
+          $("#addExpenseTransferForModal").modal("toggle");
+          $.ajax({
+            url: '/master/add-transfer-for',
+            type: 'POST',
+            data: {expenseTypeId: expenseTypeId, expenseInId: expenseInId, expenseFor: expenseTransferFor},
+            success:function(data){
+              var data = JSON.parse(data);
+              console.log(data);
+              if (data.flag) {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "success"
+                }).then(function(){
+                  location.reload();
+                });
+              } else {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "error"
+                }).then(function(){
+                  $("#addExpenseTransferForModal").modal("toggle");
+                });
+              }
+            }
+          });
+        }
+      });
+    });
+    function showExpenseInOptions() {
+      var expenseTypeId = $("#expenseTypeId option:selected").val();
+      if (expenseTypeId != "") {
+        $.ajax({
+          url: '/master/get-expense-in-by-expense-type',
+          type: 'POST',
+          data: {expense_type_id: expenseTypeId},
+          success:function (data) {
+            var data = JSON.parse(data);
+            console.log(data);
+            if (data.flag) {
+             $("#expenseInId").html(data.option);
+           } else {
+            swal({
+              title : data.title,
+              text  : data.message,
+              icon  : "error"
+            });
+          }
+        }
+      });
+      } else {
+        $("#expenseInId").html('<option value="">Please Select</option>');
+      }
+    }
+    function showUpdatedExpenseInOptions() {
+      var expenseTypeId = $("#updatedExpenseTypeId option:selected").val();
+      if (expenseTypeId != "") {
+        $.ajax({
+          url: '/master/get-expense-in-by-expense-type',
+          type: 'POST',
+          data: {expense_type_id: expenseTypeId},
+          success:function (data) {
+            var data = JSON.parse(data);
+            console.log(data);
+            if (data.flag) {
+             $("#updatedExpenseInId").html(data.option);
+           } else {
+            swal({
+              title : data.title,
+              text  : data.message,
+              icon  : "error"
+            });
+          }
+        }
+      });
+      } else {
+        $("#updatedExpenseInId").html('<option value="">Please Select</option>');
+      }
+    }
+    function editDeactivateActivateDeleteExpenseTransferFor(id, type) {
+      if (type == "edit") {
+        $.ajax({
+          url: '/master/get-expense-transfer-for',
+          type: 'POST',
+          data: {expense_transfer_for_id: id},
+          success:function (data) {
+            $("#editExpenseTransferForModal").html(data);
+            $(".select2").select2();
+            $("#editExpenseTransferForModal").modal("toggle");
+          }
+        });
+      } else {
+        swal({
+          title : "Are you sure?",
+          text  : "Do you want to "+type+" clicked transfer for?",
+          icon  : "warning",
+          buttons : [true, "Yes, "+type],
+          dangerMode : true
+        }).then(function(isConfirm){
+          if (!isConfirm) {
+            return false;
+          } else {
+            $.ajax({
+              url  : '/master/deactivate-activate-delete-expense-transfer-for',
+              type : 'POST',
+              data : {type:type, expense_transfer_for_id:id},
+              success:function(data){
+                var data = JSON.parse(data);
+                if (data.flag) {
+                  swal({
+                    title : data.title,
+                    text  : data.message,
+                    icon  : "success",
+                  }).then(function(){
+                    location.reload("/master/expense-type");
+                  });
+                } else {
+                  swal({
+                    title : data.title,
+                    text  : data.message,
+                    icon  : "error"
+                  });           
+                }
+              }
+            });
+          }
+        });
+      }
+    }
+    function submitUpdateExpenseTransferForForm(id) {
+     var expenseTypeId       = $("#updatedExpenseTypeId").val();
+     var expenseInId         = $("#updatedExpenseInId").val();
+     var expenseTransferFor  = $("#updatedExpenseTransferFor").val();
+     if (expenseTypeId == "") {
+      swal({
+        title : "Expense Type Missing!",
+        text  : "Please select expense type.",
+        icon  : "error",
+      });
+      return false;
+    } else if (expenseInId == "") {
+      swal({
+        title : "Expense In Type Missing!",
+        text  : "Please select expense in type.",
+        icon  : "error",
+      });
+      return false;
+    } else if (expenseTransferFor == "") {
+      swal({
+        title : "Transfer For Missing!",
+        text  : "Please enter expense transfer for.",
+        icon  : "error",
+      }).then(function(){
+        $("#updatedExpenseTransferFor").focus();
+      });
+      return false;
+    } else {
+      $("#editExpenseTransferForModal").modal("toggle");
+      $.ajax({
+        url: '/master/edit-expense-transfer-for',
+        type: 'POST',
+        data: {expenseForId : id, expenseTypeId : expenseTypeId, expenseInId : expenseInId, expenseTransferFor : expenseTransferFor},
+        success:function(data){
+          var data = JSON.parse(data);
+          console.log(data);
+          if (data.flag) {
+            swal({
+              title : "Updated Successfully",
+              text  : data.message,
+              icon  : "success"
+            }).then(function(){
+              location.reload();
+            });
+          } else {
+            swal({
+              title : "Error",
+              text  : data.message,
+              icon  : "error"
+            }).then(function(){
+              $("#editExpenseTransferForModal").modal("toggle");
+            });
+          }
+        }
+      });
+    }
+  }
+</script>
+

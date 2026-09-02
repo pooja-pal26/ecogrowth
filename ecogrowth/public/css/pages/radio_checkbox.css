@@ -1,0 +1,146 @@
+.custom-checkbox .custom-control-indicator{
+    border-radius: 5px;
+}
+.left_align .custom-control-description{
+    padding-left: 15px;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_default,
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_default{
+    background-color: #31d0d6 !important; }
+
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_success,
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_success{
+    background-color: #5aca82 !important; }
+
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_info,
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_info{
+    background-color: #007bb8 !important; }
+
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_warning,
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_warning{
+    background-color: #fcb410 !important; }
+
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_primary,
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_primary{
+    background-color: #329cff !important; }
+
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_danger,
+.custom-checkbox .custom-control-input:checked ~ .custom_checkbox_danger{
+    background-color: #f86a67 !important; }
+.radio_custom_checkbox1 span{
+    padding-left: 15px;
+}
+/*------------Transitions-----------*/
+
+.checkbox label:after,
+.radio label:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+.checkbox .cr,
+.radio .cr {
+    margin-top: 3px;
+    position: relative;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    border-radius: .25em;
+    width: 1.3em;
+    height: 1.3em;
+    float: left;
+    margin-right: .5em;
+}
+.radio .cr {
+    border-radius: 50%;
+}
+.checkbox .cr .cr-icon,
+.radio .cr .cr-icon {
+    position: absolute;
+    font-size: .8em;
+    line-height: 0;
+    top: 50%;
+    left: 17%;
+}
+.radio .cr .cr-icon {
+    margin-left: 0.04em;
+}
+.checkbox label input[type="checkbox"],
+.radio label input[type="radio"] {
+    display: none;
+}
+.checkbox label input[type="checkbox"] + .cr > .cr-icon,
+.radio label input[type="radio"] + .cr > .cr-icon {
+    transform: scale(3) rotateZ(-20deg);
+    opacity: 0;
+    transition: all .3s ease-in;
+}
+.checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+.radio label input[type="radio"]:checked + .cr > .cr-icon {
+    transform: scale(1) rotateZ(0deg);
+    opacity: 1;
+}
+.checkbox label input[type="checkbox"]:disabled + .cr,
+.radio label input[type="radio"]:disabled + .cr {
+    opacity: .5;
+}
+.small_font_check{
+    font-size: 0.7em;
+}
+.radio_Checkbox_size2{
+    font-size: 1.5em;
+}
+.radio_Checkbox_size4{
+    font-size: 1em;
+}
+.diff_colored_checkbox .btn, .diff_colored_radio .btn{
+    margin-right:-2px;
+}
+.diff_colored_checkbox .btn span.ti-check {
+    opacity: 0;
+}
+.diff_colored_checkbox .btn.active span.ti-check {
+    opacity: 1;
+}
+.diff_colored_radio .btn span.ti-control-record {
+    opacity: 0;
+}
+.diff_colored_radio .btn.active span.ti-control-record {
+    opacity: 1;
+}
+.btn-group label{
+    cursor: pointer;
+}
+.diff_colored_checkbox .btn_danger_rad {
+    border-top-right-radius: 3px !important;
+    border-bottom-right-radius: 3px !important;
+}
+/*-------------radio buttons------*/
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_default,
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_default{
+    background-color: #31d0d6 !important; }
+
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_success,
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_success{
+    background-color: #5aca82 !important; }
+
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_info,
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_info{
+    background-color: #007bb8 !important; }
+
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_warning,
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_warning{
+    background-color: #fcb410 !important; }
+
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_primary,
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_primary{
+    background-color: #329cff !important; }
+
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_danger,
+.custom-radio .custom-control-input:checked ~ .custom_checkbox_danger{
+    background-color: #f86a67 !important; }
+
+.checkbox .cr .cr-icon, .radio .cr .cr-icon{
+    left:11%;
+}

@@ -1,0 +1,62 @@
+
+<a class="btn btn-primary pull-right" href="/import/add-deployement">Add  New Deployement</a>
+<table class="table table-striped">
+    <!-- START PAGINATION -->
+    <?php 
+    $record = $this->paginator; 
+    $totalrec = $this->totalrec;
+    if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'deployment-pagination.phtml'); } ?>  
+    <!-- END PAGINATION -->
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>SO</th>
+        <th>Action</th>
+        <th nowrap>Created Date</th>
+        <th nowrap>OPCO Name</th>
+        <th nowrap>SR Type OPCO</th>
+        <th>PO</th>
+        <th nowrap>Infratel Id</th>
+        <th>District</th>
+        <th>Zone</th>
+        <th>Cluster</th>
+        <th nowrap>Technical Site ID</th>
+        <th>Item</th>
+        <th>Category</th>
+        <th nowrap>Item Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php 
+    if($totalrec){ 
+    $totalnum = $this->totalnum?$this->totalnum:1;
+    $istart = ($totalnum-1) * 10;
+    $i=$istart;
+    foreach($record as $deploy)
+    { ?>
+    <tr>
+        <td><?php echo $i+1;?>.</td>
+        <td><a href="/import/edit-deployement/id/<?php echo $deploy['id']; ?>"><i class="ti-pencil-alt"></i></a></td>
+        <td nowrap><?php echo $deploy['so']; ?></td>
+        <td nowrap><?php echo $deploy['created_date']; ?></td>
+        <td nowrap><?php echo $deploy['opco_name']; ?></td>
+        <td nowrap><?php echo $deploy['sr_type_opco']; ?></td>
+        <td nowrap><?php echo $deploy['po']; ?></td>
+        <td nowrap><?php echo $deploy['infratel_id']; ?></td>
+        <td nowrap><?php echo $deploy['district']; ?></td>
+        <td nowrap><?php echo $deploy['zone']; ?></td>
+        <td nowrap><?php echo $deploy['cluster']; ?></td>
+        <td nowrap><?php echo $deploy['technical_site_id']; ?></td>
+        <td nowrap><?php echo $deploy['item']; ?></td>
+        <td nowrap><?php echo $deploy['category']; ?></td>
+        <td nowrap><?php echo $deploy['item_des']; ?></td>
+    </tr>
+    <?php  $i++;} } else{  ?>
+                    <tr><td colspan="14"><p style="color:red; font-size:16px;">No Record Found !</p></td></tr>
+        <?php  } ?>
+    </tbody>
+</table>
+
+<!-- START PAGINATION -->
+<?php if($totalrec > $this->perPage) { echo $this->paginationControl($this->paginator, 'Sliding', 'deployment-pagination.phtml'); } ?>  
+<!-- END PAGINATION -->

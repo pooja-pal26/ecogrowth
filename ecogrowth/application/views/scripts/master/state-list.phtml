@@ -1,0 +1,206 @@
+
+<div id="page-wrapper">
+  <div class="main-page">
+    <?php if ($this->messages): ?>
+      <?php foreach ($this->messages as $message): ?>
+        <?php if ($message['success']){ ?>
+          <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Success !</strong>&nbsp; <?php echo $message["success"]; ?>
+          </div>
+        <?php } else if ($message['error']) { ?>
+          <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Error !</strong>&nbsp; <?php echo $message["error"]; ?>
+          </div>
+        <?php } ?>
+      <?php endforeach ?>
+    <?php endif ?>
+    <div class="panel panel-primary">
+      <div class="panel panel-heading">
+        <h3>State List
+          <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-success" data-toggle="modal" data-target="#addStateModal">Add State</a>
+          </div></h3>
+        </div>
+        <div class="panel panel-body">
+          <div class="table-responsive" id="state-list">
+            <table class="display" width="100%" id="stateListTable">
+             <thead>
+              <th>#</th>
+              <th>State Name</th>
+              <th>State Code</th>
+              <th>Action</th>
+            </thead>
+            <tbody>
+              <?php if($this->statesNameList){
+                $i = 1;
+                foreach ($this->statesNameList as $state) { ?>
+                 <tr>
+                  <td><?php echo $i; ?></td>
+                  <td><?php echo $state['state_name']; ?></td>
+                  <td><?php echo $state['state_code'] < 10 ? '0'.$state['state_code']:$state['state_code']; ?></td>
+                  <td>
+                    <a href="javascript:void(0)" title="Edit State Name" onclick="editStateNameModal(<?php echo $state['id']; ?>)"><span class="fa fa-pencil" style="color: #1DAA29;"></span></a>
+                    &nbsp;&nbsp;
+                    <a href="javascript:void(0)" class="tododelete redcolor" onclick="deleteState('<?php echo $state['id'];?>')" title="Delete State"><span class="fa fa-trash" style="color: red;"></span></a>
+                  </td>
+                </tr>
+                <?php $i++; } } ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add State Modal : Start -->
+  <div class="modal fade" id="addStateModal">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Add New State</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <form action="/master/add-state-name" method="POST" role="form" id="addStateNameForm">
+              <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="state_name">State Name :</label>
+                <input type="text" class="form-control" name="state_name" id="state_name" placeholder="Enter State Name" oninput="this.value = this.value.replace(/[^a-z A-Z]/g,'')">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="state_code">State Code :</label>
+                <input type="text" class="form-control" name="state_code" id="state_code" placeholder="Enter State Code" oninput="this.value = this.value.replace(/[^0-9]/g,'')">
+              </div>
+              <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <input type="submit" class="btn btn-primary pull-right" id="saveStateName" value="Save">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add State Modal : End -->
+
+  <!-- Edit Bank Modal : Start -->
+  <div class="modal fade" id="editStateModal"></div>
+  <!-- Edit Bank Modal : End -->
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#stateListTable").DataTable();
+      $("#saveStateName").click(function(event) {
+        event.preventDefault();
+        var state_name = $("#state_name").val();
+        var state_code = $("#state_code").val();
+        if (state_name == "") {
+          swal({
+            title : "State Name Missing!",
+            text  : "Please enter state name.",
+            icon  : "error"
+          }).then(function(){
+            $("#state_name").focus();
+          });
+          return false;
+        } else if (state_code == "") {
+          swal({
+            title : "State Code Missing!",
+            text  : "Please enter state code.",
+            icon  : "error"
+          }).then(function(){
+            $("#state_code").focus();
+          });
+          return false;
+        } else {
+          $("#loading-bg").show();
+          $.ajax({
+            url: $("#addStateNameForm").attr('action'),
+            type: 'POST',
+            data: $("#addStateNameForm").serialize(),
+            success:function(data){
+              var data = JSON.parse(data);
+              console.log(data);
+              if (data.flag) {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "success"
+                }).then(function(){
+                  window.location.reload();
+                });
+              } else {
+                swal({
+                  title : data.title,
+                  text  : data.message,
+                  icon  : "error"
+                });
+                return false;
+              }
+            }
+          });
+          
+        }
+      });
+    });
+    function deleteState(id) {
+      swal({
+        title : "Are you sure?",
+        text  : "Do you want to delete clicked state?",
+        icon  : "warning",
+        buttons : [true, "Yes, Delete"],
+        dangerMode : true
+      }).then(function(isConfirm){
+        if (!isConfirm) {
+          return false;
+        } else {
+          $.ajax({
+            url: '/master/delete-state-name/id/'+id,
+            type: 'GET',
+            success:function(data){
+              var data = JSON.parse(data);
+              if (data.flag) {
+                swal({
+                  title : "Deleted",
+                  text  : data.message,
+                  icon  : "success",
+                }).then(function(){
+                  location.reload("/master/state-list");
+                });
+              } else {
+                swal({
+                  title : "Failed !",
+                  text  : data.message,
+                  icon  : "error"
+                });           
+              }
+            }
+          });
+
+        }
+      });
+    }
+    function editStateNameModal(id) {
+      if (id == "") {
+        swal({
+          title : "State ID Missing!",
+          text  : "Please try after refresh the page once.",
+          icon  : "error"
+        });
+      } else {
+        $.ajax({
+          url: '/master/get-state-name',
+          type: 'POST',
+          data: {state_id: id},
+          success:function(data){
+            $("#editStateModal").html(data);
+            $("#editStateModal").modal("toggle");
+          }
+        });
+        
+      }
+    }
+  </script>
+

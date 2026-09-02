@@ -1,0 +1,40 @@
+<?php
+$params = $this->params;
+$reason = $this->companies;
+// echo '<pre>';print_r( $this->companies);exit;
+
+?>
+<div class="row">
+	<form action="/master/add-debit-account/id/<?php echo $reason['id']?>" method="POST" onsubmit="return Validate();">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="row">
+				<div class="col-md-5">
+					<div class="form-group">
+						<label>Debit Account:</label>
+						<input type="text" name="debit_account" class="form-control" id="name" value="<?php echo $this->companies['debit_account']?>">
+					</div>
+				</div>
+				
+			</div>
+			<br clear="all">
+			<div class="row" id="reason">
+				<div class="row">
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+						<div class="input-group">
+							<button class="btn btn-primary">Submit</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript">
+		function Validate() {
+			if($('#debit_account').val() == ""){
+				swal('Error','Please enter the debit_account','error');
+				return false;
+			}else{
+				return true;
+			}
+		}
+	</script>
