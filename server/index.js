@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/master-data', require('./routes/masterDataRoutes'));
 
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/ecogrowth')
   .then(() => console.log('MongoDB connected'))
