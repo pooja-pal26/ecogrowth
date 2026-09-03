@@ -37,7 +37,24 @@ const navItems = [
       { name: 'Site Documents', path: '/master-data/site-documents' },
       { name: 'Add Geo Location', path: '/master-data/geo-location' },
       { name: 'Payment Modes', path: '/master-data/payment-modes' },
-      { name: 'Bank Accounts', path: '/master-data/bank-accounts' }
+      { name: 'Bank Accounts', path: '/master-data/bank-accounts' },
+      { 
+        name: 'Work Master Data', 
+        icon: Settings, 
+        hasSubmenu: true,
+        subItems: [
+          { name: 'Work For Site Of', path: '/master-data/work-master-data/work-for-site-of' },
+          { name: 'Nature Of Work', path: '/master-data/work-master-data/nature-of-work' },
+          { name: 'Site Type', path: '/master-data/work-master-data/site-type' },
+          { name: 'Work', path: '/master-data/work-master-data/work' },
+          { name: 'Work Description', path: '/master-data/work-master-data/work-description' }
+        ]
+      },
+      { name: 'Expense Master Data', icon: IndianRupee, hasSubmenu: true, subItems: [] },
+      { name: 'Debit Accounts', icon: IndianRupee, hasSubmenu: true, subItems: [] },
+      { name: 'Product Master Data', icon: Settings, hasSubmenu: true, subItems: [] },
+      { name: 'Vendor Master Data', icon: Settings, hasSubmenu: true, subItems: [] },
+      { name: 'Employee Roles', icon: Users, hasSubmenu: true, subItems: [] }
     ]
   },
   { name: 'Expense Dashboard', path: '/expense-dashboard', icon: LineChart },
@@ -83,24 +100,7 @@ const navItems = [
   { name: 'Manage Users', path: '/manage-users', icon: Users, hasSubmenu: true },
   { name: 'Manage Vendors', path: '/manage-vendors', icon: Settings, hasSubmenu: true },
   { name: 'Material Stock', path: '/material-stock', icon: MuiInventory, hasSubmenu: true },
-  { name: 'Reports', path: '/reports', icon: MuiAssessment, hasSubmenu: true },
-  { 
-    name: 'Work Master Data', 
-    icon: Settings, 
-    hasSubmenu: true,
-    subItems: [
-      { name: 'Work For Site Of', path: '/master-data/work-master-data/work-for-site-of' },
-      { name: 'Nature Of Work', path: '/master-data/work-master-data/nature-of-work' },
-      { name: 'Site Type', path: '/master-data/work-master-data/site-type' },
-      { name: 'Work', path: '/master-data/work-master-data/work' },
-      { name: 'Work Description', path: '/master-data/work-master-data/work-description' }
-    ]
-  },
-  { name: 'Expense Master Data', icon: Settings, hasSubmenu: true, subItems: [] },
-  { name: 'Debit Accounts', icon: Settings, hasSubmenu: true, subItems: [] },
-  { name: 'Product Master Data', icon: Settings, hasSubmenu: true, subItems: [] },
-  { name: 'Vendor Master Data', icon: Settings, hasSubmenu: true, subItems: [] },
-  { name: 'Employee Roles', icon: Users, hasSubmenu: true, subItems: [] },
+  { name: 'Reports', path: '/reports', icon: MuiAssessment, hasSubmenu: true }
 ];
 
 const MenuItem = ({ item, depth = 0 }) => {
