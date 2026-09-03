@@ -40,6 +40,13 @@ import SiteType from './pages/master-data/work-master-data/SiteType';
 import Work from './pages/master-data/work-master-data/Work';
 import WorkDescription from './pages/master-data/work-master-data/WorkDescription';
 
+// Expense Module imports
+import CreateNewExpense from './pages/expense-module/CreateNewExpense';
+import SiteExpenseReport from './pages/expense-module/SiteExpenseReport';
+import InvoiceReport from './pages/expense-module/InvoiceReport';
+import OfficeExpenseReport from './pages/expense-module/OfficeExpenseReport';
+import B2BFundTransferReport from './pages/expense-module/B2BFundTransferReport';
+
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/layout/Layout';
 
@@ -112,6 +119,14 @@ function App() {
           <Route path="/master-data/work-master-data/site-type" element={<ProtectedRoute><Layout><SiteType /></Layout></ProtectedRoute>} />
           <Route path="/master-data/work-master-data/work" element={<ProtectedRoute><Layout><Work /></Layout></ProtectedRoute>} />
           <Route path="/master-data/work-master-data/work-description" element={<ProtectedRoute><Layout><WorkDescription /></Layout></ProtectedRoute>} />
+          
+          {/* Expense Module routes */}
+          <Route path="/expense-module/create-new-expense" element={<ProtectedRoute><Layout><CreateNewExpense /></Layout></ProtectedRoute>} />
+          <Route path="/expense-module/site-expense-report" element={<ProtectedRoute><Layout><SiteExpenseReport /></Layout></ProtectedRoute>} />
+          <Route path="/expense-module/invoice-report" element={<ProtectedRoute><Layout><InvoiceReport /></Layout></ProtectedRoute>} />
+          <Route path="/expense-module/office-expense-report" element={<ProtectedRoute><Layout><OfficeExpenseReport /></Layout></ProtectedRoute>} />
+          <Route path="/expense-module/b2b-fund-transfer-report" element={<ProtectedRoute><Layout><B2BFundTransferReport /></Layout></ProtectedRoute>} />
+          
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

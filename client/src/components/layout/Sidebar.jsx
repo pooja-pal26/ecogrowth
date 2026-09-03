@@ -58,7 +58,18 @@ const navItems = [
     ]
   },
   { name: 'Expense Dashboard', path: '/expense-dashboard', icon: LineChart },
-  { name: 'Expense Module', path: '/expense-module', icon: IndianRupee, hasSubmenu: true },
+  { 
+    name: 'Expense Module', 
+    icon: IndianRupee, 
+    hasSubmenu: true,
+    subItems: [
+      { name: 'Create New Expense', path: '/expense-module/create-new-expense' },
+      { name: 'Site Expense Report', path: '/expense-module/site-expense-report' },
+      { name: "Invoice's Report", path: '/expense-module/invoice-report' },
+      { name: 'Office Expense Report', path: '/expense-module/office-expense-report' },
+      { name: 'B2B Fund Transfer Report', path: '/expense-module/b2b-fund-transfer-report' }
+    ]
+  },
   { name: 'Company', path: '/company', icon: Laptop, hasSubmenu: true },
   { name: 'Invoice Module', path: '/invoice-module', icon: FileText, hasSubmenu: true },
   { 
