@@ -1,0 +1,16 @@
+# Do not push old PHP project
+ecogrowth/
+
+# Environment variables
+.env
+.env.*
+
+# Dependencies
+node_modules/
+
+# Build files
+dist/
+build/
+
+# Logs
+*.log
