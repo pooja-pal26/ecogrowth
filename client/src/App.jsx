@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import MaterialStock from './pages/MaterialStock';
@@ -22,11 +23,11 @@ import ReportNewIncident from './pages/po-sites/incidents-reporting/ReportNewInc
 
 // Master Data imports
 import StateList from './pages/master-data/StateList';
-import ClientMasterData from './pages/master-data/ClientMasterData';
-import CompanyVendor from './pages/master-data/CompanyVendor';
-import MaterialSuppliers from './pages/master-data/MaterialSuppliers';
-import Transporters from './pages/master-data/Transporters';
-import StateFor from './pages/master-data/StateFor';
+import ClientList from './pages/master-data/ClientList';
+import CompanyVendor from './pages/masterData/CompanyVendor';
+import MaterialSuppliers from './pages/masterData/MaterialSuppliers';
+import Transporters from './pages/masterData/Transporters';
+import StateFor from './pages/masterData/StateFor';
 import BankNameList from './pages/master-data/BankNameList';
 import SiteDocuments from './pages/master-data/SiteDocuments';
 import GeoLocation from './pages/master-data/GeoLocation';
@@ -55,7 +56,9 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+
           <Route path="/login" element={<Login />} />
+
           <Route
             path="/"
             element={
@@ -66,6 +69,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/material-stock"
             element={
@@ -76,6 +80,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/reports"
             element={
@@ -86,23 +91,24 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           {/* PO & Sites routes */}
           <Route path="/po-sites/po/add-new-po" element={<ProtectedRoute><Layout><AddNewPO /></Layout></ProtectedRoute>} />
           <Route path="/po-sites/po/add-new-po-sites" element={<ProtectedRoute><Layout><AddNewPOSites /></Layout></ProtectedRoute>} />
           <Route path="/po-sites/po/po-details" element={<ProtectedRoute><Layout><PODetails /></Layout></ProtectedRoute>} />
           <Route path="/po-sites/po/po-status" element={<ProtectedRoute><Layout><POStatus /></Layout></ProtectedRoute>} />
-          
+
           <Route path="/po-sites/sites/import-site-data" element={<ProtectedRoute><Layout><ImportSiteData /></Layout></ProtectedRoute>} />
           <Route path="/po-sites/sites/allocate-site" element={<ProtectedRoute><Layout><AllocateSite /></Layout></ProtectedRoute>} />
           <Route path="/po-sites/sites/allocated-site-list" element={<ProtectedRoute><Layout><AllocatedSiteList /></Layout></ProtectedRoute>} />
           <Route path="/po-sites/sites/allocated-site-status" element={<ProtectedRoute><Layout><AllocatedSiteStatus /></Layout></ProtectedRoute>} />
-          
+
           <Route path="/po-sites/incidents-reporting/incidents-report" element={<ProtectedRoute><Layout><IncidentsReport /></Layout></ProtectedRoute>} />
           <Route path="/po-sites/incidents-reporting/report-new-incident" element={<ProtectedRoute><Layout><ReportNewIncident /></Layout></ProtectedRoute>} />
-          
+
           {/* Master Data routes */}
           <Route path="/master-data/state-list" element={<ProtectedRoute><Layout><StateList /></Layout></ProtectedRoute>} />
-          <Route path="/master-data/client-master-data" element={<ProtectedRoute><Layout><ClientMasterData /></Layout></ProtectedRoute>} />
+          <Route path="/master-data/client-master-data" element={<ProtectedRoute><Layout><ClientList /></Layout></ProtectedRoute>} />
           <Route path="/master-data/company-vendor" element={<ProtectedRoute><Layout><CompanyVendor /></Layout></ProtectedRoute>} />
           <Route path="/master-data/material-suppliers" element={<ProtectedRoute><Layout><MaterialSuppliers /></Layout></ProtectedRoute>} />
           <Route path="/master-data/transporters" element={<ProtectedRoute><Layout><Transporters /></Layout></ProtectedRoute>} />
@@ -119,15 +125,16 @@ function App() {
           <Route path="/master-data/work-master-data/site-type" element={<ProtectedRoute><Layout><SiteType /></Layout></ProtectedRoute>} />
           <Route path="/master-data/work-master-data/work" element={<ProtectedRoute><Layout><Work /></Layout></ProtectedRoute>} />
           <Route path="/master-data/work-master-data/work-description" element={<ProtectedRoute><Layout><WorkDescription /></Layout></ProtectedRoute>} />
-          
+
           {/* Expense Module routes */}
           <Route path="/expense-module/create-new-expense" element={<ProtectedRoute><Layout><CreateNewExpense /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/site-expense-report" element={<ProtectedRoute><Layout><SiteExpenseReport /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/invoice-report" element={<ProtectedRoute><Layout><InvoiceReport /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/office-expense-report" element={<ProtectedRoute><Layout><OfficeExpenseReport /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/b2b-fund-transfer-report" element={<ProtectedRoute><Layout><B2BFundTransferReport /></Layout></ProtectedRoute>} />
-          
+
           <Route path="*" element={<Navigate to="/" replace />} />
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>
