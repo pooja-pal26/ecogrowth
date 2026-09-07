@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../../components/master-data/MasterDataForm';
 
-const Work = () => {
+const ProductList = () => {
   const [data, setData] = useState([
     {
       _id: '1',
-      name: 'Sample Data',
+      product_name: 'Sample Data',
       status: true
     }
   ]);
@@ -15,7 +15,9 @@ const Work = () => {
   const [isEditing, setIsEditing] = useState(false);
   
   const initialForm = {
-    name: '',
+    product_name: '',
+    type: '',
+    unit: '',
     status: true
   };
   
@@ -23,16 +25,28 @@ const Work = () => {
   const [editId, setEditId] = useState(null);
 
   const columns = [
-    { key: 'name', label: 'Name' },
+    { key: 'product_name', label: 'Product Name' },
+    { key: 'type', label: 'Type' },
+    { key: 'unit', label: 'Unit' },
     { key: 'status', label: 'Status', render: (row) => row.status ? 'Active' : 'Deactive' }
   ];
 
   const formFields = [
     {
-        key: "name",
-        label: "Name",
+        key: "product_name",
+        label: "Product Name",
         type: "text",
         required: true
+    },
+    {
+        key: "type",
+        label: "Type",
+        type: "text"
+    },
+    {
+        key: "unit",
+        label: "Unit",
+        type: "text"
     },
     {
         key: "status",
@@ -59,7 +73,9 @@ const Work = () => {
 
   const handleEdit = (row) => {
     setFormData({
-      name: row.name,
+      product_name: row.product_name,
+      type: row.type,
+      unit: row.unit,
       status: row.status
     });
     setEditId(row._id);
@@ -68,7 +84,7 @@ const Work = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this work?")) {
+    if (window.confirm("Are you sure you want to delete this product?")) {
       setData(data.filter(v => v._id !== id));
     }
   };
@@ -87,7 +103,7 @@ const Work = () => {
   return (
     <>
       <MasterDataTable
-        title="Work"
+        title="Product List"
         data={data}
         columns={columns}
         onAdd={handleAdd}
@@ -97,7 +113,7 @@ const Work = () => {
       <MasterDataForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Work"
+        title="Product"
         fields={formFields}
         formData={formData}
         setFormData={setFormData}
@@ -108,4 +124,4 @@ const Work = () => {
   );
 };
 
-export default Work;
+export default ProductList;

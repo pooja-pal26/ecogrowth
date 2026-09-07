@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../../components/master-data/MasterDataForm';
 
-const Work = () => {
+const ExpenseType = () => {
   const [data, setData] = useState([
     {
       _id: '1',
@@ -68,7 +68,7 @@ const Work = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this work?")) {
+    if (window.confirm("Are you sure you want to delete this expense type?")) {
       setData(data.filter(v => v._id !== id));
     }
   };
@@ -87,7 +87,7 @@ const Work = () => {
   return (
     <>
       <MasterDataTable
-        title="Work"
+        title="Expense Type"
         data={data}
         columns={columns}
         onAdd={handleAdd}
@@ -97,7 +97,7 @@ const Work = () => {
       <MasterDataForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Work"
+        title="Expense Type"
         fields={formFields}
         formData={formData}
         setFormData={setFormData}
@@ -108,4 +108,4 @@ const Work = () => {
   );
 };
 
-export default Work;
+export default ExpenseType;

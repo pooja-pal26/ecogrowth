@@ -50,11 +50,60 @@ const navItems = [
           { name: 'Work Description', path: '/master-data/work-master-data/work-description' }
         ]
       },
-      { name: 'Expense Master Data', icon: IndianRupee, hasSubmenu: true, subItems: [] },
-      { name: 'Debit Accounts', icon: IndianRupee, hasSubmenu: true, subItems: [] },
-      { name: 'Product Master Data', icon: Settings, hasSubmenu: true, subItems: [] },
-      { name: 'Vendor Master Data', icon: Settings, hasSubmenu: true, subItems: [] },
-      { name: 'Employee Roles', icon: Users, hasSubmenu: true, subItems: [] }
+      { 
+        name: 'Expense Master Data', 
+        icon: IndianRupee, 
+        hasSubmenu: true, 
+        subItems: [
+          { name: 'Expense Type', path: '/master-data/expense-master-data/expense-type' },
+          { name: 'Expense In', path: '/master-data/expense-master-data/expense-in' },
+          { name: 'Expense For', path: '/master-data/expense-master-data/expense-for' }
+        ] 
+      },
+      { 
+        name: 'Debit Accounts', 
+        icon: IndianRupee, 
+        hasSubmenu: true, 
+        subItems: [
+          { name: 'Debit Account Details', path: '/master-data/debit-accounts/debit-account-details' }
+        ] 
+      },
+      { 
+        name: 'Product Master Data', 
+        icon: Settings, 
+        hasSubmenu: true, 
+        subItems: [
+          { name: 'Product Suppliers', path: '/master-data/product-master-data/product-suppliers' },
+          { name: 'Product (s)', path: '/master-data/product-master-data/product-list' },
+          { name: 'Product Type', path: '/master-data/product-master-data/product-type' },
+          { name: 'Product Unit', path: '/master-data/product-master-data/product-unit' },
+          { name: 'Product Brand', path: '/master-data/product-master-data/product-brand' }
+        ] 
+      },
+      { 
+        name: 'Vendor Master Data', 
+        icon: Settings, 
+        hasSubmenu: true, 
+        subItems: [
+          { name: 'Vendor Experience', path: '/master-data/vendor-master-data/vendor-experience' },
+          { name: 'Organization Type', path: '/master-data/vendor-master-data/organization-type' },
+          { name: 'Association Years', path: '/master-data/vendor-master-data/association-years' },
+          { name: 'Geographical Presense', path: '/master-data/vendor-master-data/geographical-presence' },
+          { name: 'Major Clients', path: '/master-data/vendor-master-data/major-clients' },
+          { name: 'Team Strength', path: '/master-data/vendor-master-data/team-strength' },
+          { name: 'Annual Turnover', path: '/master-data/vendor-master-data/annual-turnover' },
+          { name: 'Work Handle Amount', path: '/master-data/vendor-master-data/work-handle-amount' }
+        ] 
+      },
+      { 
+        name: 'Employee Roles', 
+        icon: Users, 
+        hasSubmenu: true, 
+        subItems: [
+          { name: 'Roles', path: '/master-data/employee-roles/roles' },
+          { name: 'Role Types', path: '/master-data/employee-roles/role-types' }
+        ] 
+      }
     ]
   },
   { name: 'Expense Dashboard', path: '/expense-dashboard', icon: LineChart },
@@ -70,8 +119,26 @@ const navItems = [
       { name: 'B2B Fund Transfer Report', path: '/expense-module/b2b-fund-transfer-report' }
     ]
   },
-  { name: 'Company', path: '/company', icon: Laptop, hasSubmenu: true },
-  { name: 'Invoice Module', path: '/invoice-module', icon: FileText, hasSubmenu: true },
+  { 
+    name: 'Company', 
+    icon: Laptop, 
+    hasSubmenu: true,
+    subItems: [
+      { name: 'Company details', path: '/company/company-details' }
+    ]
+  },
+  { 
+    name: 'Invoice Module', 
+    icon: FileText, 
+    hasSubmenu: true,
+    subItems: [
+      { name: 'Punched Invoices', path: '/invoice-module/punched-invoices' },
+      { name: 'Punch Invoice', path: '/invoice-module/punch-invoice' },
+      { name: 'Monthly Invoice Report', path: '/invoice-module/monthly-invoice-report' },
+      { name: 'Generate Invoice', path: '/invoice-module/generate-invoice' },
+      { name: 'Services / Products', path: '/invoice-module/services-products' }
+    ]
+  },
   { 
     name: 'PO & Sites', 
     icon: Book, 
@@ -107,11 +174,56 @@ const navItems = [
       }
     ]
   },
-  { name: 'Asset Management', path: '/asset-management', icon: MonitorSmartphone, hasSubmenu: true },
-  { name: 'Manage Users', path: '/manage-users', icon: Users, hasSubmenu: true },
-  { name: 'Manage Vendors', path: '/manage-vendors', icon: Settings, hasSubmenu: true },
-  { name: 'Material Stock', path: '/material-stock', icon: MuiInventory, hasSubmenu: true },
-  { name: 'Reports', path: '/reports', icon: MuiAssessment, hasSubmenu: true }
+  { 
+    name: 'Asset Management', 
+    icon: MonitorSmartphone, 
+    hasSubmenu: true,
+    subItems: [
+      { name: 'Asset Type', path: '/asset-management/asset-type' },
+      { name: 'Assets', path: '/asset-management/assets' },
+      { name: 'Asset assignments', path: '/asset-management/asset-assignments' }
+    ]
+  },
+  { 
+    name: 'Manage Users', 
+    icon: Users, 
+    hasSubmenu: true,
+    subItems: [
+      { name: 'Add New User', path: '/manage-users/add-new-user' },
+      { name: 'Active Users', path: '/manage-users/active-users' },
+      { name: 'Deactive Users', path: '/manage-users/deactive-users' }
+    ]
+  },
+  { 
+    name: 'Manage Vendors', 
+    icon: Settings, 
+    hasSubmenu: true,
+    subItems: [
+      { name: 'Add New Vendor', path: '/manage-vendors/add-new-vendor' },
+      { name: 'Active Vendors', path: '/manage-vendors/active-vendors' },
+      { name: 'Deactive Vendors', path: '/manage-vendors/deactive-vendors' }
+    ]
+  },
+  { 
+    name: 'Material Stock', 
+    icon: MuiInventory, 
+    hasSubmenu: true,
+    subItems: [
+      { name: 'Material Stock Report', path: '/material-stock/material-stock-report' },
+      { name: 'Stock In', path: '/material-stock/stock-in' },
+      { name: 'Stock Out', path: '/material-stock/stock-out' }
+    ]
+  },
+  { 
+    name: 'Reports', 
+    icon: MuiAssessment, 
+    hasSubmenu: true,
+    subItems: [
+      { name: 'Stock In Report', path: '/reports/stock-in-report' },
+      { name: 'Stock Out Report', path: '/reports/stock-out-report' },
+      { name: 'Summary Report', path: '/reports/summary-report' }
+    ]
+  }
 ];
 
 const MenuItem = ({ item, depth = 0 }) => {

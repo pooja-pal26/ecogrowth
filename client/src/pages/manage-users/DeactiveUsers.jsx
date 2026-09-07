@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import MasterDataTable from '../../../components/master-data/MasterDataTable';
-import MasterDataForm from '../../../components/master-data/MasterDataForm';
+import MasterDataTable from '../../components/master-data/MasterDataTable';
+import MasterDataForm from '../../components/master-data/MasterDataForm';
 
-const Work = () => {
+const DeactiveUsers = () => {
   const [data, setData] = useState([
     {
       _id: '1',
       name: 'Sample Data',
-      status: true
+      status: 'Active'
     }
   ]);
   
@@ -16,7 +16,7 @@ const Work = () => {
   
   const initialForm = {
     name: '',
-    status: true
+    status: 'Active'
   };
   
   const [formData, setFormData] = useState(initialForm);
@@ -24,32 +24,22 @@ const Work = () => {
 
   const columns = [
     { key: 'name', label: 'Name' },
-    { key: 'status', label: 'Status', render: (row) => row.status ? 'Active' : 'Deactive' }
+    { key: 'status', label: 'Status' }
   ];
 
   const formFields = [
-    {
-        key: "name",
-        label: "Name",
-        type: "text",
-        required: true
-    },
-    {
-        key: "status",
-        label: "Status",
-        type: "select",
-        options: [
-            {
-                value: true,
-                label: "Active"
-            },
-            {
-                value: false,
-                label: "Deactive"
-            }
-        ]
+    { key: 'name', label: 'Name', type: 'text', required: true },
+    { 
+      key: 'status', 
+      label: 'Status', 
+      type: 'select', 
+      required: true,
+      options: [
+        { value: 'Active', label: 'Active' },
+        { value: 'Inactive', label: 'Inactive' }
+      ]
     }
-];
+  ];
 
   const handleAdd = () => {
     setFormData(initialForm);
@@ -68,7 +58,7 @@ const Work = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this work?")) {
+    if (window.confirm("Are you sure you want to delete this record?")) {
       setData(data.filter(v => v._id !== id));
     }
   };
@@ -87,7 +77,7 @@ const Work = () => {
   return (
     <>
       <MasterDataTable
-        title="Work"
+        title="Deactive Users"
         data={data}
         columns={columns}
         onAdd={handleAdd}
@@ -97,7 +87,7 @@ const Work = () => {
       <MasterDataForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Work"
+        title="Deactive Users"
         fields={formFields}
         formData={formData}
         setFormData={setFormData}
@@ -108,4 +98,4 @@ const Work = () => {
   );
 };
 
-export default Work;
+export default DeactiveUsers;

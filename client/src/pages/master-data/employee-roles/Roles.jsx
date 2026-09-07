@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../../components/master-data/MasterDataForm';
 
-const Work = () => {
+const Roles = () => {
   const [data, setData] = useState([
     {
       _id: '1',
@@ -23,14 +23,14 @@ const Work = () => {
   const [editId, setEditId] = useState(null);
 
   const columns = [
-    { key: 'name', label: 'Name' },
+    { key: 'name', label: 'Role Name' },
     { key: 'status', label: 'Status', render: (row) => row.status ? 'Active' : 'Deactive' }
   ];
 
   const formFields = [
     {
         key: "name",
-        label: "Name",
+        label: "Role Name",
         type: "text",
         required: true
     },
@@ -68,7 +68,7 @@ const Work = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this work?")) {
+    if (window.confirm("Are you sure you want to delete this role?")) {
       setData(data.filter(v => v._id !== id));
     }
   };
@@ -87,7 +87,7 @@ const Work = () => {
   return (
     <>
       <MasterDataTable
-        title="Work"
+        title="Employee Roles"
         data={data}
         columns={columns}
         onAdd={handleAdd}
@@ -97,7 +97,7 @@ const Work = () => {
       <MasterDataForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Work"
+        title="Role"
         fields={formFields}
         formData={formData}
         setFormData={setFormData}
@@ -108,4 +108,4 @@ const Work = () => {
   );
 };
 
-export default Work;
+export default Roles;

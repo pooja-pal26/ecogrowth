@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import MaterialStock from './pages/MaterialStock';
 import Reports from './pages/Reports';
@@ -24,13 +25,13 @@ import ReportNewIncident from './pages/po-sites/incidents-reporting/ReportNewInc
 // Master Data imports
 import StateList from './pages/master-data/StateList';
 import ClientList from './pages/master-data/ClientList';
-import CompanyVendor from './pages/masterData/CompanyVendor';
-import MaterialSuppliers from './pages/masterData/MaterialSuppliers';
-import Transporters from './pages/masterData/Transporters';
-import StateFor from './pages/masterData/StateFor';
+import CompanyVendor from './pages/master-data/CompanyVendor';
+import MaterialSuppliers from './pages/master-data/MaterialSuppliers';
+import Transporters from './pages/master-data/Transporters';
+import StateFor from './pages/master-data/StateFor';
 import BankNameList from './pages/master-data/BankNameList';
 import SiteDocuments from './pages/master-data/SiteDocuments';
-import GeoLocation from './pages/master-data/GeoLocation';
+import AddGeoLocation from './pages/master-data/AddGeoLocation';
 import PaymentModes from './pages/master-data/PaymentModes';
 import BankAccounts from './pages/master-data/BankAccounts';
 
@@ -48,6 +49,39 @@ import InvoiceReport from './pages/expense-module/InvoiceReport';
 import OfficeExpenseReport from './pages/expense-module/OfficeExpenseReport';
 import B2BFundTransferReport from './pages/expense-module/B2BFundTransferReport';
 
+
+// Invoice Module
+import PunchedInvoices from './pages/invoice-module/PunchedInvoices';
+import PunchInvoice from './pages/invoice-module/PunchInvoice';
+import MonthlyInvoiceReport from './pages/invoice-module/MonthlyInvoiceReport';
+import GenerateInvoice from './pages/invoice-module/GenerateInvoice';
+import ServicesProducts from './pages/invoice-module/ServicesProducts';
+
+// Asset Management
+import AssetType from './pages/asset-management/AssetType';
+import Assets from './pages/asset-management/Assets';
+import AssetAssignments from './pages/asset-management/AssetAssignments';
+
+// Manage Users
+import AddNewUser from './pages/manage-users/AddNewUser';
+import ActiveUsers from './pages/manage-users/ActiveUsers';
+import DeactiveUsers from './pages/manage-users/DeactiveUsers';
+
+// Manage Vendors
+import AddNewVendor from './pages/manage-vendors/AddNewVendor';
+import ActiveVendors from './pages/manage-vendors/ActiveVendors';
+import DeactiveVendors from './pages/manage-vendors/DeactiveVendors';
+
+// Material Stock
+import MaterialStockReport from './pages/material-stock/MaterialStockReport';
+import StockIn from './pages/material-stock/StockIn';
+import StockOut from './pages/material-stock/StockOut';
+
+// Reports
+import StockInReport from './pages/reports/StockInReport';
+import StockOutReport from './pages/reports/StockOutReport';
+import SummaryReport from './pages/reports/SummaryReport';
+
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/layout/Layout';
 
@@ -58,6 +92,7 @@ function App() {
         <Routes>
 
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
           <Route
             path="/"
@@ -115,7 +150,7 @@ function App() {
           <Route path="/master-data/state-for" element={<ProtectedRoute><Layout><StateFor /></Layout></ProtectedRoute>} />
           <Route path="/master-data/bank-name-list" element={<ProtectedRoute><Layout><BankNameList /></Layout></ProtectedRoute>} />
           <Route path="/master-data/site-documents" element={<ProtectedRoute><Layout><SiteDocuments /></Layout></ProtectedRoute>} />
-          <Route path="/master-data/geo-location" element={<ProtectedRoute><Layout><GeoLocation /></Layout></ProtectedRoute>} />
+          <Route path="/master-data/geo-location" element={<ProtectedRoute><Layout><AddGeoLocation /></Layout></ProtectedRoute>} />
           <Route path="/master-data/payment-modes" element={<ProtectedRoute><Layout><PaymentModes /></Layout></ProtectedRoute>} />
           <Route path="/master-data/bank-accounts" element={<ProtectedRoute><Layout><BankAccounts /></Layout></ProtectedRoute>} />
 
@@ -132,6 +167,39 @@ function App() {
           <Route path="/expense-module/invoice-report" element={<ProtectedRoute><Layout><InvoiceReport /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/office-expense-report" element={<ProtectedRoute><Layout><OfficeExpenseReport /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/b2b-fund-transfer-report" element={<ProtectedRoute><Layout><B2BFundTransferReport /></Layout></ProtectedRoute>} />
+
+          
+          {/* Invoice Module routes */}
+          <Route path="/invoice-module/punched-invoices" element={<ProtectedRoute><Layout><PunchedInvoices /></Layout></ProtectedRoute>} />
+          <Route path="/invoice-module/punch-invoice" element={<ProtectedRoute><Layout><PunchInvoice /></Layout></ProtectedRoute>} />
+          <Route path="/invoice-module/monthly-invoice-report" element={<ProtectedRoute><Layout><MonthlyInvoiceReport /></Layout></ProtectedRoute>} />
+          <Route path="/invoice-module/generate-invoice" element={<ProtectedRoute><Layout><GenerateInvoice /></Layout></ProtectedRoute>} />
+          <Route path="/invoice-module/services-products" element={<ProtectedRoute><Layout><ServicesProducts /></Layout></ProtectedRoute>} />
+
+          {/* Asset Management routes */}
+          <Route path="/asset-management/asset-type" element={<ProtectedRoute><Layout><AssetType /></Layout></ProtectedRoute>} />
+          <Route path="/asset-management/assets" element={<ProtectedRoute><Layout><Assets /></Layout></ProtectedRoute>} />
+          <Route path="/asset-management/asset-assignments" element={<ProtectedRoute><Layout><AssetAssignments /></Layout></ProtectedRoute>} />
+
+          {/* Manage Users routes */}
+          <Route path="/manage-users/add-new-user" element={<ProtectedRoute><Layout><AddNewUser /></Layout></ProtectedRoute>} />
+          <Route path="/manage-users/active-users" element={<ProtectedRoute><Layout><ActiveUsers /></Layout></ProtectedRoute>} />
+          <Route path="/manage-users/deactive-users" element={<ProtectedRoute><Layout><DeactiveUsers /></Layout></ProtectedRoute>} />
+
+          {/* Manage Vendors routes */}
+          <Route path="/manage-vendors/add-new-vendor" element={<ProtectedRoute><Layout><AddNewVendor /></Layout></ProtectedRoute>} />
+          <Route path="/manage-vendors/active-vendors" element={<ProtectedRoute><Layout><ActiveVendors /></Layout></ProtectedRoute>} />
+          <Route path="/manage-vendors/deactive-vendors" element={<ProtectedRoute><Layout><DeactiveVendors /></Layout></ProtectedRoute>} />
+
+          {/* Material Stock routes */}
+          <Route path="/material-stock/material-stock-report" element={<ProtectedRoute><Layout><MaterialStockReport /></Layout></ProtectedRoute>} />
+          <Route path="/material-stock/stock-in" element={<ProtectedRoute><Layout><StockIn /></Layout></ProtectedRoute>} />
+          <Route path="/material-stock/stock-out" element={<ProtectedRoute><Layout><StockOut /></Layout></ProtectedRoute>} />
+
+          {/* Reports routes */}
+          <Route path="/reports/stock-in-report" element={<ProtectedRoute><Layout><StockInReport /></Layout></ProtectedRoute>} />
+          <Route path="/reports/stock-out-report" element={<ProtectedRoute><Layout><StockOutReport /></Layout></ProtectedRoute>} />
+          <Route path="/reports/summary-report" element={<ProtectedRoute><Layout><SummaryReport /></Layout></ProtectedRoute>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
 

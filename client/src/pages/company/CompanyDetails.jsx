@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import MasterDataTable from '../../../components/master-data/MasterDataTable';
-import MasterDataForm from '../../../components/master-data/MasterDataForm';
+import MasterDataTable from '../../components/master-data/MasterDataTable';
+import MasterDataForm from '../../components/master-data/MasterDataForm';
 
-const Work = () => {
+const CompanyDetails = () => {
   const [data, setData] = useState([
     {
       _id: '1',
-      name: 'Sample Data',
-      status: true
+      name: 'EcoGrowth Technologies',
+      address: '123 Tech Park, Silicon Valley',
+      email: 'contact@ecogrowth.com',
+      mobile_number: '9876543210',
+      company_alias: 'EcoTech'
     }
   ]);
   
@@ -16,40 +19,29 @@ const Work = () => {
   
   const initialForm = {
     name: '',
-    status: true
+    address: '',
+    email: '',
+    mobile_number: '',
+    company_alias: ''
   };
   
   const [formData, setFormData] = useState(initialForm);
   const [editId, setEditId] = useState(null);
 
   const columns = [
-    { key: 'name', label: 'Name' },
-    { key: 'status', label: 'Status', render: (row) => row.status ? 'Active' : 'Deactive' }
+    { key: 'name', label: 'Company' },
+    { key: 'address', label: 'Address' },
+    { key: 'email', label: 'Email' },
+    { key: 'mobile_number', label: 'Mobile Number' }
   ];
 
   const formFields = [
-    {
-        key: "name",
-        label: "Name",
-        type: "text",
-        required: true
-    },
-    {
-        key: "status",
-        label: "Status",
-        type: "select",
-        options: [
-            {
-                value: true,
-                label: "Active"
-            },
-            {
-                value: false,
-                label: "Deactive"
-            }
-        ]
-    }
-];
+    { key: 'name', label: 'Company Name', type: 'text', required: true },
+    { key: 'address', label: 'Address', type: 'text', required: true },
+    { key: 'email', label: 'Email', type: 'text', required: true },
+    { key: 'mobile_number', label: 'Mobile Number', type: 'text', required: true },
+    { key: 'company_alias', label: 'Company Alias', type: 'text', required: true }
+  ];
 
   const handleAdd = () => {
     setFormData(initialForm);
@@ -60,7 +52,10 @@ const Work = () => {
   const handleEdit = (row) => {
     setFormData({
       name: row.name,
-      status: row.status
+      address: row.address,
+      email: row.email,
+      mobile_number: row.mobile_number,
+      company_alias: row.company_alias
     });
     setEditId(row._id);
     setIsEditing(true);
@@ -68,7 +63,7 @@ const Work = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this work?")) {
+    if (window.confirm("Are you sure you want to delete this company?")) {
       setData(data.filter(v => v._id !== id));
     }
   };
@@ -87,7 +82,7 @@ const Work = () => {
   return (
     <>
       <MasterDataTable
-        title="Work"
+        title="Company Details"
         data={data}
         columns={columns}
         onAdd={handleAdd}
@@ -97,7 +92,7 @@ const Work = () => {
       <MasterDataForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Work"
+        title="Company"
         fields={formFields}
         formData={formData}
         setFormData={setFormData}
@@ -108,4 +103,4 @@ const Work = () => {
   );
 };
 
-export default Work;
+export default CompanyDetails;
