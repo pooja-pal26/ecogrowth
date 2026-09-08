@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Building2, AlertCircle, Briefcase, CheckCircle, BarChart3, TrendingUp } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Building2, AlertCircle, Briefcase, CheckCircle, BarChart3, TrendingUp, LineChart as LineChartIcon } from 'lucide-react';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import DashboardCard from '../components/DashboardCard';
 import { 
   getTotalSites, 
@@ -8,7 +8,8 @@ import {
   getAllocatedSites, 
   getCompletedSites,
   getSiteExpensesChart,
-  getOfficeExpensesChart
+  getOfficeExpensesChart,
+  getScurveData
 } from '../services/dashboardService';
 
 const Dashboard = () => {
@@ -21,18 +22,20 @@ const Dashboard = () => {
   
   const [siteExpenses, setSiteExpenses] = useState([]);
   const [officeExpenses, setOfficeExpenses] = useState([]);
+  const [sCurveData, setSCurveData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [total, pending, allocated, completed, siteExp, officeExp] = await Promise.all([
+        const [total, pending, allocated, completed, siteExp, officeExp, scurve] = await Promise.all([
           getTotalSites(),
           getPendingSites(),
           getAllocatedSites(),
           getCompletedSites(),
           getSiteExpensesChart(),
-          getOfficeExpensesChart()
+          getOfficeExpensesChart(),
+          getScurveData()
         ]);
         
         setStats({
@@ -44,6 +47,7 @@ const Dashboard = () => {
         
         setSiteExpenses(siteExp);
         setOfficeExpenses(officeExp);
+        setSCurveData(scurve);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -106,6 +110,39 @@ const Dashboard = () => {
             icon={TrendingUp} 
             colorClass="bg-purple-500 shadow-purple-500/50 shadow-lg"
           />
+        </div>
+
+        {/* S-Curve Chart (From PHP Dashboard) */}
+        <div className="mb-8">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center">
+                <LineChartIcon className="text-emerald-500 mr-2" />
+                <h3 className="text-lg font-semibold text-gray-800">S-Curve [Cumulative]</h3>
+              </div>
+              <div className="flex space-x-2 text-sm text-gray-500">
+                <span className="bg-gray-100 px-3 py-1 rounded-full">Project: All</span>
+                <span className="bg-gray-100 px-3 py-1 rounded-full">Line: All</span>
+                <span className="bg-gray-100 px-3 py-1 rounded-full">Activity: Overall</span>
+              </div>
+            </div>
+            <div className="h-96">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={sCurveData} margin={{ top: 10, right: 10, left: 0, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#888', fontSize: 12 }} tickFormatter={(val) => `${val}%`} />
+                  <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                  <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                  <Line type="monotone" dataKey="plan" name="Plan" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                  <Line type="monotone" dataKey="cup1" name="CUP-1" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="cup2" name="CUP-2" stroke="#ec4899" strokeWidth={2} dot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="cup3" name="CUP-3" stroke="#f59e0b" strokeWidth={2} dot={{ r: 4 }} />
+                  <Line type="monotone" dataKey="actual" name="Actual" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
 
         {/* Charts Grid */}

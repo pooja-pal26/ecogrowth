@@ -36,3 +36,8 @@ export const getOfficeExpensesChart = async () => {
   const response = await axios.get(`${API_URL}/expenses/office`);
   return response.data;
 };
+
+export const getScurveData = async () => {
+  const response = await axios.get(`${API_URL}/scurve`);
+  return response.data;
+};

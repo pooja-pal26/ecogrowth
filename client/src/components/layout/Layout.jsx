@@ -7,7 +7,9 @@ const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    if (window.innerWidth < 1024) {
+      setIsSidebarOpen(!isSidebarOpen);
+    }
   };
 
   return (

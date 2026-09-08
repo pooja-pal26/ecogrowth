@@ -114,3 +114,20 @@ exports.getOfficeExpenses = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+exports.getScurveData = async (req, res) => {
+  try {
+    // Return dummy S-curve data simulating the PHP Application_Model_Home->getScurveGraphsData response
+    const mockScurveData = [
+      { month: "JAN", plan: 10, cup1: 8, cup2: 5, cup3: 3, actual: 7 },
+      { month: "FEB", plan: 25, cup1: 20, cup2: 15, cup3: 10, actual: 22 },
+      { month: "MAR", plan: 45, cup1: 38, cup2: 30, cup3: 20, actual: 40 },
+      { month: "APR", plan: 70, cup1: 60, cup2: 50, cup3: 40, actual: 65 },
+      { month: "MAY", plan: 90, cup1: 85, cup2: 75, cup3: 65, actual: 88 },
+      { month: "JUN", plan: 100, cup1: 100, cup2: 95, cup3: 85, actual: 98 }
+    ];
+    res.json(mockScurveData);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};

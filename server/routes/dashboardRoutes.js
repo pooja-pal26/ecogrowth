@@ -11,5 +11,6 @@ router.get('/allocated-sites', dashboardController.getAllocatedSites);
 router.get('/completed-sites', dashboardController.getCompletedSites);
 router.get('/expenses/site', dashboardController.getSiteExpenses);
 router.get('/expenses/office', dashboardController.getOfficeExpenses);
+router.get('/scurve', dashboardController.getScurveData);
 
 module.exports = router;
