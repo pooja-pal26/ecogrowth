@@ -3,7 +3,7 @@ import React from 'react';
 const B2BFundTransferReport = () => {
   return (
     <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto">
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">B2B Fund Transfer Report</h1>
           <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
@@ -17,7 +17,7 @@ const B2BFundTransferReport = () => {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="bg-slate-800 text-white px-6 py-4 rounded-t-xl flex justify-between items-center">
+        <div className="bg-slate-800 text-white px-6 py-4 rounded-t-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h2 className="text-lg font-medium flex items-center">
             Fund Transfer Report <span className="ml-2 bg-white text-blue-600 px-2 py-0.5 rounded-full text-sm font-bold flex items-center justify-center w-6 h-6">₹</span>
           </h2>
@@ -40,7 +40,7 @@ const B2BFundTransferReport = () => {
             </div>
           </div>
 
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
             <button className="bg-gray-100 text-gray-700 px-4 py-1.5 border border-gray-300 rounded-md hover:bg-gray-200 text-sm font-medium">Excel</button>
             <div className="flex items-center">
               <label className="text-sm font-medium text-gray-700 mr-2">Search:</label>

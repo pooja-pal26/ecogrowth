@@ -51,7 +51,7 @@ const PODetails = () => {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto">
-      <div className="flex justify-between items-end mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">PO Details</h1>
           <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">

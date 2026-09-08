@@ -69,8 +69,8 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Dashboard</h1>
           <p className="text-sm text-gray-500">Welcome back, EcoGrowth Admin</p>
         </div>
 
@@ -115,15 +115,15 @@ const Dashboard = () => {
         {/* S-Curve Chart (From PHP Dashboard) */}
         <div className="mb-8">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
               <div className="flex items-center">
                 <LineChartIcon className="text-emerald-500 mr-2" />
                 <h3 className="text-lg font-semibold text-gray-800">S-Curve [Cumulative]</h3>
               </div>
-              <div className="flex space-x-2 text-sm text-gray-500">
-                <span className="bg-gray-100 px-3 py-1 rounded-full">Project: All</span>
-                <span className="bg-gray-100 px-3 py-1 rounded-full">Line: All</span>
-                <span className="bg-gray-100 px-3 py-1 rounded-full">Activity: Overall</span>
+              <div className="flex flex-wrap gap-2 text-sm text-gray-500">
+                <span className="bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">Project: All</span>
+                <span className="bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">Line: All</span>
+                <span className="bg-gray-100 px-3 py-1 rounded-full whitespace-nowrap">Activity: Overall</span>
               </div>
             </div>
             <div className="h-96">

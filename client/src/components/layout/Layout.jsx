@@ -4,16 +4,22 @@ import Topbar from './Topbar';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
 
   const toggleSidebar = () => {
-    if (window.innerWidth < 1024) {
-      setIsSidebarOpen(!isSidebarOpen);
-    }
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans text-gray-800">
+      {/* Mobile overlay */}
+      {isSidebarOpen && window.innerWidth < 1024 && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden" 
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+      
       <Sidebar isOpen={isSidebarOpen} />
       
       <div className="flex flex-col flex-1 w-full overflow-hidden">

@@ -7,7 +7,7 @@ const OfficeExpenseReport = () => {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto">
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Office Expense Report</h1>
           <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
@@ -21,7 +21,7 @@ const OfficeExpenseReport = () => {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        <div className="bg-slate-800 text-white px-6 py-4 rounded-t-xl flex justify-between items-center">
+        <div className="bg-slate-800 text-white px-6 py-4 rounded-t-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h2 className="text-lg font-medium flex items-center">
             Office Expense Report <span className="ml-2 bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-bold">₹ 9314.80</span>
           </h2>
@@ -58,7 +58,7 @@ const OfficeExpenseReport = () => {
             </div>
           </div>
 
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
             <div className="flex items-center text-sm text-gray-600">
               <span>Show</span>
               <select className="mx-2 border border-gray-300 rounded p-1">
