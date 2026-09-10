@@ -295,15 +295,10 @@ const Sidebar = ({ isOpen }) => {
         isOpen ? 'w-64' : 'w-0 overflow-hidden'
       } lg:w-64 fixed lg:static h-screen z-40`}
     >
-      <div className="h-16 flex items-center px-4 bg-white border-b border-r border-gray-200 shrink-0">
-        <div className="flex items-center space-x-2 text-black">
-           <div className="flex items-center">
-             <div className="font-bold text-2xl tracking-tighter">
-               <span className="text-black">Genstree</span>
-               <span className="text-blue-600">Ai</span>
-             </div>
-           </div>
-        </div>
+      <div className="h-16 flex items-center justify-center px-4 bg-white border-b border-r border-gray-200 shrink-0">
+        <NavLink to="/" className="flex items-center justify-center">
+          <img src="/assets/echo_growth.png" alt="EcoGrowth" className="h-10 w-auto max-w-[200px] object-contain" />
+        </NavLink>
       </div>
       
       <div className="flex-1 overflow-y-auto py-4">

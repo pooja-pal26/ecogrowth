@@ -7,13 +7,12 @@ import MasterDataForm from '../../components/master-data/MasterDataForm';
 const CompanyVendor = () => {
   const [vendors, setVendors] = useState([]);
   
-  
   const loadData = async () => {
     try {
-      const res = await fetchList('dynamic/companyvendors');
+      const res = await fetchList('company-vendors');
       if (res.success) setVendors(res.data);
     } catch (error) {
-      console.error(error);
+      console.error('Failed to load company vendors:', error);
     }
   };
 
@@ -29,6 +28,9 @@ const CompanyVendor = () => {
     contact_person_name: '',
     contact_number: '',
     pan_number: '',
+    gst_number: '',
+    proprietor_name: '',
+    company_address: '',
     is_active: true
   };
   
@@ -40,6 +42,8 @@ const CompanyVendor = () => {
     { key: 'contact_person_name', label: 'Contact Person Name' },
     { key: 'contact_number', label: 'Contact Number' },
     { key: 'pan_number', label: 'PAN Number' },
+    { key: 'gst_number', label: 'GST Number' },
+    { key: 'proprietor_name', label: 'Proprietor Name' },
     { 
       key: 'is_active', 
       label: 'Status',
@@ -52,6 +56,9 @@ const CompanyVendor = () => {
     { key: 'contact_person_name', label: 'Contact Person Name', type: 'text', required: true },
     { key: 'contact_number', label: 'Contact Number', type: 'text', required: true },
     { key: 'pan_number', label: 'PAN Number', type: 'text', required: true },
+    { key: 'gst_number', label: 'GST Number', type: 'text' },
+    { key: 'proprietor_name', label: 'Proprietor Name', type: 'text' },
+    { key: 'company_address', label: 'Company Address', type: 'text' },
     { 
       key: 'is_active', 
       label: 'Status', 
@@ -71,11 +78,14 @@ const CompanyVendor = () => {
 
   const handleEdit = (row) => {
     setFormData({
-      vendor_company_name: row.vendor_company_name,
-      contact_person_name: row.contact_person_name,
-      contact_number: row.contact_number,
-      pan_number: row.pan_number,
-      is_active: row.is_active
+      vendor_company_name: row.vendor_company_name || '',
+      contact_person_name: row.contact_person_name || '',
+      contact_number: row.contact_number || '',
+      pan_number: row.pan_number || '',
+      gst_number: row.gst_number || '',
+      proprietor_name: row.proprietor_name || '',
+      company_address: row.company_address || '',
+      is_active: row.is_active !== undefined ? row.is_active : true
     });
     setEditId(row._id);
     setIsEditing(true);
@@ -85,10 +95,10 @@ const CompanyVendor = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
-        await deleteItem('dynamic/companyvendors', id);
+        await deleteItem('company-vendors', id);
         loadData();
       } catch (error) {
-        alert('Failed to delete');
+        alert(error?.response?.data?.message || 'Failed to delete');
       }
     }
   };
@@ -96,14 +106,14 @@ const CompanyVendor = () => {
   const handleSubmit = async () => {
     try {
       if (isEditing) {
-        await updateItem('dynamic/companyvendors', editId, formData);
+        await updateItem('company-vendors', editId, formData);
       } else {
-        await createItem('dynamic/companyvendors', formData);
+        await createItem('company-vendors', formData);
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
-      alert('Failed to save');
+      alert(error?.response?.data?.message || 'Failed to save');
     }
   };
 
@@ -132,4 +142,3 @@ const CompanyVendor = () => {
 };
 
 export default CompanyVendor;
-

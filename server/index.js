@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
+const config = require('./config');
 
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
@@ -15,12 +15,8 @@ const vendorRoutes = require('./routes/vendorRoutes');
 const materialRoutes = require('./routes/materialRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: 'http://localhost:5173', 
-  credentials: true
-}));
+app.use(cors(config.cors));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -39,10 +35,23 @@ app.use('/api/assets', assetRoutes);
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/materials', materialRoutes);
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/ecogrowth')
+// Global error handler preserving displayExceptions behavior
+app.use((err, req, res, next) => {
+  console.error('[SERVER ERROR]', err);
+  const response = {
+    message: err.message || 'Internal Server Error',
+  };
+  if (config.app.displayExceptions) {
+    response.stack = err.stack;
+    response.details = err;
+  }
+  res.status(err.status || 500).json(response);
+});
+
+mongoose.connect(config.db.uri)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-app.listen(PORT, () => {
-  console.log('Server running on port ' + PORT);
+app.listen(config.port, () => {
+  console.log(`Server running in ${config.env} mode on port ${config.port}`);
 });
