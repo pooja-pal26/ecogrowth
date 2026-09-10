@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Building2, AlertCircle, Briefcase, CheckCircle, BarChart3, TrendingUp, LineChart as LineChartIcon } from 'lucide-react';
+import { Building2, AlertCircle, Briefcase, CheckCircle, BarChart3, TrendingUp, LineChart as LineChartIcon, Server } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Link } from 'react-router-dom';
 import DashboardCard from '../components/DashboardCard';
 import { 
   getTotalSites, 
@@ -74,41 +75,59 @@ const Dashboard = () => {
           <p className="text-sm text-gray-500">Welcome back, EcoGrowth Admin</p>
         </div>
 
+        {/* Filters Row */}
+        <div className="flex flex-col md:flex-row items-end gap-4 mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div className="flex flex-col">
+                <label className="text-sm font-semibold text-gray-800 mb-1">From date</label>
+                <input type="date" className="border border-gray-200 rounded px-3 py-2 bg-gray-50 text-gray-500 outline-none w-40" />
+            </div>
+            <div className="flex flex-col">
+                <label className="text-sm font-semibold text-gray-800 mb-1">To date</label>
+                <input type="date" className="border border-gray-200 rounded px-3 py-2 bg-gray-50 text-gray-500 outline-none w-40" />
+            </div>
+            <div className="flex flex-col flex-grow max-w-xs">
+                <label className="text-sm font-semibold text-gray-800 mb-1">Site Type</label>
+                <select className="border border-gray-300 rounded px-3 py-2 bg-white text-gray-700 outline-none w-full">
+                    <option>Select Site Type</option>
+                </select>
+            </div>
+            <div className="flex gap-4">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-medium transition-colors">Submit</button>
+                <button className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-2 rounded font-medium transition-colors">Reset</button>
+            </div>
+        </div>
+
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-6 mb-8">
           <DashboardCard 
             title="Total Sites" 
             value={stats.totalSites} 
             icon={Building2} 
-            colorClass="bg-blue-500 shadow-blue-500/50 shadow-lg"
+            colorClass="bg-[#6b52e6] shadow-[#6b52e6]/50 shadow-lg"
           />
           <DashboardCard 
             title="Pending Sites" 
             value={stats.pendingSites} 
             icon={AlertCircle} 
-            colorClass="bg-amber-500 shadow-amber-500/50 shadow-lg"
+            colorClass="bg-red-600 shadow-red-600/50 shadow-lg"
           />
           <DashboardCard 
             title="Allocated Sites" 
             value={stats.allocatedSites} 
             icon={Briefcase} 
-            colorClass="bg-indigo-500 shadow-indigo-500/50 shadow-lg"
+            colorClass="bg-blue-500 shadow-blue-500/50 shadow-lg"
+          />
+          <DashboardCard 
+            title="In Progress" 
+            value={stats.pendingSites} // Assuming we mock this or use pending for now
+            icon={TrendingUp} 
+            colorClass="bg-[#f0ad4e] shadow-[#f0ad4e]/50 shadow-lg"
           />
           <DashboardCard 
             title="Completed Sites" 
             value={stats.completedSites} 
             icon={CheckCircle} 
             colorClass="bg-emerald-500 shadow-emerald-500/50 shadow-lg"
-          />
-        </div>
-
-        {/* In Progress Sites - as requested, uses pending sites count */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <DashboardCard 
-            title="In Progress" 
-            value={stats.pendingSites} 
-            icon={TrendingUp} 
-            colorClass="bg-purple-500 shadow-purple-500/50 shadow-lg"
           />
         </div>
 
@@ -227,6 +246,14 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+        {/* Floating Action Button for Daily Update Dashboard */}
+        <div className="fixed bottom-10 right-10">
+          <Link to="/home/daily-update-dashboard" className="bg-[#6b52e6] hover:bg-[#5842c2] text-white w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-105">
+            <Server className="w-8 h-8" />
+          </Link>
+        </div>
+
       </div>
     </div>
   );

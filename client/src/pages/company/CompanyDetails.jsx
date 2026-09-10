@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
 
 const CompanyDetails = () => {
-  const [data, setData] = useState([
-    {
-      _id: '1',
-      name: 'EcoGrowth Technologies',
-      address: '123 Tech Park, Silicon Valley',
-      email: 'contact@ecogrowth.com',
-      mobile_number: '9876543210',
-      company_alias: 'EcoTech'
-    }
-  ]);
+  const [data, setData] = useState([]);
   
+  
+  const loadData = async () => {
+    try {
+      const res = await fetchList('dynamic/companydetailss');
+      if (res.success) setData(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -62,21 +68,29 @@ const CompanyDetails = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this company?")) {
-      setData(data.filter(v => v._id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
+      try {
+        await deleteItem('dynamic/companydetailss', id);
+        loadData();
+      } catch (error) {
+        alert('Failed to delete');
+      }
     }
   };
 
-  const handleSubmit = () => {
-    if (isEditing) {
-      setData(data.map(v => 
-        v._id === editId ? { ...v, ...formData } : v
-      ));
-    } else {
-      setData([...data, { _id: Date.now().toString(), ...formData }]);
+  const handleSubmit = async () => {
+    try {
+      if (isEditing) {
+        await updateItem('dynamic/companydetailss', editId, formData);
+      } else {
+        await createItem('dynamic/companydetailss', formData);
+      }
+      setIsModalOpen(false);
+      loadData();
+    } catch (error) {
+      alert('Failed to save');
     }
-    setIsModalOpen(false);
   };
 
   return (
@@ -104,3 +118,4 @@ const CompanyDetails = () => {
 };
 
 export default CompanyDetails;
+

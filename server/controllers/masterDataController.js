@@ -169,3 +169,78 @@ exports.deleteCompanyVendor = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to delete vendor', error: error.message });
   }
 };
+
+// --- DYNAMIC CRUD CONTROLLER ---
+const mongoose = require('mongoose');
+
+const getDynamicModel = (collectionName) => {
+  if (mongoose.models[collectionName]) {
+    return mongoose.models[collectionName];
+  }
+  const schema = new mongoose.Schema({}, { strict: false, timestamps: true, collection: collectionName });
+  return mongoose.model(collectionName, schema);
+};
+
+exports.getDynamicList = async (req, res) => {
+  try {
+    const { collection } = req.params;
+    const Model = getDynamicModel(collection);
+    const data = await Model.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: `Failed to fetch ${req.params.collection}`, error: error.message });
+  }
+};
+
+exports.addDynamicItem = async (req, res) => {
+  try {
+    const { collection } = req.params;
+    const Model = getDynamicModel(collection);
+    
+    const bodyData = { ...req.body };
+    if (bodyData._id) delete bodyData._id;
+    
+    const newItem = new Model(bodyData);
+    await newItem.save();
+    res.status(201).json({ success: true, message: `${collection} item added successfully`, data: newItem });
+  } catch (error) {
+    res.status(500).json({ success: false, message: `Failed to add ${req.params.collection} item`, error: error.message });
+  }
+};
+
+exports.updateDynamicItem = async (req, res) => {
+  try {
+    const { collection, id } = req.params;
+    const Model = getDynamicModel(collection);
+    
+    const bodyData = { ...req.body };
+    if (bodyData._id) delete bodyData._id;
+
+    const updatedItem = await Model.findByIdAndUpdate(
+      id,
+      bodyData,
+      { new: true, runValidators: true }
+    );
+    if (!updatedItem) {
+      return res.status(404).json({ success: false, message: 'Item not found' });
+    }
+    res.status(200).json({ success: true, message: `${collection} item updated successfully`, data: updatedItem });
+  } catch (error) {
+    res.status(500).json({ success: false, message: `Failed to update ${req.params.collection} item`, error: error.message });
+  }
+};
+
+exports.deleteDynamicItem = async (req, res) => {
+  try {
+    const { collection, id } = req.params;
+    const Model = getDynamicModel(collection);
+    
+    const deletedItem = await Model.findByIdAndDelete(id);
+    if (!deletedItem) {
+      return res.status(404).json({ success: false, message: 'Item not found' });
+    }
+    res.status(200).json({ success: true, message: `${collection} item deleted successfully` });
+  } catch (error) {
+    res.status(500).json({ success: false, message: `Failed to delete ${req.params.collection} item`, error: error.message });
+  }
+};

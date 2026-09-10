@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
 
 const StateFor = () => {
-  const [stateForList, setStateForList] = useState([
-    {
-      _id: '1',
-      state_for: 'Client'
-    },
-    {
-      _id: '2',
-      state_for: 'Supplier'
-    }
-  ]);
+  const [stateForList, setStateForList] = useState([]);
   
+  
+  const loadData = async () => {
+    try {
+      const res = await fetchList('dynamic/statefors');
+      if (res.success) setStateForList(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -48,21 +54,29 @@ const StateFor = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this state for?")) {
-      setStateForList(stateForList.filter(v => v._id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
+      try {
+        await deleteItem('dynamic/statefors', id);
+        loadData();
+      } catch (error) {
+        alert('Failed to delete');
+      }
     }
   };
 
-  const handleSubmit = () => {
-    if (isEditing) {
-      setStateForList(stateForList.map(v => 
-        v._id === editId ? { ...v, ...formData } : v
-      ));
-    } else {
-      setStateForList([...stateForList, { _id: Date.now().toString(), ...formData }]);
+  const handleSubmit = async () => {
+    try {
+      if (isEditing) {
+        await updateItem('dynamic/statefors', editId, formData);
+      } else {
+        await createItem('dynamic/statefors', formData);
+      }
+      setIsModalOpen(false);
+      loadData();
+    } catch (error) {
+      alert('Failed to save');
     }
-    setIsModalOpen(false);
   };
 
   return (
@@ -90,3 +104,4 @@ const StateFor = () => {
 };
 
 export default StateFor;
+

@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
 
 const Transporters = () => {
-  const [transporters, setTransporters] = useState([
-    {
-      _id: '1',
-      transporter_name: 'Fast Track Logistics',
-      contact_person: 'Michael Jordan',
-      contact_number: '9876543212',
-      gst_number: '33BBBBB0000B1Z6',
-      is_active: true
-    }
-  ]);
+  const [transporters, setTransporters] = useState([]);
   
+  
+  const loadData = async () => {
+    try {
+      const res = await fetchList('dynamic/transporterss');
+      if (res.success) setTransporters(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -75,21 +81,29 @@ const Transporters = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this transporter?")) {
-      setTransporters(transporters.filter(v => v._id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
+      try {
+        await deleteItem('dynamic/transporterss', id);
+        loadData();
+      } catch (error) {
+        alert('Failed to delete');
+      }
     }
   };
 
-  const handleSubmit = () => {
-    if (isEditing) {
-      setTransporters(transporters.map(v => 
-        v._id === editId ? { ...v, ...formData } : v
-      ));
-    } else {
-      setTransporters([...transporters, { _id: Date.now().toString(), ...formData }]);
+  const handleSubmit = async () => {
+    try {
+      if (isEditing) {
+        await updateItem('dynamic/transporterss', editId, formData);
+      } else {
+        await createItem('dynamic/transporterss', formData);
+      }
+      setIsModalOpen(false);
+      loadData();
+    } catch (error) {
+      alert('Failed to save');
     }
-    setIsModalOpen(false);
   };
 
   return (
@@ -117,3 +131,4 @@ const Transporters = () => {
 };
 
 export default Transporters;
+

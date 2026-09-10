@@ -38,6 +38,52 @@ export const getOfficeExpensesChart = async () => {
 };
 
 export const getScurveData = async () => {
-  const response = await axios.get(`${API_URL}/scurve`);
+  const response = await axios.get(`${API_URL}/charts/scurve`);
+  return response.data;
+};
+
+
+export const getTotalAssets = async () => {
+  const response = await axios.get(`${API_URL}/assets`);
+  return response.data.total;
+};
+
+export const getTotalInvoices = async () => {
+  const response = await axios.get(`${API_URL}/invoices`);
+  return response.data.total;
+};
+
+export const getTotalMaterials = async () => {
+  const response = await axios.get(`${API_URL}/materials`);
+  return response.data.total;
+};
+
+export const getTotalUsers = async () => {
+  const response = await axios.get(`${API_URL}/users`);
+  return response.data.total;
+};
+
+export const getTotalVendors = async () => {
+  const response = await axios.get(`${API_URL}/vendors`);
+  return response.data.total;
+};
+
+export const getMaterialStockChart = async () => {
+  const response = await axios.get(`${API_URL}/charts/material-stock`);
+  return response.data;
+};
+
+export const getInvoiceDataChart = async () => {
+  const response = await axios.get(`${API_URL}/charts/invoices`);
+  return response.data;
+};
+
+export const getPoAmountsChart = async () => {
+  const response = await axios.get(`${API_URL}/charts/po-amounts`);
+  return response.data;
+};
+
+export const getRecentActivity = async () => {
+  const response = await axios.get(`${API_URL}/recent-activity`);
   return response.data;
 };

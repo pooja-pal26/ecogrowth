@@ -36,7 +36,7 @@ const AddNewPOSites = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto">
+    <div className="p-2 sm:p-4 lg:p-6 w-full max-w-7xl mx-auto overflow-hidden">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Add PO Sites</h1>
         <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
@@ -64,7 +64,7 @@ const AddNewPOSites = () => {
             <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center underline">Site Details</h3>
             
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 border">
+              <table className="min-w-[1000px] w-full divide-y divide-gray-200 border">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Site ID *</th>

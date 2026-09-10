@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
 
 const CompanyVendor = () => {
-  const [vendors, setVendors] = useState([
-    {
-      _id: '1',
-      vendor_company_name: 'Tech Solutions Inc',
-      contact_person_name: 'John Doe',
-      contact_number: '9876543210',
-      pan_number: 'ABCDE1234F',
-      is_active: true
-    }
-  ]);
+  const [vendors, setVendors] = useState([]);
   
+  
+  const loadData = async () => {
+    try {
+      const res = await fetchList('dynamic/companyvendors');
+      if (res.success) setVendors(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -76,21 +82,29 @@ const CompanyVendor = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this vendor?")) {
-      setVendors(vendors.filter(v => v._id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
+      try {
+        await deleteItem('dynamic/companyvendors', id);
+        loadData();
+      } catch (error) {
+        alert('Failed to delete');
+      }
     }
   };
 
-  const handleSubmit = () => {
-    if (isEditing) {
-      setVendors(vendors.map(v => 
-        v._id === editId ? { ...v, ...formData } : v
-      ));
-    } else {
-      setVendors([...vendors, { _id: Date.now().toString(), ...formData }]);
+  const handleSubmit = async () => {
+    try {
+      if (isEditing) {
+        await updateItem('dynamic/companyvendors', editId, formData);
+      } else {
+        await createItem('dynamic/companyvendors', formData);
+      }
+      setIsModalOpen(false);
+      loadData();
+    } catch (error) {
+      alert('Failed to save');
     }
-    setIsModalOpen(false);
   };
 
   return (
@@ -118,3 +132,4 @@ const CompanyVendor = () => {
 };
 
 export default CompanyVendor;
+

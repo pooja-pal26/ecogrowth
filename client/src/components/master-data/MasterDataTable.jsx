@@ -26,7 +26,7 @@ const MasterDataTable = ({
   const paginatedData = filteredData.slice((currentPage - 1) * entries, currentPage * entries);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto">
+    <div className="p-2 sm:p-4 lg:p-6 w-full max-w-7xl mx-auto overflow-hidden">
       <div className="mb-6 flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">{title}</h1>
@@ -64,7 +64,7 @@ const MasterDataTable = ({
         </div>
 
         <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 w-full">
             <div className="flex items-center text-sm text-gray-600">
               <span>Show</span>
               <select 
@@ -81,8 +81,8 @@ const MasterDataTable = ({
               </select>
               <span>entries</span>
             </div>
-            <div className="flex items-center">
-              <label className="text-sm font-medium text-gray-700 mr-2">Search:</label>
+            <div className="flex items-center w-full sm:w-auto">
+              <label className="text-sm font-medium text-gray-700 mr-2 shrink-0">Search:</label>
               <input 
                 type="text" 
                 value={searchTerm}
@@ -90,7 +90,7 @@ const MasterDataTable = ({
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="border border-gray-300 rounded-md p-1.5 focus:ring-blue-500 focus:border-blue-500" 
+                className="border border-gray-300 rounded-md p-1.5 focus:ring-blue-500 focus:border-blue-500 w-full sm:w-auto" 
               />
             </div>
           </div>
@@ -145,11 +145,11 @@ const MasterDataTable = ({
             </table>
           </div>
           
-          <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4 text-sm text-gray-500 w-full">
             <div>
               Showing {filteredData.length > 0 ? (currentPage - 1) * entries + 1 : 0} to {Math.min(currentPage * entries, filteredData.length)} of {filteredData.length} entries
             </div>
-            <div className="flex space-x-1">
+            <div className="flex flex-wrap justify-center gap-1">
               <button 
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}

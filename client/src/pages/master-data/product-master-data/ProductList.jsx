@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchList, createItem, updateItem, deleteItem } from '../../../services/masterDataApi';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../../components/master-data/MasterDataForm';
 
 const ProductList = () => {
-  const [data, setData] = useState([
-    {
-      _id: '1',
-      product_name: 'Sample Data',
-      status: true
-    }
-  ]);
+  const [data, setData] = useState([]);
   
+  
+  const loadData = async () => {
+    try {
+      const res = await fetchList('dynamic/productlists');
+      if (res.success) setData(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -83,21 +92,29 @@ const ProductList = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      setData(data.filter(v => v._id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
+      try {
+        await deleteItem('dynamic/productlists', id);
+        loadData();
+      } catch (error) {
+        alert('Failed to delete');
+      }
     }
   };
 
-  const handleSubmit = () => {
-    if (isEditing) {
-      setData(data.map(v => 
-        v._id === editId ? { ...v, ...formData } : v
-      ));
-    } else {
-      setData([...data, { _id: Date.now().toString(), ...formData }]);
+  const handleSubmit = async () => {
+    try {
+      if (isEditing) {
+        await updateItem('dynamic/productlists', editId, formData);
+      } else {
+        await createItem('dynamic/productlists', formData);
+      }
+      setIsModalOpen(false);
+      loadData();
+    } catch (error) {
+      alert('Failed to save');
     }
-    setIsModalOpen(false);
   };
 
   return (
@@ -125,3 +142,4 @@ const ProductList = () => {
 };
 
 export default ProductList;
+

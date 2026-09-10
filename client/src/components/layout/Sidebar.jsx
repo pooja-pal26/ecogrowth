@@ -234,14 +234,17 @@ const MenuItem = ({ item, depth = 0 }) => {
     setIsOpen(!isOpen);
   };
 
-  const paddingLeft = depth === 0 ? 'px-4' : `pl-${4 + depth * 4} pr-4`;
+  // Compute padding left based on depth. 1rem = 16px (equivalent to px-4 in tailwind).
+  // Each depth level adds 1.25rem (20px) of padding.
+  const paddingLeft = `${1 + depth * 1.25}rem`;
 
   if (item.hasSubmenu) {
     return (
       <div>
         <button 
           onClick={toggleMenu}
-          className={`w-full flex items-center justify-between ${paddingLeft} py-3 hover:bg-[#3d3f45] transition-colors`}
+          className={`w-full flex items-center justify-between pr-4 py-3 hover:bg-[#3d3f45] transition-colors`}
+          style={{ paddingLeft }}
         >
           <div className="flex items-center space-x-3">
             {item.icon && <item.icon size={18} />}
@@ -256,7 +259,10 @@ const MenuItem = ({ item, depth = 0 }) => {
                 <MenuItem item={subItem} depth={depth + 1} />
               </li>
             )) : (
-              <li className={`pl-${4 + (depth + 1) * 4} py-2 text-sm text-gray-500`}>
+              <li 
+                className="py-2 text-sm text-gray-500 pr-4"
+                style={{ paddingLeft: `${1 + (depth + 1) * 1.25}rem` }}
+              >
                 Coming Soon
               </li>
             )}
@@ -270,10 +276,11 @@ const MenuItem = ({ item, depth = 0 }) => {
     <NavLink 
       to={item.path}
       className={({ isActive }) => 
-        `flex items-center space-x-3 ${paddingLeft} py-3 transition-colors ${
+        `flex items-center space-x-3 pr-4 py-3 transition-colors ${
           isActive ? 'bg-[#3d3f45] text-white border-l-4 border-blue-500' : 'hover:bg-[#3d3f45] hover:text-white'
         }`
       }
+      style={{ paddingLeft: depth === 0 ? paddingLeft : `calc(${paddingLeft} - 4px)` }} // Adjust for border-l-4 if active on root, but here it's generally applied. We'll simplify.
     >
       {item.icon && <item.icon size={18} />}
       <span className="text-sm font-medium">{item.name}</span>

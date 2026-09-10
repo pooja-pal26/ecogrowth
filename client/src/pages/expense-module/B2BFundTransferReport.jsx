@@ -2,7 +2,7 @@ import React from 'react';
 
 const B2BFundTransferReport = () => {
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto">
+    <div className="p-2 sm:p-4 lg:p-6 w-full max-w-7xl mx-auto overflow-hidden">
       <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">B2B Fund Transfer Report</h1>
@@ -34,22 +34,22 @@ const B2BFundTransferReport = () => {
             <div className="flex-1 min-w-[150px]">
               <input type="text" className="w-full border border-gray-300 rounded-md p-2 bg-gray-50" placeholder="To Date" readOnly />
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
               <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">Submit</button>
               <button className="bg-cyan-400 text-white px-6 py-2 rounded-md hover:bg-cyan-500 transition-colors">Reset</button>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4 w-full">
             <button className="bg-gray-100 text-gray-700 px-4 py-1.5 border border-gray-300 rounded-md hover:bg-gray-200 text-sm font-medium">Excel</button>
-            <div className="flex items-center">
-              <label className="text-sm font-medium text-gray-700 mr-2">Search:</label>
-              <input type="text" className="border border-gray-300 rounded-md p-1.5 focus:ring-blue-500 focus:border-blue-500" />
+            <div className="flex items-center w-full sm:w-auto">
+              <label className="text-sm font-medium text-gray-700 mr-2 shrink-0">Search:</label>
+              <input type="text" className="border border-gray-300 rounded-md p-1.5 focus:ring-blue-500 focus:border-blue-500 w-full sm:w-auto" />
             </div>
           </div>
 
           <div className="overflow-x-auto w-full">
-            <table className="w-full border-collapse text-sm text-left text-gray-600 whitespace-nowrap">
+            <table className="min-w-[800px] w-full border-collapse text-sm text-left text-gray-600 whitespace-nowrap">
               <thead className="text-xs text-gray-700 uppercase bg-white border-b-2 border-black">
                 <tr>
                   <th className="px-4 py-3 font-semibold">#</th>
@@ -74,9 +74,9 @@ const B2BFundTransferReport = () => {
             </table>
           </div>
           
-          <div className="flex items-center justify-between mt-4 text-sm text-gray-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4 text-sm text-gray-500 w-full">
             <div>Showing 0 to 0 of 0 entries</div>
-            <div className="flex space-x-2">
+            <div className="flex flex-wrap justify-center gap-2">
               <button className="text-gray-500 hover:text-gray-700 font-medium">Previous</button>
               <button className="text-gray-500 hover:text-gray-700 font-medium">Next</button>
             </div>

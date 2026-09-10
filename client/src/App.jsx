@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import DailyUpdateDashboard from './pages/DailyUpdateDashboard';
 import MaterialStock from './pages/MaterialStock';
 import Reports from './pages/Reports';
 
@@ -100,6 +101,17 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <Dashboard />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/home/daily-update-dashboard"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <DailyUpdateDashboard />
                 </Layout>
               </ProtectedRoute>
             }

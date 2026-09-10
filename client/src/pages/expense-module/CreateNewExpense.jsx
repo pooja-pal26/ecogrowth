@@ -28,7 +28,7 @@ const CreateNewExpense = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto">
+    <div className="p-2 sm:p-4 lg:p-6 w-full max-w-7xl mx-auto overflow-hidden">
       <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Create New Expense</h1>
@@ -121,7 +121,7 @@ const CreateNewExpense = () => {
             </div>
 
             <div className="overflow-x-auto mb-4">
-              <table className="min-w-full border-collapse border border-gray-300">
+              <table className="min-w-[1000px] w-full border-collapse border border-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="border border-gray-300 p-2 text-left text-sm font-semibold">Expense In</th>
@@ -217,7 +217,7 @@ const CreateNewExpense = () => {
             </div>
 
             <div className="overflow-x-auto mb-4">
-              <table className="min-w-full border-collapse border border-gray-300">
+              <table className="min-w-[800px] w-full border-collapse border border-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="border border-gray-300 p-2 text-left text-sm font-semibold">Expense In</th>

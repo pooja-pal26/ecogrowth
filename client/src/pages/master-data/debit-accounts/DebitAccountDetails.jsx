@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchList, createItem, updateItem, deleteItem } from '../../../services/masterDataApi';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../../components/master-data/MasterDataForm';
 
 const DebitAccountDetails = () => {
-  const [data, setData] = useState([
-    {
-      _id: '1',
-      name: 'Sample Data',
-      status: true
-    }
-  ]);
+  const [data, setData] = useState([]);
   
+  
+  const loadData = async () => {
+    try {
+      const res = await fetchList('dynamic/debitaccountdetailss');
+      if (res.success) setData(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -67,21 +76,29 @@ const DebitAccountDetails = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this debit account?")) {
-      setData(data.filter(v => v._id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
+      try {
+        await deleteItem('dynamic/debitaccountdetailss', id);
+        loadData();
+      } catch (error) {
+        alert('Failed to delete');
+      }
     }
   };
 
-  const handleSubmit = () => {
-    if (isEditing) {
-      setData(data.map(v => 
-        v._id === editId ? { ...v, ...formData } : v
-      ));
-    } else {
-      setData([...data, { _id: Date.now().toString(), ...formData }]);
+  const handleSubmit = async () => {
+    try {
+      if (isEditing) {
+        await updateItem('dynamic/debitaccountdetailss', editId, formData);
+      } else {
+        await createItem('dynamic/debitaccountdetailss', formData);
+      }
+      setIsModalOpen(false);
+      loadData();
+    } catch (error) {
+      alert('Failed to save');
     }
-    setIsModalOpen(false);
   };
 
   return (
@@ -109,3 +126,4 @@ const DebitAccountDetails = () => {
 };
 
 export default DebitAccountDetails;
+

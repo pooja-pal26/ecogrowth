@@ -44,7 +44,7 @@ const AllocateSite = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto">
+    <div className="p-2 sm:p-4 lg:p-6 w-full max-w-7xl mx-auto overflow-hidden">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Allocate Site</h1>
@@ -118,7 +118,7 @@ const AllocateSite = () => {
             <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center underline">Nature Of Work & Resource Allocation</h3>
             
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 border bg-white">
+              <table className="min-w-[800px] w-full divide-y divide-gray-200 border bg-white">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nature Of Work</th>

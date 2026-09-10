@@ -20,4 +20,13 @@ router.post('/company-vendors', masterDataController.addCompanyVendor);
 router.put('/company-vendors/:id', masterDataController.updateCompanyVendor);
 router.delete('/company-vendors/:id', masterDataController.deleteCompanyVendor);
 
+
+
+// --- DYNAMIC CRUD ROUTES ---
+// Catch-all routes for any master data collection
+router.get('/dynamic/:collection', masterDataController.getDynamicList);
+router.post('/dynamic/:collection', masterDataController.addDynamicItem);
+router.put('/dynamic/:collection/:id', masterDataController.updateDynamicItem);
+router.delete('/dynamic/:collection/:id', masterDataController.deleteDynamicItem);
+
 module.exports = router;

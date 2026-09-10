@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
 
 const MaterialSuppliers = () => {
-  const [suppliers, setSuppliers] = useState([
-    {
-      _id: '1',
-      supplier_name: 'BuildMat Solutions',
-      supplier_gst: '22AAAAA0000A1Z5',
-      supplier_person_name: 'Alice Smith',
-      supplier_contact_number: '9876543211',
-      status: true
-    }
-  ]);
+  const [suppliers, setSuppliers] = useState([]);
   
+  
+  const loadData = async () => {
+    try {
+      const res = await fetchList('dynamic/materialsupplierss');
+      if (res.success) setSuppliers(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -75,21 +81,29 @@ const MaterialSuppliers = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this supplier?")) {
-      setSuppliers(suppliers.filter(v => v._id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this record?")) {
+      try {
+        await deleteItem('dynamic/materialsupplierss', id);
+        loadData();
+      } catch (error) {
+        alert('Failed to delete');
+      }
     }
   };
 
-  const handleSubmit = () => {
-    if (isEditing) {
-      setSuppliers(suppliers.map(v => 
-        v._id === editId ? { ...v, ...formData } : v
-      ));
-    } else {
-      setSuppliers([...suppliers, { _id: Date.now().toString(), ...formData }]);
+  const handleSubmit = async () => {
+    try {
+      if (isEditing) {
+        await updateItem('dynamic/materialsupplierss', editId, formData);
+      } else {
+        await createItem('dynamic/materialsupplierss', formData);
+      }
+      setIsModalOpen(false);
+      loadData();
+    } catch (error) {
+      alert('Failed to save');
     }
-    setIsModalOpen(false);
   };
 
   return (
@@ -117,3 +131,4 @@ const MaterialSuppliers = () => {
 };
 
 export default MaterialSuppliers;
+
