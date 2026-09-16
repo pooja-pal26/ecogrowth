@@ -1,0 +1,79 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5cda76",
+    "id": "1",
+    "state_for": "Madhya Pradesh",
+    "status": "1",
+    "created": "2018-03-20 12:35:50"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda77",
+    "id": "2",
+    "state_for": "UP East",
+    "status": "1",
+    "created": "2018-03-20 12:41:04"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda78",
+    "id": "3",
+    "state_for": "Andhra Pradesh",
+    "status": "0",
+    "created": "2019-02-05 15:39:30"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda79",
+    "id": "4",
+    "state_for": "Chattisgarh",
+    "status": "1",
+    "created": "2019-04-09 15:43:22"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda7a",
+    "id": "5",
+    "state_for": "Bihar",
+    "status": "1",
+    "created": "2020-01-06 18:17:33"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda7b",
+    "id": "6",
+    "state_for": "Karnataka",
+    "status": "1",
+    "created": "2020-01-06 18:17:44"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda7c",
+    "id": "7",
+    "state_for": "Assam",
+    "status": "1",
+    "created": "2020-12-08 08:36:20"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda7d",
+    "id": "8",
+    "state_for": "Punjab",
+    "status": "1",
+    "created": "2023-04-07 12:14:55"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda7e",
+    "id": "9",
+    "state_for": "Gujarat",
+    "status": "1",
+    "created": "2023-04-20 14:05:37"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda7f",
+    "id": "10",
+    "state_for": "UTTARAKHAND",
+    "status": "1",
+    "created": "2023-04-27 16:16:08"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda80",
+    "id": "11",
+    "state_for": "Uttar Pradesh",
+    "status": "1",
+    "created": "2026-01-24 15:39:44"
+  }
+]

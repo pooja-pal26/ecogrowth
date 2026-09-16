@@ -35,14 +35,30 @@ const Transporters = () => {
   const [editId, setEditId] = useState(null);
 
   const columns = [
-    { key: 'transporter_name', label: 'Transporter Name' },
-    { key: 'contact_person', label: 'Contact Person' },
-    { key: 'contact_number', label: 'Contact Number' },
-    { key: 'gst_number', label: 'GST Number' },
+    { 
+      key: 'transporter_name', 
+      label: 'Transporter Name',
+      render: (row) => row.transporter_name || '-'
+    },
+    { 
+      key: 'contact_person', 
+      label: 'Contact Person',
+      render: (row) => row.contact_person || row.transporter_contact_person || '-'
+    },
+    { 
+      key: 'contact_number', 
+      label: 'Contact Number',
+      render: (row) => row.contact_number || row.transporter_contact_number || '-'
+    },
+    { 
+      key: 'gst_number', 
+      label: 'GST Number',
+      render: (row) => row.gst_number || row.transporter_gst_number || '-'
+    },
     { 
       key: 'is_active', 
       label: 'Status',
-      render: (row) => row.is_active ? 'Active' : 'Deactive'
+      render: (row) => (row.is_active !== false && row.status !== false) ? 'Active' : 'Deactive'
     }
   ];
 
@@ -70,11 +86,11 @@ const Transporters = () => {
 
   const handleEdit = (row) => {
     setFormData({
-      transporter_name: row.transporter_name,
-      contact_person: row.contact_person,
-      contact_number: row.contact_number,
-      gst_number: row.gst_number,
-      is_active: row.is_active
+      transporter_name: row.transporter_name || '',
+      contact_person: row.contact_person || row.transporter_contact_person || '',
+      contact_number: row.contact_number || row.transporter_contact_number || '',
+      gst_number: row.gst_number || row.transporter_gst_number || '',
+      is_active: row.is_active !== undefined ? row.is_active : (row.status !== undefined ? row.status : true)
     });
     setEditId(row._id);
     setIsEditing(true);
@@ -94,10 +110,16 @@ const Transporters = () => {
 
   const handleSubmit = async () => {
     try {
+      const payload = {
+        ...formData,
+        transporter_contact_person: formData.contact_person,
+        transporter_contact_number: formData.contact_number,
+        transporter_gst_number: formData.gst_number
+      };
       if (isEditing) {
-        await updateItem('dynamic/transporterss', editId, formData);
+        await updateItem('dynamic/transporterss', editId, payload);
       } else {
-        await createItem('dynamic/transporterss', formData);
+        await createItem('dynamic/transporterss', payload);
       }
       setIsModalOpen(false);
       loadData();

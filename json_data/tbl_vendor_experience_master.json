@@ -1,0 +1,29 @@
+[
+  {
+    "_id": "6aa3f1293c200cb6cc5df730",
+    "id": "1",
+    "experience": "Less than 2 years",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 12:27:12",
+    "updated_at": "0000-00-00 00:00:00"
+  },
+  {
+    "_id": "6aa3f1293c200cb6cc5df731",
+    "id": "2",
+    "experience": "3 years - 5 years",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 12:27:56",
+    "updated_at": "0000-00-00 00:00:00"
+  },
+  {
+    "_id": "6aa3f1293c200cb6cc5df732",
+    "id": "3",
+    "experience": "More than 5 years",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 12:28:10",
+    "updated_at": "2019-02-11 12:38:06"
+  }
+]

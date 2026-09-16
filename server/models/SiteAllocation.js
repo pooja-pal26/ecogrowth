@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const schema = new mongoose.Schema({
-  poNumber: String, siteId: String, status: { type: String, default: 'Pending' }
-}, { timestamps: true });
-module.exports = mongoose.models.SiteAllocation || mongoose.model('SiteAllocation', schema);
+const { createJsonModel } = require('./JsonModel');
+
+const SiteAllocation = createJsonModel('tbl_site_allocation');
+
+module.exports = SiteAllocation;

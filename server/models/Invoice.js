@@ -1,7 +1,5 @@
-const mongoose = require('mongoose');
+const { createJsonModel } = require('./JsonModel');
 
-const invoiceSchema = new mongoose.Schema({
-  invoiceNumber: String, amount: Number, status: { type: String, default: "Pending" }, clientId: { type: mongoose.Schema.Types.ObjectId, ref: "ClientMaster" }, poId: { type: mongoose.Schema.Types.ObjectId, ref: "PoSite" }
-}, { timestamps: true });
+const Invoice = createJsonModel('tbl_punched_invoice_details');
 
-module.exports = mongoose.model('Invoice', invoiceSchema);
+module.exports = Invoice;

@@ -33,3 +33,4 @@ router.put('/dynamic/:collection/:id', masterDataController.updateDynamicItem);
 router.delete('/dynamic/:collection/:id', masterDataController.deleteDynamicItem);
 
 module.exports = router;
+

@@ -1,0 +1,164 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5cda64",
+    "id": "1",
+    "state_name": "U P East",
+    "state_code": "9",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 18:36:43"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda65",
+    "id": "2",
+    "state_name": "Madhya Pradesh",
+    "state_code": "23",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-14 14:33:55"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda66",
+    "id": "3",
+    "state_name": "Chhattisgarh",
+    "state_code": "22",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-14 14:38:49"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda67",
+    "id": "4",
+    "state_name": "Uttar Pradesh Reliance",
+    "state_code": null,
+    "is_active": "0",
+    "created_by": "1",
+    "created_at": "2019-02-28 17:47:54"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda68",
+    "id": "5",
+    "state_name": "Karnataka",
+    "state_code": "29",
+    "is_active": "1",
+    "created_by": "37",
+    "created_at": "2019-04-17 16:45:36"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda69",
+    "id": "6",
+    "state_name": "New Delhi",
+    "state_code": "7",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-06-11 16:50:21"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda6a",
+    "id": "7",
+    "state_name": "Uttar Pradesh West",
+    "state_code": "33",
+    "is_active": "0",
+    "created_by": "7",
+    "created_at": "2019-11-19 18:30:32"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda6b",
+    "id": "8",
+    "state_name": "Up West",
+    "state_code": "9",
+    "is_active": "1",
+    "created_by": "42",
+    "created_at": "2019-11-20 16:44:39"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda6c",
+    "id": "9",
+    "state_name": "Haryana",
+    "state_code": "6",
+    "is_active": "1",
+    "created_by": "31",
+    "created_at": "2019-12-18 16:00:04"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda6d",
+    "id": "10",
+    "state_name": "Rajasthan",
+    "state_code": "8",
+    "is_active": "1",
+    "created_by": "31",
+    "created_at": "2019-12-18 16:09:12"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda6e",
+    "id": "11",
+    "state_name": "Bihar",
+    "state_code": "10",
+    "is_active": "1",
+    "created_by": "37",
+    "created_at": "2019-12-23 12:56:09"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda6f",
+    "id": "12",
+    "state_name": "Indus Towers Limited",
+    "state_code": "9",
+    "is_active": "0",
+    "created_by": "7",
+    "created_at": "2021-07-30 07:54:54"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda70",
+    "id": "13",
+    "state_name": "Mizoram",
+    "state_code": "50",
+    "is_active": "1",
+    "created_by": "7",
+    "created_at": "2022-10-03 17:09:32"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda71",
+    "id": "14",
+    "state_name": "Punjab",
+    "state_code": "3",
+    "is_active": "1",
+    "created_by": "37",
+    "created_at": "2023-04-07 12:16:18"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda72",
+    "id": "15",
+    "state_name": "Gujarat",
+    "state_code": "24",
+    "is_active": "1",
+    "created_by": "37",
+    "created_at": "2023-04-20 14:07:15"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda73",
+    "id": "16",
+    "state_name": "Uttarakhand",
+    "state_code": "5",
+    "is_active": "1",
+    "created_by": "37",
+    "created_at": "2023-04-27 16:17:32"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda74",
+    "id": "17",
+    "state_name": "Uttar Prasesh",
+    "state_code": "95",
+    "is_active": "1",
+    "created_by": "7",
+    "created_at": "2026-01-24 14:35:00"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda75",
+    "id": "18",
+    "state_name": "Hgfh",
+    "state_code": "90",
+    "is_active": "0",
+    "created_by": "7",
+    "created_at": "2026-01-24 14:59:20"
+  }
+]

@@ -22,9 +22,6 @@ const config = {
   isProduction,
   isDevelopment,
   port: parseNumber(process.env.PORT, 5000),
-  db: {
-    uri: process.env.MONGO_URI || 'mongodb://localhost:27017/ecogrowth',
-  },
   auth: {
     jwtSecret: process.env.JWT_SECRET || 'supersecretkey_change_me_in_production',
     tokenExpireTimeHours,
@@ -52,9 +49,6 @@ const config = {
 if (isProduction) {
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET === 'supersecretkey_change_me_in_production') {
     console.warn('[CONFIG WARNING] JWT_SECRET is using the default placeholder in production mode!');
-  }
-  if (!process.env.MONGO_URI) {
-    console.warn('[CONFIG WARNING] MONGO_URI is not explicitly defined in production mode!');
   }
 }
 

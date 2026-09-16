@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f8",
+    "id": "1",
+    "work_for_id": "1",
+    "site_type": "Ground Based Tower (GBT)",
+    "is_active": "1",
+    "is_deleted": "0",
+    "created_by": "1",
+    "created_at": "2019-04-12 14:53:13",
+    "updated_by": "1",
+    "updated_at": "2019-04-17 17:32:58"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f9",
+    "id": "2",
+    "work_for_id": "2",
+    "site_type": "Roof Top Tower (RTT)",
+    "is_active": "1",
+    "is_deleted": "0",
+    "created_by": "1",
+    "created_at": "2019-04-12 14:53:38",
+    "updated_by": "0",
+    "updated_at": "0000-00-00 00:00:00"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3fa",
+    "id": "3",
+    "work_for_id": "2",
+    "site_type": "Maintenance Airtel",
+    "is_active": "1",
+    "is_deleted": "0",
+    "created_by": "1",
+    "created_at": "2019-04-12 14:53:50",
+    "updated_by": "0",
+    "updated_at": "0000-00-00 00:00:00"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3fb",
+    "id": "4",
+    "work_for_id": "2",
+    "site_type": "Ground Based Tower (GBT)",
+    "is_active": "1",
+    "is_deleted": "0",
+    "created_by": "1",
+    "created_at": "2019-04-19 14:29:05",
+    "updated_by": "0",
+    "updated_at": "0000-00-00 00:00:00"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3fc",
+    "id": "0",
+    "work_for_id": "3",
+    "site_type": "Civil, Structural, Water Supply, Sanitary, Roadwork. Electrification & Miscellaneous Work",
+    "is_active": "1",
+    "is_deleted": "0",
+    "created_by": "37",
+    "created_at": "2024-09-23 13:07:52",
+    "updated_by": "0",
+    "updated_at": "0000-00-00 00:00:00"
+  }
+]

@@ -1,0 +1,387 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1e8",
+    "id": "1",
+    "from_id": "1",
+    "to_id": "7",
+    "message": "Vipul Rai assigned you a system 't'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1e9",
+    "id": "2",
+    "from_id": "1",
+    "to_id": "23",
+    "message": "Vipul Rai assigned you a system 't'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1ea",
+    "id": "3",
+    "from_id": "1",
+    "to_id": "27",
+    "message": "Vipul Rai released a system 't' from you."
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1eb",
+    "id": "4",
+    "from_id": "1",
+    "to_id": "14",
+    "message": "Vipul Rai assigned you a system 'mouse'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1ec",
+    "id": "5",
+    "from_id": "1",
+    "to_id": "16",
+    "message": "Vipul Rai released a system 'mouse' from you."
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1ed",
+    "id": "6",
+    "from_id": "1",
+    "to_id": "10",
+    "message": "Vipul Rai assigned you a system 'Computer'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1ee",
+    "id": "7",
+    "from_id": "1",
+    "to_id": "23",
+    "message": "Vipul Rai released a system 't' from you."
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1ef",
+    "id": "8",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f0",
+    "id": "9",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f1",
+    "id": "10",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f2",
+    "id": "11",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV updated your assigned system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f3",
+    "id": "12",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f4",
+    "id": "13",
+    "from_id": "1",
+    "to_id": "48",
+    "message": "Vipul Rai assigned you a system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f5",
+    "id": "14",
+    "from_id": "1",
+    "to_id": "48",
+    "message": "Vipul Rai assigned you a system 'samsung mini phone\t'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f6",
+    "id": "15",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f7",
+    "id": "16",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV updated your assigned system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f8",
+    "id": "17",
+    "from_id": "1",
+    "to_id": "48",
+    "message": "Vipul Rai assigned you a system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1f9",
+    "id": "18",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1fa",
+    "id": "19",
+    "from_id": "42",
+    "to_id": "52",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1fb",
+    "id": "20",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1fc",
+    "id": "21",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1fd",
+    "id": "22",
+    "from_id": "42",
+    "to_id": "46",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'stapler'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1fe",
+    "id": "23",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca1ff",
+    "id": "24",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca200",
+    "id": "25",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca201",
+    "id": "26",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca202",
+    "id": "27",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'Data Cable'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca203",
+    "id": "28",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV updated your assigned system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca204",
+    "id": "29",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca205",
+    "id": "30",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca206",
+    "id": "31",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca207",
+    "id": "32",
+    "from_id": "42",
+    "to_id": "50",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'LENOVO K8'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca208",
+    "id": "33",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'LENOVO K8'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca209",
+    "id": "34",
+    "from_id": "42",
+    "to_id": "50",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'MI DATA CABLE'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca20a",
+    "id": "35",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'MI DATA CABLE'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca20b",
+    "id": "36",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca20c",
+    "id": "37",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca20d",
+    "id": "38",
+    "from_id": "37",
+    "to_id": "59",
+    "message": "ANIKET CHAUHAN assigned you a system 'Samsung A5'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca20e",
+    "id": "39",
+    "from_id": "37",
+    "to_id": "59",
+    "message": "ANIKET CHAUHAN assigned you a system 'White Data Cable'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca20f",
+    "id": "40",
+    "from_id": "37",
+    "to_id": "48",
+    "message": "ANIKET CHAUHAN assigned you a system 'Samsung Mini Phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca210",
+    "id": "41",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca211",
+    "id": "42",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system 'samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca212",
+    "id": "43",
+    "from_id": "42",
+    "to_id": "48",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca213",
+    "id": "44",
+    "from_id": "42",
+    "to_id": "59",
+    "message": "SHIVAM SRIVASTAV assigned you a system ' samsung mini phone'"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca214",
+    "id": "45",
+    "from_id": "7",
+    "to_id": "0",
+    "message": "Asset 5 assigned to Vipul Rai"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca215",
+    "id": "46",
+    "from_id": "7",
+    "to_id": "0",
+    "message": "Asset 5 assigned to Vipul Rai"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca216",
+    "id": "47",
+    "from_id": "7",
+    "to_id": "0",
+    "message": "Asset 5 assigned to Vipul Rai"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca217",
+    "id": "48",
+    "from_id": "7",
+    "to_id": "0",
+    "message": "Asset 7 assigned to vijay"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca218",
+    "id": "49",
+    "from_id": "7",
+    "to_id": "0",
+    "message": "Asset 5 assigned to Vipul Rai"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca219",
+    "id": "50",
+    "from_id": "42",
+    "to_id": "0",
+    "message": "Asset 22 assigned to ASHISH MISHRA"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca21a",
+    "id": "51",
+    "from_id": "42",
+    "to_id": "0",
+    "message": "Asset 22 assigned to ASHISH MISHRA"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca21b",
+    "id": "52",
+    "from_id": "42",
+    "to_id": "0",
+    "message": "Asset 22 assigned to SAVITA SHUKLA"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca21c",
+    "id": "53",
+    "from_id": "42",
+    "to_id": "0",
+    "message": "Asset 22 assigned to SAVITA SHUKLA"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca21d",
+    "id": "54",
+    "from_id": "37",
+    "to_id": "0",
+    "message": "Asset 22 assigned to PIYUSH RAI"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca21e",
+    "id": "55",
+    "from_id": "7",
+    "to_id": "0",
+    "message": "Asset 28 assigned to SUMIT VISHWAS"
+  }
+]

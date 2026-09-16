@@ -1,0 +1,98 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5ca14f",
+    "id": "1",
+    "unit_name": "LS",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca150",
+    "id": "2",
+    "unit_name": "Meter",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca151",
+    "id": "3",
+    "unit_name": "Nos",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca152",
+    "id": "4",
+    "unit_name": "RM",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca153",
+    "id": "5",
+    "unit_name": "JOB",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca154",
+    "id": "6",
+    "unit_name": "Each",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca155",
+    "id": "7",
+    "unit_name": "demo12",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca156",
+    "id": "8",
+    "unit_name": "demo1",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca157",
+    "id": "9",
+    "unit_name": "demo",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca158",
+    "id": "10",
+    "unit_name": "demo",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca159",
+    "id": "11",
+    "unit_name": "PKT",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca15a",
+    "id": "12",
+    "unit_name": "PCS",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca15b",
+    "id": "13",
+    "unit_name": "KG",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca15c",
+    "id": "14",
+    "unit_name": "M.T.",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca15d",
+    "id": "15",
+    "unit_name": "Bag",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca15e",
+    "id": "16",
+    "unit_name": "CFT",
+    "is_active": "1"
+  }
+]

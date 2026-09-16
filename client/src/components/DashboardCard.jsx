@@ -2,15 +2,18 @@ import React from 'react';
 
 const DashboardCard = ({ title, value, icon: Icon, colorClass }) => {
   return (
-    <div className={`group bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center space-x-4 transition-all duration-300 hover:bg-blue-900 hover:shadow-md cursor-pointer`}>
-      <div className={`p-4 rounded-full ${colorClass} group-hover:bg-blue-800 transition-colors duration-300`}>
-        <Icon className="w-6 h-6 text-white" />
+    <div className="bg-white rounded-xl shadow-xs border border-gray-200/90 p-3.5 sm:p-4 flex items-center gap-3 transition-all duration-200 hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5 cursor-pointer w-full h-full select-none">
+      <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full ${colorClass} flex items-center justify-center flex-shrink-0 shadow-xs`}>
+        <Icon className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-white" />
       </div>
-      <div>
-        <h5 className="text-2xl font-bold text-gray-800 group-hover:text-white transition-colors duration-300">
-          {value !== null && value !== undefined ? value : '...'}
+      <div className="min-w-0 flex-1 overflow-hidden">
+        <h5 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight truncate">
+          {value !== null && value !== undefined ? value : '0'}
         </h5>
-        <span className="text-sm font-medium text-gray-500 group-hover:text-blue-100 uppercase tracking-wide transition-colors duration-300">
+        <span
+          className="block text-[11px] sm:text-xs font-semibold text-gray-500 uppercase tracking-tight mt-0.5 leading-snug break-words"
+          title={title}
+        >
           {title}
         </span>
       </div>

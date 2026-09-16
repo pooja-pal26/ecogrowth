@@ -1,0 +1,186 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5ca12f",
+    "id": "1608",
+    "infratel_site_id": "Bharti Infratel ID /",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2021-10-21 12:37:17"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca130",
+    "id": "2737",
+    "infratel_site_id": "5 OPS new cabs_Sep'2",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2023-10-12 11:03:13"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca131",
+    "id": "2738",
+    "infratel_site_id": "R/NN-947348",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-02-25 16:10:55"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca132",
+    "id": "2739",
+    "infratel_site_id": "R/NN-958764",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-02-25 16:18:25"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca133",
+    "id": "2740",
+    "infratel_site_id": "R/NN-961710",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-02-25 16:24:37"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca134",
+    "id": "2741",
+    "infratel_site_id": "R/NN-952793",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-04-04 14:34:08"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca135",
+    "id": "2742",
+    "infratel_site_id": "R/NN-953300",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-04-04 14:43:21"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca136",
+    "id": "2743",
+    "infratel_site_id": "R/NN-952286",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-04-04 14:55:01"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca137",
+    "id": "2744",
+    "infratel_site_id": "R/NN-933302",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-04-04 14:58:20"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca138",
+    "id": "2745",
+    "infratel_site_id": "R/NN-947811",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-04-04 15:02:07"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca139",
+    "id": "2746",
+    "infratel_site_id": "R/NN-925302",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-04-04 15:07:37"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca13a",
+    "id": "2747",
+    "infratel_site_id": "R/NN-878729",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-04-04 15:22:29"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca13b",
+    "id": "2748",
+    "infratel_site_id": "R/NN-970643",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-05-18 13:00:52"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca13c",
+    "id": "2749",
+    "infratel_site_id": "R/NN-956431",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-05-18 13:04:26"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca13d",
+    "id": "2750",
+    "infratel_site_id": "R/NN-948915",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-05-18 13:08:31"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca13e",
+    "id": "2751",
+    "infratel_site_id": "R/NN-949035",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-05-18 14:29:57"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca13f",
+    "id": "2752",
+    "infratel_site_id": "R/NN-969007",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-05-18 14:33:00"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca140",
+    "id": "2753",
+    "infratel_site_id": ": R/NN-971835",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-05-18 14:37:56"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca141",
+    "id": "2754",
+    "infratel_site_id": "R/NN-981901",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-08-19 16:19:14"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca142",
+    "id": "2755",
+    "infratel_site_id": "R/NN-985562",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-08-19 16:23:28"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca143",
+    "id": "2756",
+    "infratel_site_id": "R/NN-985566",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-08-19 16:25:38"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca144",
+    "id": "2757",
+    "infratel_site_id": "R/NN-997079",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-08-19 16:27:34"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca145",
+    "id": "2758",
+    "infratel_site_id": "R/NN-997089",
+    "latitude": null,
+    "longitude": null,
+    "importation_datetime": "2026-08-19 16:30:38"
+  }
+]

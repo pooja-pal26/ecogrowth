@@ -61,6 +61,9 @@ const CreateNewExpense = () => {
               <option value="">Please Select</option>
               <option value="Site Expense">Site Expense</option>
               <option value="Office Expense">Office Expense</option>
+              <option value="Office Expense">Miscellaneous Expense</option>
+              <option value="Office Expense">Earting</option>
+              <option value="Office Expense">Personal Expense</option>
             </select>
           </div>
         </div>

@@ -33,7 +33,11 @@ const SiteDocuments = () => {
 
   const columns = [
     { key: 'document_name', label: 'Document Name' },
-    { key: 'status', label: 'Status', render: (row) => row.status ? 'Active' : 'Deactive' }
+    { 
+      key: 'status', 
+      label: 'Status', 
+      render: (row) => (row.status !== false && row.status !== '0' && row.is_active !== false) ? 'Active' : 'Deactive' 
+    }
   ];
 
   const formFields = [
@@ -58,7 +62,7 @@ const SiteDocuments = () => {
             }
         ]
     }
-];
+  ];
 
   const handleAdd = () => {
     setFormData(initialForm);
@@ -68,8 +72,8 @@ const SiteDocuments = () => {
 
   const handleEdit = (row) => {
     setFormData({
-      document_name: row.document_name,
-      status: row.status
+      document_name: row.document_name || '',
+      status: row.status !== undefined ? (row.status === true || row.status === '1' || row.status === 1) : (row.is_active !== false)
     });
     setEditId(row._id);
     setIsEditing(true);

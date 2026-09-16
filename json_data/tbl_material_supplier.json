@@ -1,0 +1,101 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5ca146",
+    "id": "1",
+    "supplier_name": "MAHESHWARI STEEL TRADERS",
+    "supplier_gst": "22AADFM7813N1Z5",
+    "supplier_person_name": "MAHESHWARI STEEL TRADERS",
+    "supplier_contact_number": "9009992403",
+    "status": "1",
+    "created_at": "2026-02-27 15:20:11",
+    "created_by": "7"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca147",
+    "id": "2",
+    "supplier_name": "PVM AGENCY  (VIVEK JAGGI)",
+    "supplier_gst": "22AAIHV3638P1ZK",
+    "supplier_person_name": "VIVEK JAGGI",
+    "supplier_contact_number": "9575945494",
+    "status": "1",
+    "created_at": "2026-02-27 15:22:54",
+    "created_by": "7"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca148",
+    "id": "3",
+    "supplier_name": "D.K SALES",
+    "supplier_gst": "22AIVPA7719F1Z9",
+    "supplier_person_name": "D.K SALES",
+    "supplier_contact_number": "9826399199",
+    "status": "1",
+    "created_at": "2026-03-14 17:34:03",
+    "created_by": "92"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca149",
+    "id": "4",
+    "supplier_name": "PARI INFRASTRUCTURE",
+    "supplier_gst": "10AAXFP8506F1Z4",
+    "supplier_person_name": "PARI INFRASTRUCTURE",
+    "supplier_contact_number": "9910913464",
+    "status": "1",
+    "created_at": "2026-04-07 12:37:33",
+    "created_by": "92"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca14a",
+    "id": "5",
+    "supplier_name": "GANESH TRADING",
+    "supplier_gst": "10APBPK9622E1ZE",
+    "supplier_person_name": "GANESH TRADING",
+    "supplier_contact_number": "7739450075",
+    "status": "1",
+    "created_at": "2026-04-07 12:41:05",
+    "created_by": "92"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca14b",
+    "id": "6",
+    "supplier_name": "MARUTI STEEL",
+    "supplier_gst": "10AARPG6849C3ZS",
+    "supplier_person_name": "MARUTI STEEL",
+    "supplier_contact_number": null,
+    "status": "1",
+    "created_at": "2026-04-07 12:47:18",
+    "created_by": "92"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca14c",
+    "id": "7",
+    "supplier_name": "RDC CONCRETE (INDIA) LIMITED",
+    "supplier_gst": "22AAACU0108Q1ZI",
+    "supplier_person_name": "RDC CONCRETE (INDIA) LIMITED",
+    "supplier_contact_number": "02267896789",
+    "status": "1",
+    "created_at": "2026-05-21 14:09:44",
+    "created_by": "92"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca14d",
+    "id": "8",
+    "supplier_name": "ABHINANDAN HARDWARE AND SANITARY",
+    "supplier_gst": "22AVIPJ4603K2ZQ",
+    "supplier_person_name": null,
+    "supplier_contact_number": null,
+    "status": "1",
+    "created_at": "2026-06-13 14:50:28",
+    "created_by": "92"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca14e",
+    "id": "9",
+    "supplier_name": "BBC STEEL  KHAIRAGARH",
+    "supplier_gst": "22ACGPT9583K1ZX",
+    "supplier_person_name": "BBC STEEL  KHAIRAGARH",
+    "supplier_contact_number": "9926906482",
+    "status": "1",
+    "created_at": "2026-08-31 14:15:06",
+    "created_by": "92"
+  }
+]

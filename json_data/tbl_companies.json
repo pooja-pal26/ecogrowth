@@ -1,0 +1,90 @@
+[
+  {
+    "_id": "6aa3f1273c200cb6cc5c9982",
+    "id": "1",
+    "name": "Logimetrix Techsolutions Pvt. Ltd.",
+    "address": "3/204, Vikas Khand, Gomti Nagar, Lucknow - 226010",
+    "company_logo": "",
+    "company_alias": "LTS",
+    "email": "logimetrix@gmail.com",
+    "mobile_number": "9935540006",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9983",
+    "id": "2",
+    "name": "Ecogrowth Infra Private Ltd",
+    "address": "3/116, Vikas khand, Gomti nagaer, Lucknow - 226010",
+    "company_logo": "",
+    "company_alias": "EI",
+    "email": "ajeet@logimetrix.me",
+    "mobile_number": "9935540006",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9984",
+    "id": "3",
+    "name": "Logimetrix Infra Pvt Ltd",
+    "address": "1404,Land Craft Golf Link Society NH-24,\r\nGhaziabad",
+    "company_logo": "",
+    "company_alias": "LI",
+    "email": "vipul@logimetrix.co.in",
+    "mobile_number": "9935540006",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9985",
+    "id": "13",
+    "name": "Cropnet Private Limited",
+    "address": "B-15, SIDDHARTH NAGAR, JAIPUR, Jaipur, Rajasthan, 302017",
+    "company_logo": "",
+    "company_alias": "Cropnet",
+    "email": "cropnet56@gmail.com",
+    "mobile_number": "9935540006",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9986",
+    "id": "14",
+    "name": "V3 ENTERPRISES",
+    "address": "128/123 Block, Y Kidwai Nagar, Kanpur 208011",
+    "company_logo": "",
+    "company_alias": "Rishabh Gupta",
+    "email": "rishabh@logimetrix.co.in",
+    "mobile_number": "8687712206",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9987",
+    "id": "15",
+    "name": "Genstrre AI LLP",
+    "address": "Gomtinaga, Lucknow",
+    "company_logo": null,
+    "company_alias": "Genstrre",
+    "email": "info@genstreetech.com",
+    "mobile_number": "9999999999",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9988",
+    "id": "16",
+    "name": "Ehnovate",
+    "address": "Gomtinagar, Lucknow",
+    "company_logo": null,
+    "company_alias": "Ehnovate",
+    "email": "info@ehnovate.com",
+    "mobile_number": "9999999999",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9989",
+    "id": "17",
+    "name": "Vaikom Techsolutions",
+    "address": "Haryana, India",
+    "company_logo": null,
+    "company_alias": "Vaikom",
+    "email": "info@vaikomtech.com",
+    "mobile_number": "9999999999",
+    "is_active": "1"
+  }
+]

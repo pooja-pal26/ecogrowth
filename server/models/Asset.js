@@ -1,7 +1,5 @@
-const mongoose = require('mongoose');
+const { createJsonModel } = require('./JsonModel');
 
-const assetSchema = new mongoose.Schema({
-  assetName: String, assetType: String, serialNumber: String, status: { type: String, default: "Active" }
-}, { timestamps: true });
+const Asset = createJsonModel('asset_types');
 
-module.exports = mongoose.model('Asset', assetSchema);
+module.exports = Asset;

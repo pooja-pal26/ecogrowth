@@ -1,0 +1,80 @@
+[
+  {
+    "_id": "6aa3f1273c200cb6cc5c9994",
+    "id": "1",
+    "debit_account": "Site Expense",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9995",
+    "id": "8",
+    "debit_account": "Power & Fuel Imprest A/c",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9996",
+    "id": "9",
+    "debit_account": "Office Imprest",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9997",
+    "id": "10",
+    "debit_account": "Site Expense",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9998",
+    "id": "11",
+    "debit_account": "Director Remunaration A/c",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9999",
+    "id": "12",
+    "debit_account": "Printing & Stationary ",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c999a",
+    "id": "13",
+    "debit_account": "Legal Charges",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c999b",
+    "id": "14",
+    "debit_account": "Printer",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c999c",
+    "id": "15",
+    "debit_account": "Staff Welfare A/c",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c999d",
+    "id": "16",
+    "debit_account": "Imprest A/c",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c999e",
+    "id": "17",
+    "debit_account": "Cleaning",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c999f",
+    "id": "18",
+    "debit_account": "Fooding & Lodging",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c99a0",
+    "id": "19",
+    "debit_account": "Salary",
+    "is_active": "1"
+  }
+]

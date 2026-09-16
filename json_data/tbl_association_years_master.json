@@ -1,0 +1,29 @@
+[
+  {
+    "_id": "6aa3f1273c200cb6cc5c9927",
+    "id": "1",
+    "association_years": "No Existing Relation",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 14:45:40",
+    "updated_at": "0000-00-00 00:00:00"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9928",
+    "id": "2",
+    "association_years": "1 year - 2 years",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 14:46:11",
+    "updated_at": "2019-02-11 14:56:26"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9929",
+    "id": "3",
+    "association_years": "Over 2 years",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 14:46:31",
+    "updated_at": "2019-02-11 14:56:14"
+  }
+]

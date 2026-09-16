@@ -1,0 +1,50 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f0",
+    "id": "1",
+    "name": "Open",
+    "status": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f1",
+    "id": "2",
+    "name": "Pending",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f2",
+    "id": "3",
+    "name": "Allocated",
+    "status": "2"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f3",
+    "id": "4",
+    "name": "Started",
+    "status": "3"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f4",
+    "id": "5",
+    "name": "In-Process",
+    "status": "4"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f5",
+    "id": "6",
+    "name": "Completed",
+    "status": "5"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f6",
+    "id": "7",
+    "name": "Re-open",
+    "status": "6"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cd3f7",
+    "id": "8",
+    "name": "Closed",
+    "status": "7"
+  }
+]

@@ -1,0 +1,205 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5ca491",
+    "id": "1",
+    "role_type": "1",
+    "role": "Admin",
+    "status": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca492",
+    "id": "2",
+    "role_type": "1",
+    "role": "Chief Executive Officer (CEO)",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca493",
+    "id": "3",
+    "role_type": "1",
+    "role": "Chief Operation Officer (COO)",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca494",
+    "id": "4",
+    "role_type": "1",
+    "role": "Chief Finance Officer (CFO)",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca495",
+    "id": "5",
+    "role_type": "1",
+    "role": "Chief Technology Officer (CTO)",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca496",
+    "id": "6",
+    "role_type": "1",
+    "role": "Chief Revenue Officer (CRO)",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca497",
+    "id": "7",
+    "role_type": "1",
+    "role": "Chief Information Officer (CIO)",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca498",
+    "id": "8",
+    "role_type": "1",
+    "role": "President",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca499",
+    "id": "9",
+    "role_type": "1",
+    "role": "Vice president",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca49a",
+    "id": "10",
+    "role_type": "2",
+    "role": "Senior Project Manager",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca49b",
+    "id": "11",
+    "role_type": "2",
+    "role": "Project Director/Project Head",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca49c",
+    "id": "12",
+    "role_type": "2",
+    "role": "Senior Quality Analyst",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca49d",
+    "id": "13",
+    "role_type": "2",
+    "role": "Senior Resource Management Officer",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca49e",
+    "id": "14",
+    "role_type": "2",
+    "role": "Human Resource Manager",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca49f",
+    "id": "15",
+    "role_type": "3",
+    "role": "Supervisors",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a0",
+    "id": "16",
+    "role_type": "3",
+    "role": "Accountant",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a1",
+    "id": "17",
+    "role_type": "4",
+    "role": "System Administrator",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a2",
+    "id": "18",
+    "role_type": "5",
+    "role": "Office Boy",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a3",
+    "id": "19",
+    "role_type": "2",
+    "role": "Rjendra",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a4",
+    "id": "20",
+    "role_type": "3",
+    "role": "PHP Developer",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a5",
+    "id": "21",
+    "role_type": "3",
+    "role": "Android Developer",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a6",
+    "id": "22",
+    "role_type": "2",
+    "role": "Android Developer",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a7",
+    "id": "23",
+    "role_type": "2",
+    "role": "PHP Developer",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a8",
+    "id": "24",
+    "role_type": "6",
+    "role": "Office Boy",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4a9",
+    "id": "25",
+    "role_type": "1",
+    "role": "Director",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4aa",
+    "id": "26",
+    "role_type": "1",
+    "role": "CEO",
+    "status": "2"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4ab",
+    "id": "27",
+    "role_type": "2",
+    "role": "Sales",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4ac",
+    "id": "28",
+    "role_type": "8",
+    "role": "Driver",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca4ad",
+    "id": "29",
+    "role_type": "4",
+    "role": "data entry",
+    "status": "1"
+  }
+]

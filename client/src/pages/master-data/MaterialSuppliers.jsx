@@ -35,14 +35,30 @@ const MaterialSuppliers = () => {
   const [editId, setEditId] = useState(null);
 
   const columns = [
-    { key: 'supplier_name', label: 'Supplier Name' },
-    { key: 'supplier_gst', label: 'Supplier GST Number' },
-    { key: 'supplier_person_name', label: 'Supplier Contact Person' },
-    { key: 'supplier_contact_number', label: 'Supplier Contact Number' },
+    { 
+      key: 'supplier_name', 
+      label: 'Supplier Name',
+      render: (row) => row.supplier_name || row.name || '-'
+    },
+    { 
+      key: 'supplier_gst', 
+      label: 'Supplier GST Number',
+      render: (row) => row.supplier_gst || row.gst_number || '-'
+    },
+    { 
+      key: 'supplier_person_name', 
+      label: 'Supplier Contact Person',
+      render: (row) => row.supplier_person_name || row.contact_person || row.name || '-'
+    },
+    { 
+      key: 'supplier_contact_number', 
+      label: 'Supplier Contact Number',
+      render: (row) => row.supplier_contact_number || row.contact_1 || row.contact_number || '-'
+    },
     { 
       key: 'status', 
       label: 'Status',
-      render: (row) => row.status ? 'Active' : 'Deactive'
+      render: (row) => (row.status !== false && row.is_active !== false) ? 'Active' : 'Deactive'
     }
   ];
 
@@ -70,11 +86,11 @@ const MaterialSuppliers = () => {
 
   const handleEdit = (row) => {
     setFormData({
-      supplier_name: row.supplier_name,
-      supplier_gst: row.supplier_gst,
-      supplier_person_name: row.supplier_person_name,
-      supplier_contact_number: row.supplier_contact_number,
-      status: row.status
+      supplier_name: row.supplier_name || row.name || '',
+      supplier_gst: row.supplier_gst || row.gst_number || '',
+      supplier_person_name: row.supplier_person_name || row.contact_person || '',
+      supplier_contact_number: row.supplier_contact_number || row.contact_1 || row.contact_number || '',
+      status: row.status !== undefined ? row.status : (row.is_active !== undefined ? row.is_active : true)
     });
     setEditId(row._id);
     setIsEditing(true);

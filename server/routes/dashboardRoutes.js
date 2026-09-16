@@ -24,7 +24,9 @@ router.get('/charts/scurve', dashboardController.getScurveData);
 router.get('/charts/material-stock', dashboardController.getMaterialStockChart);
 router.get('/charts/invoices', dashboardController.getInvoiceDataChart);
 router.get('/charts/po-amounts', dashboardController.getPoAmountsChart);
+router.get('/charts/po-site-profit-loss', dashboardController.getPoSiteProfitLoss);
 router.get('/recent-activity', dashboardController.getRecentActivity);
+router.get('/sites-detail-list', dashboardController.getSitesDetailList);
 
 module.exports = router;
 

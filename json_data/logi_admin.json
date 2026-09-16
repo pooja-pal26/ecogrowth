@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "6aa3f1273c200cb6cc5c97ec",
+    "id": "2",
+    "name": "Cairn India",
+    "username": "admin",
+    "email": "cairn@info.com",
+    "password": "10470c3b4b1fed12c3baac014be15fac67c6e815",
+    "token": "671634750b9d5434549c31249cbaf4574c2b52f3",
+    "token_date_time": "2017-05-29 10:44:38",
+    "token_status": "1",
+    "Role": "super_admin",
+    "otp": "04074",
+    "otp_status": "1",
+    "otp_date_time": "0000-00-00 00:00:00"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97ed",
+    "id": "3",
+    "name": "Abhishek",
+    "username": "admin",
+    "email": "sumit@demo.com",
+    "password": "10470c3b4b1fed12c3baac014be15fac67c6e815",
+    "token": "e64101ad7a486065d399d92bc89d73ddb66b74ae",
+    "token_date_time": "2017-01-03 11:50:10",
+    "token_status": "1",
+    "Role": "super_admin",
+    "otp": "",
+    "otp_status": "0",
+    "otp_date_time": "0000-00-00 00:00:00"
+  }
+]

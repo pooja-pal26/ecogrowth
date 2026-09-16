@@ -1,0 +1,29 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5ca229",
+    "id": "1",
+    "organization_type": "Sole Proprietorship Firm",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 13:03:27",
+    "updated_at": "2019-02-11 13:03:49"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca22a",
+    "id": "2",
+    "organization_type": "Partnership Firm",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 13:03:42",
+    "updated_at": "2019-02-11 13:06:52"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca22b",
+    "id": "3",
+    "organization_type": "Private Limited Company",
+    "is_active": "1",
+    "created_by": "1",
+    "created_at": "2019-02-11 13:04:12",
+    "updated_at": "0000-00-00 00:00:00"
+  }
+]

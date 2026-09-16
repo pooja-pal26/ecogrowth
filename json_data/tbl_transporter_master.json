@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5cda95",
+    "id": "1",
+    "transporter_name": "JAI MAA AMBEY TRANPORT COMPANY",
+    "transporter_contact_person": "Himanshu",
+    "transporter_contact_number": "9795125184",
+    "transporter_gst_number": "09AIPPT3795E1ZI",
+    "created_at": "2019-06-03 15:11:47",
+    "is_active": "1",
+    "is_deleted": "0",
+    "created_by": "40"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda96",
+    "id": "2",
+    "transporter_name": "G. K. TRANSPORT  COMPANY (REGD.)",
+    "transporter_contact_person": "Bharat Singh Yadav",
+    "transporter_contact_number": "9936501411",
+    "transporter_gst_number": "09HVWPS9377G1Z5",
+    "created_at": "2019-06-03 15:19:50",
+    "is_active": "1",
+    "is_deleted": "0",
+    "created_by": "42"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5cda97",
+    "id": "3",
+    "transporter_name": "DHARMENDRA SAHU",
+    "transporter_contact_person": "Dharmendra Sahu",
+    "transporter_contact_number": "9926396050",
+    "transporter_gst_number": "",
+    "created_at": "2024-10-10 17:14:08",
+    "is_active": "1",
+    "is_deleted": "0",
+    "created_by": "37"
+  }
+]

@@ -1,7 +1,5 @@
-const mongoose = require('mongoose');
+const { createJsonModel } = require('./JsonModel');
 
-const materialSchema = new mongoose.Schema({
-  materialName: String, quantity: Number, unit: String, status: { type: String, default: "Available" }
-}, { timestamps: true });
+const Material = createJsonModel('tbl_products');
 
-module.exports = mongoose.model('Material', materialSchema);
+module.exports = Material;

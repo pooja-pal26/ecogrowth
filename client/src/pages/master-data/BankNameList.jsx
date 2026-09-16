@@ -33,7 +33,11 @@ const BankNameList = () => {
 
   const columns = [
     { key: 'bank_name', label: 'Bank Name' },
-    { key: 'status', label: 'Status', render: (row) => row.status ? 'Active' : 'Deactive' }
+    { 
+      key: 'status', 
+      label: 'Status', 
+      render: (row) => (row.is_active !== false && row.status !== false && row.status !== '0') ? 'Active' : 'Deactive' 
+    }
   ];
 
   const formFields = [
@@ -58,7 +62,7 @@ const BankNameList = () => {
             }
         ]
     }
-];
+  ];
 
   const handleAdd = () => {
     setFormData(initialForm);
@@ -68,8 +72,8 @@ const BankNameList = () => {
 
   const handleEdit = (row) => {
     setFormData({
-      bank_name: row.bank_name,
-      status: row.status
+      bank_name: row.bank_name || '',
+      status: row.is_active !== undefined ? row.is_active : (row.status !== undefined ? (row.status === true || row.status === '1') : true)
     });
     setEditId(row._id);
     setIsEditing(true);

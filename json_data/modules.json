@@ -1,0 +1,167 @@
+[
+  {
+    "_id": "6aa3f1273c200cb6cc5c9809",
+    "id": "1",
+    "module": "Master Data",
+    "link": null,
+    "icon": "fa fa-cog",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:47:03",
+    "updated_at": "2022-12-10 00:47:03"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c980a",
+    "id": "2",
+    "module": "Expense Dashboard",
+    "link": "expense/expense-dashboard",
+    "icon": "fa fa-line-chart",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:47:03",
+    "updated_at": "2022-12-19 05:38:58"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c980b",
+    "id": "3",
+    "module": "Expense Module",
+    "link": null,
+    "icon": "fa fa-rupee",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:49:26",
+    "updated_at": "2022-12-10 01:05:18"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c980c",
+    "id": "4",
+    "module": "Company",
+    "link": null,
+    "icon": "fa fa-laptop",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:49:26",
+    "updated_at": "2022-12-10 01:05:36"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c980d",
+    "id": "5",
+    "module": "Invoice Module",
+    "link": null,
+    "icon": "fa fa-file-text-o",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:51:50",
+    "updated_at": "2022-12-10 01:05:54"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c980e",
+    "id": "6",
+    "module": "PO & Sites",
+    "link": null,
+    "icon": "fa fa-book",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:51:50",
+    "updated_at": "2022-12-10 01:06:16"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c980f",
+    "id": "7",
+    "module": "Attendance",
+    "link": null,
+    "icon": "fa fa-calendar",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:57:38",
+    "updated_at": "2022-12-10 01:07:05"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9810",
+    "id": "8",
+    "module": "Asset Management",
+    "link": null,
+    "icon": "fa fa-laptop",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:57:38",
+    "updated_at": "2022-12-10 01:07:22"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9811",
+    "id": "9",
+    "module": "Manage Users",
+    "link": null,
+    "icon": "fa fa-users",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:59:24",
+    "updated_at": "2022-12-10 01:07:47"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9812",
+    "id": "10",
+    "module": "Manage Vendors",
+    "link": null,
+    "icon": "fa fa-cogs",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 00:59:24",
+    "updated_at": "2022-12-10 01:08:06"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9813",
+    "id": "11",
+    "module": "Material Stock",
+    "link": null,
+    "icon": "fa fa-truck",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 01:00:42",
+    "updated_at": "2022-12-10 01:08:20"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9814",
+    "id": "12",
+    "module": "Reports",
+    "link": null,
+    "icon": "fa fa-file-excel-o",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 01:00:42",
+    "updated_at": "2022-12-10 01:08:42"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9815",
+    "id": "13",
+    "module": "Drivers",
+    "link": null,
+    "icon": "fa fa-wrench",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 01:04:10",
+    "updated_at": "2022-12-10 01:04:10"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9816",
+    "id": "14",
+    "module": "TaskApp",
+    "link": null,
+    "icon": "fa fa-tasks",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2022-12-10 01:04:10",
+    "updated_at": "2022-12-10 01:04:10"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9817",
+    "id": "15",
+    "module": "Project Management",
+    "link": null,
+    "icon": "fa fa-th-list",
+    "is_active": "1",
+    "created_by": null,
+    "created_at": "2023-02-07 05:51:07",
+    "updated_at": "2023-02-07 06:39:43"
+  }
+]

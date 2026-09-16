@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const { createJsonModel } = require('../models/JsonModel');
+const jsonDb = require('../services/jsonDb');
 const {
   State,
   ClientMaster,
@@ -514,19 +515,7 @@ const resolveMasterModel = (collectionName) => {
   if (masterModelMap[collectionName.toLowerCase()]) {
     return masterModelMap[collectionName.toLowerCase()];
   }
-  if (mongoose.models[collectionName]) {
-    return mongoose.models[collectionName];
-  }
-
-  // Fallback dynamic schema with safety flags
-  const schema = new mongoose.Schema({
-    name: { type: String, trim: true },
-    status: { type: Boolean, default: true },
-    is_active: { type: Boolean, default: true },
-    is_deleted: { type: Boolean, default: false }
-  }, { strict: false, timestamps: true, collection: collectionName });
-
-  return mongoose.model(collectionName, schema);
+  return createJsonModel(collectionName);
 };
 
 exports.getDynamicList = async (req, res) => {
@@ -558,6 +547,32 @@ exports.addDynamicItem = async (req, res) => {
     if (bodyData.is_active === undefined && bodyData.status !== undefined) {
       bodyData.is_active = bodyData.status;
     }
+    if (bodyData.status === undefined && bodyData.is_active !== undefined) {
+      bodyData.status = bodyData.is_active;
+    }
+
+    if (collection.toLowerCase().includes('bankaccount')) {
+      const accHolder = bodyData.account_holder_name || bodyData.account_name;
+      if (accHolder) {
+        bodyData.account_holder_name = accHolder;
+        bodyData.account_name = accHolder;
+      }
+      const accNum = bodyData.bank_account_number || bodyData.account_number;
+      if (accNum) {
+        bodyData.bank_account_number = accNum;
+        bodyData.account_number = accNum;
+      }
+      const ifsc = bodyData.bank_ifsc_code || bodyData.ifsc_code;
+      if (ifsc) {
+        bodyData.bank_ifsc_code = ifsc;
+        bodyData.ifsc_code = ifsc;
+      }
+      const branch = bodyData.bank_branch || bodyData.branch_name;
+      if (branch) {
+        bodyData.bank_branch = branch;
+        bodyData.branch_name = branch;
+      }
+    }
     
     const newItem = new Model(bodyData);
     await newItem.save();
@@ -576,6 +591,32 @@ exports.updateDynamicItem = async (req, res) => {
     if (bodyData._id) delete bodyData._id;
     if (bodyData.status !== undefined && bodyData.is_active === undefined) {
       bodyData.is_active = bodyData.status;
+    }
+    if (bodyData.is_active !== undefined && bodyData.status === undefined) {
+      bodyData.status = bodyData.is_active;
+    }
+
+    if (collection.toLowerCase().includes('bankaccount')) {
+      const accHolder = bodyData.account_holder_name || bodyData.account_name;
+      if (accHolder) {
+        bodyData.account_holder_name = accHolder;
+        bodyData.account_name = accHolder;
+      }
+      const accNum = bodyData.bank_account_number || bodyData.account_number;
+      if (accNum) {
+        bodyData.bank_account_number = accNum;
+        bodyData.account_number = accNum;
+      }
+      const ifsc = bodyData.bank_ifsc_code || bodyData.ifsc_code;
+      if (ifsc) {
+        bodyData.bank_ifsc_code = ifsc;
+        bodyData.ifsc_code = ifsc;
+      }
+      const branch = bodyData.bank_branch || bodyData.branch_name;
+      if (branch) {
+        bodyData.bank_branch = branch;
+        bodyData.branch_name = branch;
+      }
     }
 
     const updatedItem = await Model.findOneAndUpdate(

@@ -1,0 +1,110 @@
+[
+  {
+    "_id": "6aa3f1273c200cb6cc5c97d4",
+    "id": "1",
+    "type": "IT Assets",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97d5",
+    "id": "2",
+    "type": "Infra Asset",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97d6",
+    "id": "10",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97d7",
+    "id": "9",
+    "type": "infri",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97d8",
+    "id": "11",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97d9",
+    "id": "12",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97da",
+    "id": "13",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97db",
+    "id": "14",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97dc",
+    "id": "15",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97dd",
+    "id": "16",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97de",
+    "id": "17",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97df",
+    "id": "18",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e0",
+    "id": "19",
+    "type": "",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e1",
+    "id": "20",
+    "type": "Others",
+    "is_active": "2"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e2",
+    "id": "21",
+    "type": "Ecogrowth Assets",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e3",
+    "id": "22",
+    "type": "TOYOTA",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e4",
+    "id": "23",
+    "type": "monitor",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e5",
+    "id": "24",
+    "type": "test",
+    "is_active": "0"
+  }
+]

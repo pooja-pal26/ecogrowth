@@ -9,7 +9,7 @@ const CompanyDetails = () => {
   
   const loadData = async () => {
     try {
-      const res = await fetchList('dynamic/companydetailss');
+      const res = await fetchList('dynamic/companies');
       if (res.success) setData(res.data);
     } catch (error) {
       console.error(error);
@@ -71,7 +71,7 @@ const CompanyDetails = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
-        await deleteItem('dynamic/companydetailss', id);
+        await deleteItem('dynamic/companies', id);
         loadData();
       } catch (error) {
         alert('Failed to delete');
@@ -82,9 +82,9 @@ const CompanyDetails = () => {
   const handleSubmit = async () => {
     try {
       if (isEditing) {
-        await updateItem('dynamic/companydetailss', editId, formData);
+        await updateItem('dynamic/companies', editId, formData);
       } else {
-        await createItem('dynamic/companydetailss', formData);
+        await createItem('dynamic/companies', formData);
       }
       setIsModalOpen(false);
       loadData();

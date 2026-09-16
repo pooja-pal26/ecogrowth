@@ -44,12 +44,16 @@ import Work from './pages/master-data/work-master-data/Work';
 import WorkDescription from './pages/master-data/work-master-data/WorkDescription';
 
 // Expense Module imports
+import ExpenseDashboard from './pages/expense-module/ExpenseDashboard';
 import CreateNewExpense from './pages/expense-module/CreateNewExpense';
 import SiteExpenseReport from './pages/expense-module/SiteExpenseReport';
 import InvoiceReport from './pages/expense-module/InvoiceReport';
 import OfficeExpenseReport from './pages/expense-module/OfficeExpenseReport';
 import B2BFundTransferReport from './pages/expense-module/B2BFundTransferReport';
 
+
+// Company
+import CompanyDetails from './pages/company/CompanyDetails';
 
 // Invoice Module
 import PunchedInvoices from './pages/invoice-module/PunchedInvoices';
@@ -174,6 +178,7 @@ function App() {
           <Route path="/master-data/work-master-data/work-description" element={<ProtectedRoute><Layout><WorkDescription /></Layout></ProtectedRoute>} />
 
           {/* Expense Module routes */}
+          <Route path="/expense-dashboard" element={<ProtectedRoute><Layout><ExpenseDashboard /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/create-new-expense" element={<ProtectedRoute><Layout><CreateNewExpense /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/site-expense-report" element={<ProtectedRoute><Layout><SiteExpenseReport /></Layout></ProtectedRoute>} />
           <Route path="/expense-module/invoice-report" element={<ProtectedRoute><Layout><InvoiceReport /></Layout></ProtectedRoute>} />
@@ -181,6 +186,9 @@ function App() {
           <Route path="/expense-module/b2b-fund-transfer-report" element={<ProtectedRoute><Layout><B2BFundTransferReport /></Layout></ProtectedRoute>} />
 
           
+          {/* Company routes */}
+          <Route path="/company/company-details" element={<ProtectedRoute><Layout><CompanyDetails /></Layout></ProtectedRoute>} />
+
           {/* Invoice Module routes */}
           <Route path="/invoice-module/punched-invoices" element={<ProtectedRoute><Layout><PunchedInvoices /></Layout></ProtectedRoute>} />
           <Route path="/invoice-module/punch-invoice" element={<ProtectedRoute><Layout><PunchInvoice /></Layout></ProtectedRoute>} />

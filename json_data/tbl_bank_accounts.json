@@ -1,0 +1,123 @@
+[
+  {
+    "_id": "6aa3f1273c200cb6cc5c992b",
+    "id": "1",
+    "bank_name": "Hdfc Bank (tech)",
+    "bank_account_number": "Vefvwvvvvvvvvvvvvvv",
+    "bank_branch": "Vwefv",
+    "bank_ifsc_code": "Wefvwef",
+    "account_holder_name": "Vfwevvvvvvvvvvvvvvvvvvv",
+    "is_active": "0",
+    "created_at": "2019-09-28 10:34:24"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c992c",
+    "id": "2",
+    "bank_name": "Hdfc Bank  (ecogrowth)",
+    "bank_account_number": "50200035341327",
+    "bank_branch": "Gomtinagar",
+    "bank_ifsc_code": "Hdfc0001112",
+    "account_holder_name": "Ecogrowth Infra Pvt. Ltd.",
+    "is_active": "1",
+    "created_at": "2019-10-04 08:23:25"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c992d",
+    "id": "8",
+    "bank_name": "Idfc  Bank",
+    "bank_account_number": "10048725950",
+    "bank_branch": "Gomti Nagar",
+    "bank_ifsc_code": "Idfb0021252",
+    "account_holder_name": "Logimetrix Techsolutions Pvt. Ltd.",
+    "is_active": "1",
+    "created_at": "2019-12-02 11:13:56"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c992e",
+    "id": "3",
+    "bank_name": "Icici Bank(infra)",
+    "bank_account_number": "021405500881",
+    "bank_branch": "Gomtinagar",
+    "bank_ifsc_code": "Icic0000214",
+    "account_holder_name": "Logimetrix Infra Pvt. Ltd.",
+    "is_active": "1",
+    "created_at": "2019-10-04 09:03:50"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c992f",
+    "id": "4",
+    "bank_name": "Allahabad Bank",
+    "bank_account_number": "50477770780",
+    "bank_branch": "Gomtinagar",
+    "bank_ifsc_code": "Alla0210969",
+    "account_holder_name": "Logimetrix Techsolutions Private Limited",
+    "is_active": "1",
+    "created_at": "2019-10-04 09:06:51"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9930",
+    "id": "5",
+    "bank_name": "Axis Bank",
+    "bank_account_number": "913020003777647",
+    "bank_branch": "Gomtinagar",
+    "bank_ifsc_code": "Utib0000053",
+    "account_holder_name": "Logimetrix Techsolutions Private Limited",
+    "is_active": "1",
+    "created_at": "2019-10-04 09:08:38"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9931",
+    "id": "6",
+    "bank_name": "Indusind Bank",
+    "bank_account_number": "257275600003",
+    "bank_branch": "Vibhutikhand",
+    "bank_ifsc_code": "Indb0001028",
+    "account_holder_name": "Logimetrix Techsolutions Private Limited",
+    "is_active": "1",
+    "created_at": "2019-10-04 09:11:34"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9932",
+    "id": "7",
+    "bank_name": "Hdfc Bank Tech",
+    "bank_account_number": "50200031713077",
+    "bank_branch": "Gomtinagar",
+    "bank_ifsc_code": "Hdfc0001112",
+    "account_holder_name": "Logimetrix Techsolutions Private Limited",
+    "is_active": "1",
+    "created_at": "2019-10-04 10:49:27"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9933",
+    "id": "9",
+    "bank_name": "Cash",
+    "bank_account_number": "4209211",
+    "bank_branch": "Gomti Nagar",
+    "bank_ifsc_code": "Test",
+    "account_holder_name": "Cash",
+    "is_active": "1",
+    "created_at": "2021-02-18 07:19:34"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9934",
+    "id": "10",
+    "bank_name": "Hdfc Bank Cropnet",
+    "bank_account_number": "50200049996177",
+    "bank_branch": "Vipul Khand, Gomti Nagar, Lucknow, Uttar Pradesh",
+    "bank_ifsc_code": "Hdfc0004419",
+    "account_holder_name": "Cropnet Private Limited",
+    "is_active": "1",
+    "created_at": "2021-10-05 01:14:26"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c9935",
+    "id": "11",
+    "bank_name": "Hdfc Bank - V3 Enterprises",
+    "bank_account_number": "50200051102735",
+    "bank_branch": "Vipul Khand Gomti Nagar Lucknow Uttar Pradesh - 226010",
+    "bank_ifsc_code": "Hdfc0004419",
+    "account_holder_name": "V3 Enterprises",
+    "is_active": "1",
+    "created_at": "2022-04-08 03:17:40"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "_id": "6aa3f1293c200cb6cc5df739",
+    "id": "1",
+    "vendor_id": "11",
+    "name": "Santosh Tiwari",
+    "department": "17",
+    "experience": "5",
+    "joining_date": "2018-03-16",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1293c200cb6cc5df73a",
+    "id": "2",
+    "vendor_id": "11",
+    "name": "Shekhar",
+    "department": "17",
+    "experience": "3",
+    "joining_date": "2018-05-23",
+    "status": "1"
+  }
+]

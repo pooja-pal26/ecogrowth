@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e6",
+    "id": "1",
+    "department": "Accounts",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e7",
+    "id": "2",
+    "department": "HR",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e8",
+    "id": "18",
+    "department": "Electrical",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97e9",
+    "id": "17",
+    "department": "Civil",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97ea",
+    "id": "16",
+    "department": "Others",
+    "status": "1"
+  },
+  {
+    "_id": "6aa3f1273c200cb6cc5c97eb",
+    "id": "25",
+    "department": "IT",
+    "status": "1"
+  }
+]

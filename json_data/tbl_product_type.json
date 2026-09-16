@@ -1,0 +1,332 @@
+[
+  {
+    "_id": "6aa3f1283c200cb6cc5ca441",
+    "id": "1",
+    "product_type_name": "Cable",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca442",
+    "id": "2",
+    "product_type_name": "GI Sheet",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca443",
+    "id": "3",
+    "product_type_name": "Pipe",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca444",
+    "id": "4",
+    "product_type_name": "GI Strip",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca445",
+    "id": "5",
+    "product_type_name": "DCDB box",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca446",
+    "id": "6",
+    "product_type_name": "MCB",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca447",
+    "id": "7",
+    "product_type_name": "LUX",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca448",
+    "id": "8",
+    "product_type_name": "Flexible Pipe",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca449",
+    "id": "9",
+    "product_type_name": "LA",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca44a",
+    "id": "10",
+    "product_type_name": "demo2",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca44b",
+    "id": "11",
+    "product_type_name": "S P 35 Insulator ",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca44c",
+    "id": "12",
+    "product_type_name": "Insulator",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca44d",
+    "id": "13",
+    "product_type_name": "Saddle",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca44e",
+    "id": "14",
+    "product_type_name": "Nut & Bolt",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca44f",
+    "id": "15",
+    "product_type_name": "demo1",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca450",
+    "id": "16",
+    "product_type_name": "new demo1",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca451",
+    "id": "17",
+    "product_type_name": "GULLY",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca452",
+    "id": "18",
+    "product_type_name": "SCREW",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca453",
+    "id": "19",
+    "product_type_name": "TIE",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca454",
+    "id": "20",
+    "product_type_name": "TAPE",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca455",
+    "id": "21",
+    "product_type_name": "Gland",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca456",
+    "id": "22",
+    "product_type_name": "Cable Tray",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca457",
+    "id": "23",
+    "product_type_name": "Steel Tube",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca458",
+    "id": "24",
+    "product_type_name": "Switch",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca459",
+    "id": "25",
+    "product_type_name": "PVC BOX",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca45a",
+    "id": "26",
+    "product_type_name": "Plate",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca45b",
+    "id": "27",
+    "product_type_name": "Socket",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca45c",
+    "id": "28",
+    "product_type_name": "PVC Clip",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca45d",
+    "id": "29",
+    "product_type_name": "PVC Pipe",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca45e",
+    "id": "30",
+    "product_type_name": "Insulotar",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca45f",
+    "id": "31",
+    "product_type_name": "Insulator",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca460",
+    "id": "32",
+    "product_type_name": "GI Elbow",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca461",
+    "id": "33",
+    "product_type_name": "Packing",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca462",
+    "id": "34",
+    "product_type_name": "GI Elbow",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca463",
+    "id": "35",
+    "product_type_name": "Faster",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca464",
+    "id": "36",
+    "product_type_name": "MS Flange",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca465",
+    "id": "37",
+    "product_type_name": "Asbestos",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca466",
+    "id": "38",
+    "product_type_name": "BUTT ELBOW",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca467",
+    "id": "39",
+    "product_type_name": "M.S. Bar",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca468",
+    "id": "40",
+    "product_type_name": "GI Busbar",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca469",
+    "id": "41",
+    "product_type_name": "GI",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca46a",
+    "id": "42",
+    "product_type_name": "Meter Box",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca46b",
+    "id": "43",
+    "product_type_name": "Electrical",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca46c",
+    "id": "44",
+    "product_type_name": "IGB",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca46d",
+    "id": "45",
+    "product_type_name": "Iron",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca46e",
+    "id": "46",
+    "product_type_name": "Copper Sheet 300x75x3",
+    "is_active": "0"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca46f",
+    "id": "47",
+    "product_type_name": "Copper Sheet",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca470",
+    "id": "48",
+    "product_type_name": "Cement",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca471",
+    "id": "49",
+    "product_type_name": "MACHINE",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca472",
+    "id": "50",
+    "product_type_name": "CHEMICAL",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca473",
+    "id": "51",
+    "product_type_name": "MATERIAL",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca474",
+    "id": "52",
+    "product_type_name": "MOULD",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca475",
+    "id": "53",
+    "product_type_name": "SHUTTERING PLY",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca476",
+    "id": "54",
+    "product_type_name": "steel",
+    "is_active": "1"
+  },
+  {
+    "_id": "6aa3f1283c200cb6cc5ca477",
+    "id": "55",
+    "product_type_name": "electric",
+    "is_active": "1"
+  }
+]

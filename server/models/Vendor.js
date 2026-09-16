@@ -1,7 +1,5 @@
-const mongoose = require('mongoose');
+const { createJsonModel } = require('./JsonModel');
 
-const vendorSchema = new mongoose.Schema({
-  vendorName: String, contactPerson: String, contactNumber: String, email: String, status: { type: String, default: "Active" }
-}, { timestamps: true });
+const Vendor = createJsonModel('tbl_vendor');
 
-module.exports = mongoose.model('Vendor', vendorSchema);
+module.exports = Vendor;
