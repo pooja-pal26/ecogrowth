@@ -1,36 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const AddNewPO = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     state_id: '',
     client_id: '',
     po_type: 'Standard PO',
     po_amount: '',
     po_number: '',
-    po_date: '',
-    revision: '',
+    po_date: new Date().toISOString().substring(0, 10),
+    revision: '0',
     site_type: '',
   });
 
   const [sites, setSites] = useState([
-    { id: 1, site_id: '', site_name: '', so_number: '', infratel_id: '', location: '', latitude: '', longitude: '', work_type: '' }
+    { id: Date.now(), site_id: '', site_name: '', so_number: '', infratel_id: '', location: '', latitude: '', longitude: '', work_type: '' }
   ]);
 
-  const states = [
-    { id: 1, name: 'Maharashtra' },
-    { id: 2, name: 'Delhi' },
-    { id: 3, name: 'Karnataka' },
-  ];
+  const [states, setStates] = useState([]);
+  const [allClients, setAllClients] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const clients = [
-    { id: 1, name: 'Client A' },
-    { id: 2, name: 'Client B' },
-  ];
+  // Dynamic masters from backend
+  useEffect(() => {
+    const fetchMasters = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/po-sites/init-data', { withCredentials: true });
+        if (res.data && res.data.success) {
+          setStates(res.data.states || []);
+          setAllClients(res.data.clients || []);
+        }
+      } catch (err) {
+        console.error('Error loading masters:', err);
+      }
+    };
+    fetchMasters();
+  }, []);
+
+  // Filter clients by selected state
+  const clients = formData.state_id 
+    ? allClients.filter(c => String(c.state_id) === String(formData.state_id))
+    : allClients;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (name === 'state_id') {
+      setFormData({ ...formData, state_id: value, client_id: '' });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSiteChange = (id, field, value) => {
@@ -42,14 +64,72 @@ const AddNewPO = () => {
   };
 
   const removeSiteRow = (id) => {
+    if (sites.length <= 1) {
+      alert('At least one site row is required');
+      return;
+    }
     setSites(sites.filter(site => site.id !== id));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('PO Data:', formData);
-    console.log('Sites:', sites);
-    alert('PO and Sites added successfully!');
+
+    if (!formData.state_id) {
+      alert('Please select State');
+      return;
+    }
+    if (!formData.client_id) {
+      alert('Please select Client');
+      return;
+    }
+    if (!formData.po_amount) {
+      alert('Please enter PO Amount');
+      return;
+    }
+    if (!formData.po_number.trim()) {
+      alert('Please enter PO Number');
+      return;
+    }
+    if (!formData.po_date) {
+      alert('Please enter PO Date');
+      return;
+    }
+
+    for (let i = 0; i < sites.length; i++) {
+      if (!sites[i].site_id.trim()) {
+        alert(`Row ${i + 1}: Site ID is mandatory`);
+        return;
+      }
+      if (!sites[i].location.trim()) {
+        alert(`Row ${i + 1}: Location is mandatory`);
+        return;
+      }
+      if (!sites[i].work_type.trim()) {
+        alert(`Row ${i + 1}: Work Type is mandatory`);
+        return;
+      }
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        ...formData,
+        sites: sites.map(({ id, ...rest }) => rest)
+      };
+
+      const res = await axios.post('http://localhost:5000/api/po-sites/add-po-and-sites', payload, { withCredentials: true });
+      if (res.data && res.data.flag) {
+        alert(res.data.message || 'PO and Sites added successfully!');
+        navigate('/po-sites/po/po-details');
+      } else {
+        alert(res.data?.message || 'Failed to add PO and Sites');
+      }
+    } catch (err) {
+      console.error('Error submitting PO:', err);
+      alert(err.response?.data?.message || err.message || 'Server error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -72,26 +152,26 @@ const AddNewPO = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">State <span className="text-red-500">*</span></label>
               <select name="state_id" value={formData.state_id} onChange={handleInputChange} required className="w-full border border-gray-300 rounded-md p-2">
                 <option value="">Select State</option>
-                {states.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                {states.map(s => <option key={s.id} value={s.id}>{s.state_name}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Client Name <span className="text-red-500">*</span></label>
-              <select name="client_id" value={formData.client_id} onChange={handleInputChange} required className="w-full border border-gray-300 rounded-md p-2">
-                <option value="">Select Client</option>
-                {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              <select name="client_id" value={formData.client_id} onChange={handleInputChange} required disabled={!formData.state_id} className="w-full border border-gray-300 rounded-md p-2 disabled:bg-gray-50">
+                <option value="">{formData.state_id ? 'Select Client' : 'First Select State'}</option>
+                {clients.map(c => <option key={c.id} value={c.id}>{c.client_name}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">PO Type <span className="text-red-500">*</span></label>
               <select name="po_type" value={formData.po_type} onChange={handleInputChange} required className="w-full border border-gray-300 rounded-md p-2">
-                <option value="">Select PO Type</option>
                 <option value="Standard PO">Standard PO</option>
+                <option value="Rate Contract PO">Rate Contract PO</option>
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">PO Amount <span className="text-red-500">*</span></label>
-              <input type="number" name="po_amount" value={formData.po_amount} onChange={handleInputChange} required className="w-full border border-gray-300 rounded-md p-2" />
+              <input type="number" step="any" name="po_amount" value={formData.po_amount} onChange={handleInputChange} required className="w-full border border-gray-300 rounded-md p-2" />
             </div>
           </div>
 
@@ -183,8 +263,8 @@ const AddNewPO = () => {
           </div>
 
           <div className="flex justify-end pt-4">
-            <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
-              Add Sites
+            <button type="submit" disabled={loading} className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50">
+              {loading ? 'Adding...' : 'Add Sites'}
             </button>
           </div>
         </form>

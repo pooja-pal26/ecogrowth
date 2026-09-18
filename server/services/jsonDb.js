@@ -7,6 +7,7 @@ const JSON_DIR = path.resolve(__dirname, '../../json_data');
 // Exact list of all 75 JSON data sources
 const REQUIRED_FILES = [
   'asset_types.json',
+  'assets.json',
   'cairn_department.json',
   'logi_admin.json',
   'logi_user_login_detail.json',
@@ -16,6 +17,7 @@ const REQUIRED_FILES = [
   'role_module_associations.json',
   'sub_modules.json',
   'tbl_annual_turnover_master.json',
+  'tbl_asset_assignments.json',
   'tbl_association_years_master.json',
   'tbl_attendance_settings.json',
   'tbl_bank_accounts.json',
@@ -85,6 +87,18 @@ const REQUIRED_FILES = [
 
 // Entity Aliases mapping any client/API name to its underlying JSON file
 const TABLE_ALIASES = {
+  // Users & Roles
+  users: 'tbl_user',
+  user: 'tbl_user',
+  tbl_user: 'tbl_user',
+  tbl_users: 'tbl_user',
+  cairn_department: 'cairn_department',
+  departments: 'cairn_department',
+  tbl_role_type: 'tbl_role_type',
+  role_types: 'tbl_role_type',
+  tbl_roles: 'tbl_roles',
+  roles: 'tbl_roles',
+
   // States
   states: 'tbl_states',
   state: 'tbl_states',
@@ -254,9 +268,14 @@ const TABLE_ALIASES = {
   tbl_user_balance: 'tbl_user_balance',
   tbl_user_path: 'tbl_user_path',
 
-  // Other Masters
+  // Asset Management
   asset_types: 'asset_types',
-  assets: 'asset_types',
+  assettypes: 'asset_types',
+  assets: 'assets',
+  asset: 'assets',
+  tbl_asset_assignments: 'tbl_asset_assignments',
+  asset_assignments: 'tbl_asset_assignments',
+  assetassignments: 'tbl_asset_assignments',
   cairn_department: 'cairn_department',
   tbl_global_data: 'tbl_global_data',
   tbl_notification: 'tbl_notification',
@@ -410,6 +429,25 @@ class JsonDbService {
     if (!this.initialized) this.init();
     const resolved = this.resolveTableName(name);
     if (!this.tables.has(resolved)) {
+      const filePath = path.join(JSON_DIR, `${resolved}.json`);
+      if (fs.existsSync(filePath)) {
+        try {
+          const raw = fs.readFileSync(filePath, 'utf8');
+          const records = JSON.parse(raw);
+          const indexMap = new Map();
+          if (Array.isArray(records)) {
+            for (const rec of records) {
+              if (rec && rec._id) indexMap.set(String(rec._id), rec);
+              if (rec && rec.id !== undefined && rec.id !== null) indexMap.set(String(rec.id), rec);
+            }
+            this.tables.set(resolved, records);
+            this.indices.set(resolved, indexMap);
+            return this.tables.get(resolved);
+          }
+        } catch (e) {
+          console.warn(`[JSON-DB] Could not load ${resolved}.json:`, e.message);
+        }
+      }
       // Auto-create in-memory collection if unknown
       this.tables.set(resolved, []);
       this.indices.set(resolved, new Map());
@@ -588,7 +626,11 @@ class JsonDbService {
     newDoc._id = String(newDoc._id);
 
     if (newDoc.id === undefined) {
-      newDoc.id = String(records.length + 1);
+      const maxId = records.reduce((max, r) => {
+        const num = parseInt(r.id, 10);
+        return !isNaN(num) && num > max ? num : max;
+      }, 0);
+      newDoc.id = String(maxId + 1);
     }
 
     newDoc.createdAt = newDoc.createdAt || new Date().toISOString();

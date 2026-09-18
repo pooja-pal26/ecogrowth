@@ -22,23 +22,23 @@ const Topbar = ({ toggleSidebar }) => {
       <div className="flex items-center space-x-4">
         <button 
           onClick={toggleSidebar}
-          className="p-2 rounded bg-amber-500 text-white hover:bg-amber-600 focus:outline-none transition-colors"
+          className="p-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 text-white hover:from-teal-600 hover:to-cyan-700 shadow-sm focus:outline-none transition-all"
         >
           <Menu size={20} />
         </button>
         
         <div className="hidden md:flex items-center space-x-3">
-          <button className="p-2 rounded-full bg-slate-500 text-white relative hover:bg-slate-600 transition-colors">
+          <button className="p-2 rounded-full bg-gradient-to-tr from-teal-500 to-cyan-600 text-white relative hover:opacity-90 shadow-sm transition-all">
             <Mail size={18} />
-            <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">4</span>
+            <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white">4</span>
           </button>
           
-          <button className="p-2 rounded-full bg-teal-500 text-white relative hover:bg-teal-600 transition-colors">
+          <button className="p-2 rounded-full bg-gradient-to-tr from-cyan-600 to-indigo-600 text-white relative hover:opacity-90 shadow-sm transition-all">
             <Bell size={18} />
-            <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">4</span>
+            <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white">4</span>
           </button>
           
-          <button className="p-2 rounded-full bg-cyan-600 text-white relative hover:bg-cyan-700 transition-colors">
+          <button className="p-2 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white relative hover:opacity-90 shadow-sm transition-all">
             <MessageSquare size={18} />
             <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white">8</span>
           </button>
@@ -47,14 +47,14 @@ const Topbar = ({ toggleSidebar }) => {
       
       <div className="flex items-center space-x-4 relative">
         <div 
-          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+          className="flex items-center space-x-2.5 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
           onClick={() => setDropdownOpen(!dropdownOpen)}
         >
-          <div className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-white">
+          <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-teal-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-sm font-semibold">
             <User size={18} />
           </div>
           <div className="hidden md:flex items-center space-x-1">
-            <span className="text-sm font-bold text-amber-500">{user?.name || 'ADMIN'}</span>
+            <span className="text-sm font-bold bg-gradient-to-r from-teal-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">{user?.name || 'ADMIN'}</span>
             <ChevronDown size={16} className="text-gray-500" />
           </div>
         </div>

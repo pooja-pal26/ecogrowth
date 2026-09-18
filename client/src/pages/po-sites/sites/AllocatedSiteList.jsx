@@ -28,7 +28,10 @@ const AllocatedSiteList = () => {
     poNumber: '',
     poDate: '',
     siteId: '',
-    dueDate: ''
+    dueDate: '',
+    workType: '',
+    status: 'Allocated',
+    closeStatus: 'Open'
   };
   
   const [formData, setFormData] = useState(initialForm);
@@ -38,46 +41,67 @@ const AllocatedSiteList = () => {
     { key: 'poNumber', label: 'PO Number' },
     { key: 'poDate', label: 'PO Date' },
     { key: 'siteId', label: 'Site ID' },
-    { key: 'dueDate', label: 'Due Date' }
+    { key: 'dueDate', label: 'Due Date' },
+    { key: 'workType', label: 'Work Type' },
+    { key: 'status', label: 'Status' },
+    { key: 'closeStatus', label: 'Close Status' }
   ];
 
   const formFields = [
-    { key: 'poNumber', label: 'PO Number', type: 'text', required: true },
-    { key: 'poDate', label: 'PO Date', type: 'text', required: true },
-    { key: 'siteId', label: 'Site ID', type: 'text', required: true },
-    { key: 'dueDate', label: 'Due Date', type: 'text', required: true }
+    { key: 'poNumber', label: 'PO Number', type: 'text', readOnly: true },
+    { key: 'poDate', label: 'PO Date', type: 'text', readOnly: true },
+    { key: 'siteId', label: 'Site ID', type: 'text', readOnly: true },
+    { key: 'dueDate', label: 'Due Date', type: 'text', readOnly: true },
+    { key: 'workType', label: 'Work Type', type: 'text', readOnly: true },
+    { key: 'status', label: 'Status', type: 'select', options: [
+      { label: 'Allocated', value: 'Allocated' },
+      { label: 'Pending', value: 'Pending' }
+    ] },
+    { key: 'closeStatus', label: 'Close Status', type: 'select', options: [
+      { label: 'Open', value: 'Open' },
+      { label: 'In Progress', value: 'In Progress' },
+      { label: 'Closed', value: 'Closed' }
+    ] }
   ];
 
   const handleAdd = () => {
-    setFormData(initialForm);
-    setIsEditing(false);
-    setIsModalOpen(true);
+    window.location.href = '/po-sites/sites/allocate-site';
   };
 
   const handleEdit = (row) => {
     setFormData({
-      poNumber: row.poNumber,
-      poDate: row.poDate,
-      siteId: row.siteId,
-      dueDate: row.dueDate
+      poNumber: row.poNumber || '',
+      poDate: row.poDate || '',
+      siteId: row.siteId || '',
+      dueDate: row.dueDate || '',
+      workType: row.workType || '',
+      status: row.status || 'Allocated',
+      closeStatus: row.closeStatus || 'Open'
     });
-    setEditId(row._id);
+    setEditId(row._id || row.id);
     setIsEditing(true);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
-      setData(data.filter(v => v._id !== id));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this allocated site record?")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/po-sites/allocated-sites/${id}`, { withCredentials: true });
+        fetchData();
+      } catch (error) {
+        console.error('Error deleting site allocation:', error);
+        alert('Error deleting site allocation');
+      }
     }
   };
 
   const handleSubmit = async () => {
     try {
-      if (isEditing) {
-        await axios.put(`http://localhost:5000/api/po-sites/allocated-sites/${editId}`, formData, { withCredentials: true });
-      } else {
-        await axios.post('http://localhost:5000/api/po-sites/allocated-sites', formData, { withCredentials: true });
+      if (isEditing && editId) {
+        await axios.put(`http://localhost:5000/api/po-sites/allocated-site-status/${editId}`, {
+          status: formData.status === 'Allocated' ? '1' : '0',
+          close_status: formData.closeStatus
+        }, { withCredentials: true });
       }
       fetchData();
       setIsModalOpen(false);
@@ -100,7 +124,7 @@ const AllocatedSiteList = () => {
       <MasterDataForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Allocated Site List"
+        title="Edit Allocated Site"
         fields={formFields}
         formData={formData}
         setFormData={setFormData}

@@ -26,7 +26,10 @@ const AllocatedSiteStatus = () => {
   
   const initialForm = {
     siteId: '',
-    status: ''
+    poNumber: '',
+    dueDate: '',
+    status: 'Allocated',
+    closeStatus: 'Open'
   };
   
   const [formData, setFormData] = useState(initialForm);
@@ -34,42 +37,62 @@ const AllocatedSiteStatus = () => {
 
   const columns = [
     { key: 'siteId', label: 'Site ID' },
-    { key: 'status', label: 'Status' }
+    { key: 'poNumber', label: 'PO Number' },
+    { key: 'dueDate', label: 'Due Date' },
+    { key: 'status', label: 'Status' },
+    { key: 'closeStatus', label: 'Close Status' }
   ];
 
   const formFields = [
-    { key: 'siteId', label: 'Site ID', type: 'text', required: true },
-    { key: 'status', label: 'Status', type: 'text', required: true }
+    { key: 'siteId', label: 'Site ID', type: 'text', readOnly: true },
+    { key: 'poNumber', label: 'PO Number', type: 'text', readOnly: true },
+    { key: 'dueDate', label: 'Due Date', type: 'text', readOnly: true },
+    { key: 'status', label: 'Status', type: 'select', options: [
+      { label: 'Allocated', value: 'Allocated' },
+      { label: 'Pending', value: 'Pending' }
+    ] },
+    { key: 'closeStatus', label: 'Close Status', type: 'select', options: [
+      { label: 'Open', value: 'Open' },
+      { label: 'In Progress', value: 'In Progress' },
+      { label: 'Closed', value: 'Closed' }
+    ] }
   ];
 
   const handleAdd = () => {
-    setFormData(initialForm);
-    setIsEditing(false);
-    setIsModalOpen(true);
+    window.location.href = '/po-sites/sites/allocate-site';
   };
 
   const handleEdit = (row) => {
     setFormData({
-      siteId: row.siteId,
-      status: row.status
+      siteId: row.siteId || '',
+      poNumber: row.poNumber || '',
+      dueDate: row.dueDate || '',
+      status: row.status || 'Allocated',
+      closeStatus: row.closeStatus || 'Open'
     });
-    setEditId(row._id);
+    setEditId(row._id || row.id);
     setIsEditing(true);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
-      setData(data.filter(v => v._id !== id));
+      try {
+        await axios.delete(`http://localhost:5000/api/po-sites/allocated-sites/${id}`, { withCredentials: true });
+        fetchData();
+      } catch (error) {
+        console.error('Error deleting record:', error);
+      }
     }
   };
 
   const handleSubmit = async () => {
     try {
-      if (isEditing) {
-        await axios.put(`http://localhost:5000/api/po-sites/allocated-site-status/${editId}`, formData, { withCredentials: true });
-      } else {
-        await axios.post('http://localhost:5000/api/po-sites/allocated-site-status', formData, { withCredentials: true });
+      if (isEditing && editId) {
+        await axios.put(`http://localhost:5000/api/po-sites/allocated-site-status/${editId}`, {
+          status: formData.status === 'Allocated' ? '1' : '0',
+          close_status: formData.closeStatus
+        }, { withCredentials: true });
       }
       fetchData();
       setIsModalOpen(false);
@@ -92,7 +115,7 @@ const AllocatedSiteStatus = () => {
       <MasterDataForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Allocated Site Status"
+        title="Update Site Status"
         fields={formFields}
         formData={formData}
         setFormData={setFormData}

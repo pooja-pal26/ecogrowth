@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Supervisor 1",
+    "status": false,
+    "is_deleted": true,
+    "is_active": false,
+    "_id": "a704a2cb5ff5a0b275bb9c28",
+    "id": "1",
+    "createdAt": "2026-09-17T06:16:04.222Z",
+    "updatedAt": "2026-09-17T11:10:38.505Z"
+  }
+]

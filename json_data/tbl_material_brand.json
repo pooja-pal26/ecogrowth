@@ -1,0 +1,9 @@
+[
+  { "id": "1", "brand_name": "Standard", "is_active": "1" },
+  { "id": "2", "brand_name": "Tata", "is_active": "1" },
+  { "id": "3", "brand_name": "Jindal", "is_active": "1" },
+  { "id": "4", "brand_name": "Havells", "is_active": "1" },
+  { "id": "11", "brand_name": "Polycab", "is_active": "1" },
+  { "id": "17", "brand_name": "Finolex", "is_active": "1" },
+  { "id": "23", "brand_name": "Schneider", "is_active": "1" }
+]

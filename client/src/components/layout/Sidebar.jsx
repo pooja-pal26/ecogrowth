@@ -243,24 +243,24 @@ const MenuItem = ({ item, depth = 0 }) => {
       <div>
         <button 
           onClick={toggleMenu}
-          className={`w-full flex items-center justify-between pr-4 py-3 hover:bg-[#3d3f45] transition-colors`}
+          className={`w-full flex items-center justify-between pr-4 py-3 text-white/90 hover:text-white hover:bg-white/15 transition-all duration-200`}
           style={{ paddingLeft }}
         >
           <div className="flex items-center space-x-3">
-            {item.icon && <item.icon size={18} />}
+            {item.icon && <item.icon size={18} className="text-white/90" />}
             <span className="text-sm font-medium">{item.name}</span>
           </div>
-          {isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          {isOpen ? <ChevronDown size={16} className="text-white/80" /> : <ChevronRight size={16} className="text-white/80" />}
         </button>
         {isOpen && (
-          <ul className="bg-[#1f2125]">
+          <ul className="bg-black/20 backdrop-blur-md border-l border-white/10">
             {item.subItems ? item.subItems.map((subItem) => (
               <li key={subItem.name}>
                 <MenuItem item={subItem} depth={depth + 1} />
               </li>
             )) : (
               <li 
-                className="py-2 text-sm text-gray-500 pr-4"
+                className="py-2 text-sm text-white/60 pr-4 italic"
                 style={{ paddingLeft: `${1 + (depth + 1) * 1.25}rem` }}
               >
                 Coming Soon
@@ -276,13 +276,15 @@ const MenuItem = ({ item, depth = 0 }) => {
     <NavLink 
       to={item.path}
       className={({ isActive }) => 
-        `flex items-center space-x-3 pr-4 py-3 transition-colors ${
-          isActive ? 'bg-[#3d3f45] text-white border-l-4 border-blue-500' : 'hover:bg-[#3d3f45] hover:text-white'
+        `flex items-center space-x-3 pr-4 py-3 transition-all duration-200 ${
+          isActive 
+            ? 'bg-white/25 text-white font-semibold shadow-sm backdrop-blur-md border-l-4 border-white' 
+            : 'text-white/85 hover:bg-white/15 hover:text-white'
         }`
       }
-      style={{ paddingLeft: depth === 0 ? paddingLeft : `calc(${paddingLeft} - 4px)` }} // Adjust for border-l-4 if active on root, but here it's generally applied. We'll simplify.
+      style={{ paddingLeft: depth === 0 ? paddingLeft : `calc(${paddingLeft} - 4px)` }}
     >
-      {item.icon && <item.icon size={18} />}
+      {item.icon && <item.icon size={18} className="text-white/90" />}
       <span className="text-sm font-medium">{item.name}</span>
     </NavLink>
   );
@@ -291,18 +293,25 @@ const MenuItem = ({ item, depth = 0 }) => {
 const Sidebar = ({ isOpen }) => {
   return (
     <aside 
-      className={`bg-[#2a2c32] text-gray-300 transition-all duration-300 flex flex-col ${
+      className={`text-white transition-all duration-300 flex flex-col ${
         isOpen ? 'w-64' : 'w-0 overflow-hidden'
-      } lg:w-64 fixed lg:static h-screen z-40`}
+      } lg:w-64 fixed lg:static h-screen z-40 shadow-2xl`}
+      style={{
+        background: 'linear-gradient(175deg, #10b981 0%, #0d9488 15%, #0284c7 45%, #6366f1 75%, #a855f7 100%)'
+      }}
     >
-      <div className="h-16 flex items-center justify-center px-4 bg-white border-b border-r border-gray-200 shrink-0">
+      <div className="h-16 flex items-center justify-center px-4 bg-white border-b border-gray-200 shrink-0">
         <NavLink to="/" className="flex items-center justify-center">
-          <img src="/assets/echo_growth.png" alt="EcoGrowth" className="h-10 w-auto max-w-[200px] object-contain" />
+          <img 
+            src="/assets/echo_growth.png" 
+            alt="GenstreeAi" 
+            className="h-10 w-auto max-w-[200px] object-contain" 
+          />
         </NavLink>
       </div>
       
-      <div className="flex-1 overflow-y-auto py-4">
-        <ul className="space-y-1">
+      <div className="flex-1 overflow-y-auto py-3 custom-sidebar-scroll">
+        <ul className="space-y-0.5">
           {navItems.map((item) => (
             <li key={item.name}>
               <MenuItem item={item} />

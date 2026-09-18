@@ -25,9 +25,14 @@ const MasterDataForm = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md overflow-hidden">
-        <div className="bg-slate-800 text-white px-4 py-3 flex justify-between items-center">
-          <h3 className="font-semibold text-lg">{isEditing ? 'Edit' : 'Add'} {title}</h3>
-          <button onClick={onClose} className="text-gray-300 hover:text-white transition-colors">
+        <div 
+          className="text-white px-4 py-3 flex justify-between items-center shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
+          <h3 className="font-bold text-lg">{isEditing ? 'Edit' : 'Add'} {title}</h3>
+          <button onClick={onClose} className="text-white/80 hover:text-white transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -44,7 +49,7 @@ const MasterDataForm = ({
                     value={formData[field.key] || ''}
                     onChange={(e) => handleChange(field.key, e.target.value)}
                     required={field.required}
-                    className="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                   >
                     <option value="">Select {field.label}</option>
                     {field.options?.map(opt => (
@@ -57,7 +62,7 @@ const MasterDataForm = ({
                     value={formData[field.key] || ''}
                     onChange={(e) => handleChange(field.key, e.target.value)}
                     required={field.required}
-                    className="w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                     placeholder={`Enter ${field.label}`}
                   />
                 )}
@@ -69,13 +74,13 @@ const MasterDataForm = ({
             <button 
               type="button" 
               onClick={onClose}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-gradient-to-r from-teal-500 to-purple-600 text-white font-semibold rounded-lg text-sm hover:opacity-90 shadow-sm transition-all"
             >
               {isEditing ? 'Update' : 'Save'}
             </button>

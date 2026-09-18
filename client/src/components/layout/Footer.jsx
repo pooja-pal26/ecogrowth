@@ -9,7 +9,7 @@ const Footer = () => {
           href="https://www.genstreetech.com/" 
           target="_blank" 
           rel="noreferrer" 
-          className="text-amber-500 hover:text-amber-600 transition-colors"
+          className="text-teal-600 hover:text-purple-600 font-semibold transition-colors"
         >
           Genstree AI LLP.
         </a>

@@ -208,6 +208,7 @@ function App() {
 
           {/* Manage Vendors routes */}
           <Route path="/manage-vendors/add-new-vendor" element={<ProtectedRoute><Layout><AddNewVendor /></Layout></ProtectedRoute>} />
+          <Route path="/manage-vendors/edit-vendor/:id" element={<ProtectedRoute><Layout><AddNewVendor /></Layout></ProtectedRoute>} />
           <Route path="/manage-vendors/active-vendors" element={<ProtectedRoute><Layout><ActiveVendors /></Layout></ProtectedRoute>} />
           <Route path="/manage-vendors/deactive-vendors" element={<ProtectedRoute><Layout><DeactiveVendors /></Layout></ProtectedRoute>} />
 

@@ -10,7 +10,7 @@ const POStatus = () => {
     try {
       const response = await axios.get('http://localhost:5000/api/po-sites/po-status', { withCredentials: true });
       if (response.data && response.data.success) {
-        setData(response.data.data);
+        setData(response.data.data || []);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -25,21 +25,70 @@ const POStatus = () => {
   const [isEditing, setIsEditing] = useState(false);
   
   const initialForm = {
-    poNumber: '',
-    status: ''
+    po_no: '',
+    status: 'Open',
+    po_completion_status: '0'
   };
   
   const [formData, setFormData] = useState(initialForm);
   const [editId, setEditId] = useState(null);
 
   const columns = [
-    { key: 'poNumber', label: 'PO Number' },
-    { key: 'status', label: 'Status' }
+    { key: 'po_no', label: 'PO Number', render: (row) => row.po_no || row.poNumber || '-' },
+    { 
+      key: 'order_date', 
+      label: 'Order Date',
+      render: (row) => {
+        if (!row.order_date) return '-';
+        try {
+          const d = new Date(row.order_date);
+          return isNaN(d.getTime()) ? row.order_date : `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        } catch { return row.order_date; }
+      }
+    },
+    { 
+      key: 'po_amount', 
+      label: 'PO Amount', 
+      render: (row) => row.po_amount ? `₹${parseFloat(row.po_amount).toLocaleString('en-IN')}` : '-' 
+    },
+    { key: 'site_type', label: 'Site Type', render: (row) => row.site_type || 'Standard' },
+    { key: 'totalSites', label: 'Total Sites', render: (row) => row.totalSites ?? 0 },
+    { key: 'allocatedSites', label: 'Allocated Sites', render: (row) => row.allocatedSites ?? 0 },
+    { 
+      key: 'status', 
+      label: 'Status',
+      render: (row) => (
+        <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+          (row.status || '').toLowerCase() === 'open' ? 'bg-blue-100 text-blue-800' :
+          (row.status || '').toLowerCase() === 'completed' || (row.status || '').toLowerCase() === 'closed' ? 'bg-green-100 text-green-800' :
+          'bg-yellow-100 text-yellow-800'
+        }`}>
+          {row.status || 'Open'}
+        </span>
+      )
+    },
+    { 
+      key: 'po_completion_status', 
+      label: 'Completion %',
+      render: (row) => `${row.po_completion_status || (row.status === 'Closed' ? '100' : '0')}%`
+    }
   ];
 
   const formFields = [
-    { key: 'poNumber', label: 'PO Number', type: 'text', required: true },
-    { key: 'status', label: 'Status', type: 'text', required: true }
+    { key: 'po_no', label: 'PO Number', type: 'text', required: true },
+    { 
+      key: 'status', 
+      label: 'Status', 
+      type: 'select', 
+      required: true,
+      options: [
+        { value: 'Open', label: 'Open' },
+        { value: 'In Progress', label: 'In Progress' },
+        { value: 'Completed', label: 'Completed' },
+        { value: 'Closed', label: 'Closed' }
+      ]
+    },
+    { key: 'po_completion_status', label: 'Completion % (0-100)', type: 'text', required: false }
   ];
 
   const handleAdd = () => {
@@ -50,17 +99,18 @@ const POStatus = () => {
 
   const handleEdit = (row) => {
     setFormData({
-      poNumber: row.poNumber,
-      status: row.status
+      po_no: row.po_no || row.poNumber || '',
+      status: row.status || 'Open',
+      po_completion_status: String(row.po_completion_status || (row.status === 'Closed' ? '100' : '0'))
     });
-    setEditId(row._id);
+    setEditId(row.id || row._id);
     setIsEditing(true);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
-      setData(data.filter(v => v._id !== id));
+      setData(prev => prev.filter(v => (v.id || v._id) !== id));
     }
   };
 

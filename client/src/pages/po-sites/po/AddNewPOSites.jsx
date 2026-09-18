@@ -1,38 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Plus, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const AddNewPOSites = () => {
+  const navigate = useNavigate();
+
   const [po, setPo] = useState('');
   const [sites, setSites] = useState([
-    { id: 1, site_id: '', site_name: '', so_number: '', infratel_id: '', location: '', latitude: '', longitude: '', work_type: '', site_type: '' }
+    { id: 1, site_id: '', site_name: '', so_number: '', infratel_id: '', location: '', latitude: '', longitude: '', work_type: '', site_type: 'RTT' }
   ]);
 
-  const pos = [
-    { id: 'PO-1001', name: 'PO-1001' },
-    { id: 'PO-1002', name: 'PO-1002' },
-  ];
+  const [pos, setPos] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Dynamically load active PO numbers
+  useEffect(() => {
+    const fetchPOs = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/po-sites/init-data', { withCredentials: true });
+        if (res.data && res.data.success) {
+          const list = (res.data.poList || []).map(p => ({
+            id: p.po_no,
+            name: p.po_no
+          }));
+          setPos(list);
+        }
+      } catch (err) {
+        console.error('Error fetching PO list:', err);
+      }
+    };
+    fetchPOs();
+  }, []);
 
   const handleSiteChange = (id, field, value) => {
     setSites(sites.map(site => site.id === id ? { ...site, [field]: value } : site));
   };
 
   const addSiteRow = () => {
-    setSites([...sites, { id: Date.now(), site_id: '', site_name: '', so_number: '', infratel_id: '', location: '', latitude: '', longitude: '', work_type: '', site_type: '' }]);
+    setSites([...sites, { id: Date.now(), site_id: '', site_name: '', so_number: '', infratel_id: '', location: '', latitude: '', longitude: '', work_type: '', site_type: 'RTT' }]);
   };
 
   const removeSiteRow = (id) => {
+    if (sites.length <= 1) {
+      alert('At least one site row is required');
+      return;
+    }
     setSites(sites.filter(site => site.id !== id));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!po) {
       alert("Please select PO");
       return;
     }
-    console.log('PO:', po);
-    console.log('Sites:', sites);
-    alert('Sites added to PO successfully!');
+
+    for (let i = 0; i < sites.length; i++) {
+      if (!sites[i].site_id.trim()) {
+        alert(`Row ${i + 1}: Site ID is mandatory`);
+        return;
+      }
+      if (!sites[i].location.trim()) {
+        alert(`Row ${i + 1}: Location is mandatory`);
+        return;
+      }
+      if (!sites[i].work_type.trim()) {
+        alert(`Row ${i + 1}: Work Type is mandatory`);
+        return;
+      }
+      if (!sites[i].site_type) {
+        alert(`Row ${i + 1}: Site Type is mandatory`);
+        return;
+      }
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        po: po,
+        sites: sites.map(({ id, ...rest }) => rest)
+      };
+
+      const res = await axios.post('http://localhost:5000/api/po-sites/add-po-sites', payload, { withCredentials: true });
+      if (res.data && res.data.flag) {
+        alert(res.data.message || 'Sites added to PO successfully!');
+        navigate('/po-sites/po/po-details');
+      } else {
+        alert(res.data?.message || 'Failed to add sites to PO');
+      }
+    } catch (err) {
+      console.error('Error submitting PO sites:', err);
+      alert(err.response?.data?.message || err.message || 'Server error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -80,7 +142,7 @@ const AddNewPOSites = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {sites.map((site) => (
+                  {sites.map((site, index) => (
                     <tr key={site.id}>
                       <td className="px-2 py-2">
                         <input type="text" value={site.site_id} onChange={(e) => handleSiteChange(site.id, 'site_id', e.target.value)} required className="w-full border border-gray-300 rounded p-1 text-sm" />
@@ -108,7 +170,6 @@ const AddNewPOSites = () => {
                       </td>
                       <td className="px-2 py-2">
                         <select value={site.site_type} onChange={(e) => handleSiteChange(site.id, 'site_type', e.target.value)} required className="w-full border border-gray-300 rounded p-1 text-sm">
-                          <option value="">Select</option>
                           <option value="RTT">RTT</option>
                           <option value="GBT">GBT</option>
                           <option value="Upgradation">Upgradation</option>
@@ -133,8 +194,8 @@ const AddNewPOSites = () => {
           </div>
 
           <div className="flex justify-end pt-4">
-            <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
-              Add Sites
+            <button type="submit" disabled={loading} className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50">
+              {loading ? 'Adding Sites...' : 'Add Sites'}
             </button>
           </div>
         </form>

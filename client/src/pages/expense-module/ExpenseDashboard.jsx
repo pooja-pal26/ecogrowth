@@ -32,15 +32,20 @@ const formatINR = (val) => {
   if (val === null || val === undefined) return '₹0';
   const num = Number(val);
   if (isNaN(num)) return '₹0';
-  return '₹' + num.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+  return '₹' + Math.round(num).toLocaleString('en-IN');
 };
 
-// Compact Indian format for axis ticks
+// Compact Indian format for axis ticks & card subtext
 const formatCompactINR = (val) => {
-  if (val >= 10000000) return `₹${(val / 10000000).toFixed(1)}Cr`;
-  if (val >= 100000) return `₹${(val / 100000).toFixed(1)}L`;
-  if (val >= 1000) return `₹${(val / 1000).toFixed(0)}k`;
-  return `₹${val}`;
+  if (val === null || val === undefined) return '₹0';
+  const num = Number(val);
+  if (isNaN(num)) return '₹0';
+  const abs = Math.abs(num);
+  const sign = num < 0 ? '-' : '';
+  if (abs >= 10000000) return `${sign}₹${(abs / 10000000).toFixed(2)} Cr`;
+  if (abs >= 100000) return `${sign}₹${(abs / 100000).toFixed(2)} L`;
+  if (abs >= 1000) return `${sign}₹${(abs / 1000).toFixed(1)} K`;
+  return `${sign}₹${abs.toLocaleString('en-IN')}`;
 };
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -136,17 +141,17 @@ const ExpenseDashboard = () => {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       {/* Top Header & Filters */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">
               Expense Dashboard
             </h1>
-            <span className="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+            <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap">
               Financial Intelligence
             </span>
           </div>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">
             Site Expenses, Office Expenses, and Invoice vs Expense comparison
           </p>
         </div>
@@ -198,104 +203,104 @@ const ExpenseDashboard = () => {
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {/* Card 1: Site Expenses */}
-        <div className="bg-gradient-to-br from-emerald-500 to-teal-700 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
-          <div className="absolute right-3 -bottom-3 opacity-15">
-            <Building2 size={90} />
+        <div className="bg-gradient-to-br from-emerald-500 to-teal-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <div className="absolute right-3 -bottom-3 opacity-15 pointer-events-none">
+            <Building2 size={80} />
           </div>
           <div>
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-100">
                 Site Expenses
               </span>
-              <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-                <Building2 size={18} />
+              <div className="p-1.5 bg-white/10 rounded-lg backdrop-blur-sm">
+                <Building2 size={16} />
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold mt-3 tracking-tight">
+            <h3 className="text-xl lg:text-2xl font-extrabold mt-2.5 tracking-tight text-white truncate" title={formatINR(kpi.totalSiteExpense)}>
               {formatINR(kpi.totalSiteExpense)}
             </h3>
           </div>
-          <div className="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs text-emerald-100">
-            <span>Year {selectedYear}</span>
-            <span>Total on-site spends</span>
+          <div className="mt-3 pt-2.5 border-t border-white/20 flex items-center justify-between text-xs text-emerald-100 font-medium">
+            <span>FY {selectedYear}</span>
+            <span>On-site spends</span>
           </div>
         </div>
 
         {/* Card 2: Office Expenses */}
-        <div className="bg-gradient-to-br from-cyan-600 to-blue-700 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
-          <div className="absolute right-3 -bottom-3 opacity-15">
-            <Wallet size={90} />
+        <div className="bg-gradient-to-br from-cyan-600 to-blue-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <div className="absolute right-3 -bottom-3 opacity-15 pointer-events-none">
+            <Wallet size={80} />
           </div>
           <div>
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-cyan-100">
                 Office Expenses
               </span>
-              <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-                <Wallet size={18} />
+              <div className="p-1.5 bg-white/10 rounded-lg backdrop-blur-sm">
+                <Wallet size={16} />
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold mt-3 tracking-tight">
+            <h3 className="text-xl lg:text-2xl font-extrabold mt-2.5 tracking-tight text-white truncate" title={formatINR(kpi.totalOfficeExpense)}>
               {formatINR(kpi.totalOfficeExpense)}
             </h3>
           </div>
-          <div className="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs text-cyan-100">
-            <span>Year {selectedYear}</span>
-            <span>Corporate & operational</span>
+          <div className="mt-3 pt-2.5 border-t border-white/20 flex items-center justify-between text-xs text-cyan-100 font-medium">
+            <span>FY {selectedYear}</span>
+            <span>Operational</span>
           </div>
         </div>
 
         {/* Card 3: Total Invoiced Value */}
-        <div className="bg-gradient-to-br from-rose-600 to-red-700 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
-          <div className="absolute right-3 -bottom-3 opacity-15">
-            <Receipt size={90} />
+        <div className="bg-gradient-to-br from-rose-600 to-red-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
+          <div className="absolute right-3 -bottom-3 opacity-15 pointer-events-none">
+            <Receipt size={80} />
           </div>
           <div>
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-rose-100">
                 Total Invoiced
               </span>
-              <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-                <Receipt size={18} />
+              <div className="p-1.5 bg-white/10 rounded-lg backdrop-blur-sm">
+                <Receipt size={16} />
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold mt-3 tracking-tight">
+            <h3 className="text-xl lg:text-2xl font-extrabold mt-2.5 tracking-tight text-white truncate" title={formatINR(kpi.totalInvoiced)}>
               {formatINR(kpi.totalInvoiced)}
             </h3>
           </div>
-          <div className="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs text-rose-100">
-            <span>Punched Invoices</span>
-            <span>Approved value</span>
+          <div className="mt-3 pt-2.5 border-t border-white/20 flex items-center justify-between text-xs text-rose-100 font-medium">
+            <span>Punched</span>
+            <span>Approved Value</span>
           </div>
         </div>
 
         {/* Card 4: Net Variance / Profit-Loss */}
-        <div className={`p-6 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between text-white ${
+        <div className={`p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between text-white ${
           kpi.netBalance >= 0 
             ? 'bg-gradient-to-br from-indigo-600 to-violet-800' 
             : 'bg-gradient-to-br from-amber-600 to-orange-700'
         }`}>
-          <div className="absolute right-3 -bottom-3 opacity-15">
-            {kpi.netBalance >= 0 ? <TrendingUp size={90} /> : <TrendingDown size={90} />}
+          <div className="absolute right-3 -bottom-3 opacity-15 pointer-events-none">
+            {kpi.netBalance >= 0 ? <TrendingUp size={80} /> : <TrendingDown size={80} />}
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-100">
-                Net Variance (Invoice vs Exp)
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-100" title="Invoice vs Expense">
+                Net Variance (P&L)
               </span>
-              <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-                {kpi.netBalance >= 0 ? <ArrowUpRight size={18} /> : <ArrowDownRight size={18} />}
+              <div className="p-1.5 bg-white/10 rounded-lg backdrop-blur-sm">
+                {kpi.netBalance >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold mt-3 tracking-tight">
+            <h3 className="text-xl lg:text-2xl font-extrabold mt-2.5 tracking-tight text-white truncate" title={formatINR(kpi.netBalance)}>
               {formatINR(kpi.netBalance)}
             </h3>
           </div>
-          <div className="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs text-indigo-100">
-            <span>{kpi.netBalance >= 0 ? 'Surplus / Profit' : 'Deficit'}</span>
-            <span>Avg Exp: {formatINR(kpi.averageMonthlyExpense)}/mo</span>
+          <div className="mt-3 pt-2.5 border-t border-white/20 flex items-center justify-between text-xs text-indigo-100 font-medium">
+            <span>{kpi.netBalance >= 0 ? 'Surplus' : 'Deficit'}</span>
+            <span>Avg: {formatCompactINR(kpi.averageMonthlyExpense)}/mo</span>
           </div>
         </div>
       </div>
