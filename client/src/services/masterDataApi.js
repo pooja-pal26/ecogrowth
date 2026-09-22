@@ -22,3 +22,9 @@ export const deleteItem = async (endpoint, id) => {
   const response = await axios.delete(`${API_URL}/${endpoint}/${id}`);
   return response.data;
 };
+
+export const patchItem = async (endpoint, id, data) => {
+  const response = await axios.patch(`${API_URL}/${endpoint}/${id}`, data);
+  return response.data;
+};
+

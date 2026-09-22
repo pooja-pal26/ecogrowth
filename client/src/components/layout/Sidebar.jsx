@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -16,32 +16,40 @@ import {
 
 import InventoryIcon from '@mui/icons-material/Inventory';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import { AuthContext } from '../../context/AuthContext';
 
 const MuiInventory = (props) => <InventoryIcon style={{ fontSize: props.size }} />;
 const MuiAssessment = (props) => <AssessmentIcon style={{ fontSize: props.size }} />;
 
 const navItems = [
-  { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+  { 
+    name: 'Dashboard', 
+    path: '/', 
+    icon: LayoutDashboard,
+    allowedRoles: ['admin', 'management', 'project_manager', 'accountant', 'supervisor', 'hr']
+  },
   { 
     name: 'Master Data', 
     icon: Settings, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management', 'accountant'],
     subItems: [
-      { name: 'State List', path: '/master-data/state-list' },
-      { name: 'Client Master Data', path: '/master-data/client-master-data' },
-      { name: 'Company Vendor', path: '/master-data/company-vendor' },
-      { name: 'Material Suppliers (Site)', path: '/master-data/material-suppliers' },
-      { name: 'Transporters', path: '/master-data/transporters' },
-      { name: 'State For', path: '/master-data/state-for' },
-      { name: 'Bank Name List', path: '/master-data/bank-name-list' },
-      { name: 'Site Documents', path: '/master-data/site-documents' },
-      { name: 'Add Geo Location', path: '/master-data/geo-location' },
-      { name: 'Payment Modes', path: '/master-data/payment-modes' },
-      { name: 'Bank Accounts', path: '/master-data/bank-accounts' },
+      { name: 'State List', path: '/master-data/state-list', allowedRoles: ['admin', 'management'] },
+      { name: 'Client Master Data', path: '/master-data/client-master-data', allowedRoles: ['admin', 'management'] },
+      { name: 'Company Vendor', path: '/master-data/company-vendor', allowedRoles: ['admin', 'management'] },
+      { name: 'Material Suppliers (Site)', path: '/master-data/material-suppliers', allowedRoles: ['admin', 'management'] },
+      { name: 'Transporters', path: '/master-data/transporters', allowedRoles: ['admin', 'management'] },
+      { name: 'State For', path: '/master-data/state-for', allowedRoles: ['admin', 'management'] },
+      { name: 'Bank Name List', path: '/master-data/bank-name-list', allowedRoles: ['admin', 'management', 'accountant'] },
+      { name: 'Site Documents', path: '/master-data/site-documents', allowedRoles: ['admin', 'management'] },
+      { name: 'Add Geo Location', path: '/master-data/geo-location', allowedRoles: ['admin', 'management'] },
+      { name: 'Payment Modes', path: '/master-data/payment-modes', allowedRoles: ['admin', 'management', 'accountant'] },
+      { name: 'Bank Accounts', path: '/master-data/bank-accounts', allowedRoles: ['admin', 'management', 'accountant'] },
       { 
         name: 'Work Master Data', 
         icon: Settings, 
         hasSubmenu: true,
+        allowedRoles: ['admin', 'management'],
         subItems: [
           { name: 'Work For Site Of', path: '/master-data/work-master-data/work-for-site-of' },
           { name: 'Nature Of Work', path: '/master-data/work-master-data/nature-of-work' },
@@ -54,6 +62,7 @@ const navItems = [
         name: 'Expense Master Data', 
         icon: IndianRupee, 
         hasSubmenu: true, 
+        allowedRoles: ['admin', 'management', 'accountant'],
         subItems: [
           { name: 'Expense Type', path: '/master-data/expense-master-data/expense-type' },
           { name: 'Expense In', path: '/master-data/expense-master-data/expense-in' },
@@ -64,6 +73,7 @@ const navItems = [
         name: 'Debit Accounts', 
         icon: IndianRupee, 
         hasSubmenu: true, 
+        allowedRoles: ['admin', 'management', 'accountant'],
         subItems: [
           { name: 'Debit Account Details', path: '/master-data/debit-accounts/debit-account-details' }
         ] 
@@ -72,6 +82,7 @@ const navItems = [
         name: 'Product Master Data', 
         icon: Settings, 
         hasSubmenu: true, 
+        allowedRoles: ['admin', 'management'],
         subItems: [
           { name: 'Product Suppliers', path: '/master-data/product-master-data/product-suppliers' },
           { name: 'Product (s)', path: '/master-data/product-master-data/product-list' },
@@ -84,6 +95,7 @@ const navItems = [
         name: 'Vendor Master Data', 
         icon: Settings, 
         hasSubmenu: true, 
+        allowedRoles: ['admin', 'management'],
         subItems: [
           { name: 'Vendor Experience', path: '/master-data/vendor-master-data/vendor-experience' },
           { name: 'Organization Type', path: '/master-data/vendor-master-data/organization-type' },
@@ -99,6 +111,7 @@ const navItems = [
         name: 'Employee Roles', 
         icon: Users, 
         hasSubmenu: true, 
+        allowedRoles: ['admin', 'management'],
         subItems: [
           { name: 'Roles', path: '/master-data/employee-roles/roles' },
           { name: 'Role Types', path: '/master-data/employee-roles/role-types' }
@@ -106,23 +119,30 @@ const navItems = [
       }
     ]
   },
-  { name: 'Expense Dashboard', path: '/expense-dashboard', icon: LineChart },
+  { 
+    name: 'Expense Dashboard', 
+    path: '/expense-dashboard', 
+    icon: LineChart,
+    allowedRoles: ['admin', 'management', 'accountant']
+  },
   { 
     name: 'Expense Module', 
     icon: IndianRupee, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management', 'accountant', 'supervisor'],
     subItems: [
-      { name: 'Create New Expense', path: '/expense-module/create-new-expense' },
-      { name: 'Site Expense Report', path: '/expense-module/site-expense-report' },
-      { name: "Invoice's Report", path: '/expense-module/invoice-report' },
-      { name: 'Office Expense Report', path: '/expense-module/office-expense-report' },
-      { name: 'B2B Fund Transfer Report', path: '/expense-module/b2b-fund-transfer-report' }
+      { name: 'Create New Expense', path: '/expense-module/create-new-expense', allowedRoles: ['admin', 'management', 'accountant', 'supervisor'] },
+      { name: 'Site Expense Report', path: '/expense-module/site-expense-report', allowedRoles: ['admin', 'management', 'accountant'] },
+      { name: "Invoice's Report", path: '/expense-module/invoice-report', allowedRoles: ['admin', 'management', 'accountant'] },
+      { name: 'Office Expense Report', path: '/expense-module/office-expense-report', allowedRoles: ['admin', 'management', 'accountant'] },
+      { name: 'B2B Fund Transfer Report', path: '/expense-module/b2b-fund-transfer-report', allowedRoles: ['admin', 'management', 'accountant'] }
     ]
   },
   { 
     name: 'Company', 
     icon: Laptop, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management'],
     subItems: [
       { name: 'Company details', path: '/company/company-details' }
     ]
@@ -131,6 +151,7 @@ const navItems = [
     name: 'Invoice Module', 
     icon: FileText, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management', 'accountant'],
     subItems: [
       { name: 'Punched Invoices', path: '/invoice-module/punched-invoices' },
       { name: 'Punch Invoice', path: '/invoice-module/punch-invoice' },
@@ -143,10 +164,12 @@ const navItems = [
     name: 'PO & Sites', 
     icon: Book, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management', 'project_manager', 'supervisor'],
     subItems: [
       {
         name: 'PO',
         hasSubmenu: true,
+        allowedRoles: ['admin', 'management', 'project_manager'],
         subItems: [
           { name: 'Add New PO', path: '/po-sites/po/add-new-po' },
           { name: 'Add New PO Sites', path: '/po-sites/po/add-new-po-sites' },
@@ -157,16 +180,18 @@ const navItems = [
       {
         name: 'Sites',
         hasSubmenu: true,
+        allowedRoles: ['admin', 'management', 'project_manager', 'supervisor'],
         subItems: [
-          { name: 'Import Site Data', path: '/po-sites/sites/import-site-data' },
-          { name: 'Allocate Site', path: '/po-sites/sites/allocate-site' },
-          { name: 'Allocated Site List', path: '/po-sites/sites/allocated-site-list' },
-          { name: 'Allocated Site Status', path: '/po-sites/sites/allocated-site-status' }
+          { name: 'Import Site Data', path: '/po-sites/sites/import-site-data', allowedRoles: ['admin', 'management', 'project_manager'] },
+          { name: 'Allocate Site', path: '/po-sites/sites/allocate-site', allowedRoles: ['admin', 'management', 'project_manager'] },
+          { name: 'Allocated Site List', path: '/po-sites/sites/allocated-site-list', allowedRoles: ['admin', 'management', 'project_manager', 'supervisor'] },
+          { name: 'Allocated Site Status', path: '/po-sites/sites/allocated-site-status', allowedRoles: ['admin', 'management', 'project_manager', 'supervisor'] }
         ]
       },
       {
         name: 'Incidents Reporting',
         hasSubmenu: true,
+        allowedRoles: ['admin', 'management', 'project_manager', 'supervisor'],
         subItems: [
           { name: 'Incidents Report', path: '/po-sites/incidents-reporting/incidents-report' },
           { name: 'Report New Incident', path: '/po-sites/incidents-reporting/report-new-incident' }
@@ -178,6 +203,7 @@ const navItems = [
     name: 'Asset Management', 
     icon: MonitorSmartphone, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management'],
     subItems: [
       { name: 'Asset Type', path: '/asset-management/asset-type' },
       { name: 'Assets', path: '/asset-management/assets' },
@@ -188,6 +214,7 @@ const navItems = [
     name: 'Manage Users', 
     icon: Users, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management', 'hr'],
     subItems: [
       { name: 'Add New User', path: '/manage-users/add-new-user' },
       { name: 'Active Users', path: '/manage-users/active-users' },
@@ -198,6 +225,7 @@ const navItems = [
     name: 'Manage Vendors', 
     icon: Settings, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management', 'project_manager', 'accountant'],
     subItems: [
       { name: 'Add New Vendor', path: '/manage-vendors/add-new-vendor' },
       { name: 'Active Vendors', path: '/manage-vendors/active-vendors' },
@@ -208,16 +236,18 @@ const navItems = [
     name: 'Material Stock', 
     icon: MuiInventory, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management', 'project_manager', 'supervisor', 'accountant'],
     subItems: [
-      { name: 'Material Stock Report', path: '/material-stock/material-stock-report' },
-      { name: 'Stock In', path: '/material-stock/stock-in' },
-      { name: 'Stock Out', path: '/material-stock/stock-out' }
+      { name: 'Material Stock Report', path: '/material-stock/material-stock-report', allowedRoles: ['admin', 'management', 'project_manager', 'accountant'] },
+      { name: 'Stock In', path: '/material-stock/stock-in', allowedRoles: ['admin', 'management', 'project_manager', 'supervisor'] },
+      { name: 'Stock Out', path: '/material-stock/stock-out', allowedRoles: ['admin', 'management', 'project_manager', 'supervisor'] }
     ]
   },
   { 
     name: 'Reports', 
     icon: MuiAssessment, 
     hasSubmenu: true,
+    allowedRoles: ['admin', 'management', 'project_manager', 'accountant'],
     subItems: [
       { name: 'Stock In Report', path: '/reports/stock-in-report' },
       { name: 'Stock Out Report', path: '/reports/stock-out-report' },
@@ -225,6 +255,33 @@ const navItems = [
     ]
   }
 ];
+
+const filterMenuItems = (items, roleKey, roleId, isAdmin) => {
+  if (isAdmin) return items;
+
+  return items.reduce((acc, item) => {
+    // Check if this item has allowedRoles defined
+    if (item.allowedRoles && item.allowedRoles.length > 0) {
+      const allowed = item.allowedRoles.some(r => {
+        const target = String(r).toLowerCase();
+        return target === roleKey || target === roleId;
+      });
+      if (!allowed) return acc;
+    }
+
+    // If item has subItems, filter them recursively
+    if (item.subItems) {
+      const filteredSubs = filterMenuItems(item.subItems, roleKey, roleId, isAdmin);
+      if (filteredSubs.length > 0) {
+        acc.push({ ...item, subItems: filteredSubs });
+      }
+    } else {
+      acc.push(item);
+    }
+
+    return acc;
+  }, []);
+};
 
 const MenuItem = ({ item, depth = 0 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -234,8 +291,6 @@ const MenuItem = ({ item, depth = 0 }) => {
     setIsOpen(!isOpen);
   };
 
-  // Compute padding left based on depth. 1rem = 16px (equivalent to px-4 in tailwind).
-  // Each depth level adds 1.25rem (20px) of padding.
   const paddingLeft = `${1 + depth * 1.25}rem`;
 
   if (item.hasSubmenu) {
@@ -243,7 +298,7 @@ const MenuItem = ({ item, depth = 0 }) => {
       <div>
         <button 
           onClick={toggleMenu}
-          className={`w-full flex items-center justify-between pr-4 py-3 text-white/90 hover:text-white hover:bg-white/15 transition-all duration-200`}
+          className="w-full flex items-center justify-between pr-4 py-3 text-white/90 hover:text-white hover:bg-white/15 transition-all duration-200"
           style={{ paddingLeft }}
         >
           <div className="flex items-center space-x-3">
@@ -291,6 +346,16 @@ const MenuItem = ({ item, depth = 0 }) => {
 };
 
 const Sidebar = ({ isOpen }) => {
+  const { user } = useContext(AuthContext);
+
+  const roleKey = (user?.role_key || '').toLowerCase();
+  const roleId = String(user?.role || '');
+  const isAdmin = roleKey === 'admin' || roleId === '1' || roleId === '17' || !user;
+
+  const accessibleNavItems = useMemo(() => {
+    return filterMenuItems(navItems, roleKey, roleId, isAdmin);
+  }, [roleKey, roleId, isAdmin]);
+
   return (
     <aside 
       className={`text-white transition-all duration-300 flex flex-col ${
@@ -312,7 +377,7 @@ const Sidebar = ({ isOpen }) => {
       
       <div className="flex-1 overflow-y-auto py-3 custom-sidebar-scroll">
         <ul className="space-y-0.5">
-          {navItems.map((item) => (
+          {accessibleNavItems.map((item) => (
             <li key={item.name}>
               <MenuItem item={item} />
             </li>

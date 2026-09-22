@@ -20,7 +20,7 @@ const RoleTypes = () => {
     loadData();
   }, []);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);11
   const [isEditing, setIsEditing] = useState(false);
   
   const initialForm = {

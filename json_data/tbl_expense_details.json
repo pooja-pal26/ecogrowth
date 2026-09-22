@@ -1,5 +1,33 @@
 [
   {
+    "_id": "b539b880ecd356bd98236461",
+    "id": "1498",
+    "expense_type_id": "1",
+    "expense_id": "12",
+    "expense_in_id": "1",
+    "expense_for_id": "1",
+    "spent_amount": "2500",
+    "spent_remark": "Stationery test",
+    "created_at": "2026-09-21 10:11:23",
+    "created_by": "1",
+    "createdAt": "2026-09-21T10:11:23.158Z",
+    "updatedAt": "2026-09-21T10:11:23.158Z"
+  },
+  {
+    "_id": "fe22f6a592ad9d49571fb073",
+    "id": "1497",
+    "expense_type_id": "1",
+    "expense_id": "11",
+    "expense_in_id": "4",
+    "expense_for_id": "3",
+    "spent_amount": "1200",
+    "spent_remark": "Refreshments",
+    "created_at": "2026-09-21 09:22:08",
+    "created_by": "1",
+    "createdAt": "2026-09-21T09:22:08.388Z",
+    "updatedAt": "2026-09-21T09:22:08.388Z"
+  },
+  {
     "_id": "6aa3f1273c200cb6cc5c99b8",
     "id": "1",
     "expense_type_id": "1",

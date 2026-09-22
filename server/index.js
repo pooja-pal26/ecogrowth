@@ -47,6 +47,7 @@ app.use('/api/assets', assetRoutes);
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/materials', materialRoutes);
 app.use('/api/expense-dashboard', require('./routes/expenseDashboardRoutes'));
+app.use('/api/expenses', require('./routes/expenseRoutes'));
 
 // Global error handler preserving displayExceptions behavior
 app.use((err, req, res, next) => {
@@ -71,7 +72,9 @@ server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
     console.error(`\n[ERROR] Port ${PORT} is already in use by another process!`);
     console.error(`Please stop the process using port ${PORT} before starting a new server.\n`);
+    process.exit(1);
   } else {
     console.error('\n[ERROR] Server listen error:', err.message);
+    process.exit(1);
   }
 });

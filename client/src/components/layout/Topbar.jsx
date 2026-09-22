@@ -53,10 +53,15 @@ const Topbar = ({ toggleSidebar }) => {
           <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-teal-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-sm font-semibold">
             <User size={18} />
           </div>
-          <div className="hidden md:flex items-center space-x-1">
-            <span className="text-sm font-bold bg-gradient-to-r from-teal-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">{user?.name || 'ADMIN'}</span>
-            <ChevronDown size={16} className="text-gray-500" />
+          <div className="hidden md:flex flex-col items-start leading-tight">
+            <span className="text-sm font-bold bg-gradient-to-r from-teal-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              {user?.name || 'Administrator'}
+            </span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-200 uppercase tracking-wider mt-0.5">
+              {user?.role_name || 'Admin'}
+            </span>
           </div>
+          <ChevronDown size={16} className="text-gray-500 hidden md:block" />
         </div>
 
         {dropdownOpen && (

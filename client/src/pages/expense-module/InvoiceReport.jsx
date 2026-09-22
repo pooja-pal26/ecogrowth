@@ -489,23 +489,23 @@ const InvoiceReport = () => {
       </div>
 
       {/* Main Panel matching PHP ecogrowth UI */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* Dark Panel Header (Exact match to PHP panel-heading in screenshot) */}
-        <div className="bg-[#24292e] text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <h3 className="text-lg font-semibold tracking-wide">Invoice(s) Details</h3>
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        {/* Dark Panel Header */}
+        <div className="bg-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <h3 className="text-lg font-bold tracking-wide">Invoice(s) Details</h3>
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/invoice-module/punch-invoice')}
-              className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white text-sm font-semibold px-4 py-2 rounded-md shadow-sm transition-colors cursor-pointer"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition-all cursor-pointer"
             >
               Punch Invoice
             </button>
             <button
               onClick={handleExportCSV}
-              className="bg-white hover:bg-gray-100 text-green-700 border border-gray-200 px-3 py-2 rounded-md shadow-sm transition-colors flex items-center justify-center cursor-pointer"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-3 py-2 rounded-xl shadow-sm transition-all flex items-center justify-center cursor-pointer"
               title="Export to Excel / CSV"
             >
-              <svg className="w-5 h-5 text-[#217346]" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7V3.5L18.5 9H15zM8.8 17.5l1.7-2.7-1.6-2.8h1.6l.8 1.7.8-1.7h1.6l-1.6 2.8 1.7 2.7h-1.6l-1-1.7-1 1.7H8.8z"/>
               </svg>
             </button>

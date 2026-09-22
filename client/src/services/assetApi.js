@@ -302,9 +302,9 @@ export const fetchAssetInitData = async () => {
       'Central QA Lab',
       'Regional Hub Lucknow',
       'Site IN-3627764 (Chhattisgarh)'
-    ]
+    ] 
   };
-};
+}; 
 
 /**
  * =======================

@@ -1,5 +1,17 @@
 [
   {
+    "state_name": "Up",
+    "state_code": "88",
+    "is_active": false,
+    "is_deleted": true,
+    "created_by": null,
+    "_id": "441eb765bf984288f17158c1",
+    "id": "19",
+    "createdAt": "2026-09-21T09:30:26.062Z",
+    "updatedAt": "2026-09-21T09:30:36.607Z",
+    "updated_by": null
+  },
+  {
     "_id": "6aa3f1283c200cb6cc5cda64",
     "id": "1",
     "state_name": "U P East",

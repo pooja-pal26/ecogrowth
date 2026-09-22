@@ -8,7 +8,9 @@ const MasterDataTable = ({
   onAdd, 
   onEdit, 
   onDelete, 
-  onExport 
+  onExport,
+  addButtonText,
+  renderActions
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [entries, setEntries] = useState(10);
@@ -47,7 +49,9 @@ const MasterDataTable = ({
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
-          <h2 className="text-base sm:text-lg font-bold tracking-tight">{title} List</h2>
+          <h2 className="text-base sm:text-lg font-bold tracking-tight">
+            {title.endsWith('List') ? title : `${title} List`}
+          </h2>
           <div className="flex gap-2">
             {onExport && (
               <button 
@@ -62,7 +66,7 @@ const MasterDataTable = ({
                 onClick={onAdd}
                 className="bg-white/20 hover:bg-white/30 text-white border border-white/30 hover:border-white/50 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-1.5 shadow-sm active:scale-95"
               >
-                <Plus size={16} /> Add New
+                <Plus size={16} /> {addButtonText || 'Add New'}
               </button>
             )}
           </div>
@@ -101,15 +105,15 @@ const MasterDataTable = ({
             </div>
           </div>
 
-          <div className="overflow-x-auto w-full">
-            <table className="w-full border-collapse text-sm text-left text-gray-600 whitespace-nowrap">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50/80 border-b-2 border-gray-200">
-                <tr>
-                  <th className="px-4 py-2.5 font-bold">#</th>
+          <div className="overflow-x-auto border border-gray-200 rounded-lg">
+            <table className="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr className="bg-gray-50/80 text-gray-700 text-xs sm:text-sm uppercase tracking-wider border-b border-gray-200">
+                  <th className="px-4 py-2.5 font-bold w-12">#</th>
                   {columns.map((col, idx) => (
                     <th key={idx} className="px-4 py-2.5 font-bold">{col.label}</th>
                   ))}
-                  {(onEdit || onDelete) && <th className="px-4 py-2.5 font-bold text-center">Action</th>}
+                  {(renderActions || onEdit || onDelete) && <th className="px-4 py-2.5 font-bold text-center">Action</th>}
                 </tr>
               </thead>
               <tbody>
@@ -122,7 +126,11 @@ const MasterDataTable = ({
                           {col.render ? col.render(row) : row[col.key]}
                         </td>
                       ))}
-                      {(onEdit || onDelete) && (
+                      {renderActions ? (
+                        <td className="px-4 py-2.5 text-center">
+                          {renderActions(row)}
+                        </td>
+                      ) : (onEdit || onDelete) ? (
                         <td className="px-4 py-2.5 text-center">
                           <div className="flex items-center justify-center space-x-2">
                             {onEdit && (
@@ -137,7 +145,7 @@ const MasterDataTable = ({
                             )}
                           </div>
                         </td>
-                      )}
+                      ) : null}
                     </tr>
                   ))
                 ) : (
