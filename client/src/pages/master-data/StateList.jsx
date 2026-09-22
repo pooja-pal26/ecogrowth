@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
+import {
+  showSuccessToast,
+  showErrorToast,
+  showWarningToast,
+  confirmDeleteDialog
+} from '../../utils/toast';
 
 const StateList = () => {
   const [states, setStates] = useState([]);
@@ -31,6 +36,7 @@ const StateList = () => {
       if (res.success) setStates(res.data);
     } catch (error) {
       console.error("Failed to load states:", error);
+      showErrorToast('Failed to load state list from server.', 'Fetch Error');
     }
   };
 
@@ -52,29 +58,60 @@ const StateList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this state?")) {
+    const targetState = states.find(s => s._id === id);
+    const stateLabel = targetState?.state_name ? `"${targetState.state_name}"` : 'this state';
+
+    const result = await confirmDeleteDialog({
+      title: 'Delete State?',
+      text: `Are you sure you want to delete ${stateLabel}? This action cannot be undone.`,
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
       try {
-        await deleteItem('states', id);
+        const res = await deleteItem('states', id);
+        if (res && res.success === false) {
+          showErrorToast(res.message || 'Failed to delete state.', 'Delete Failed');
+          return;
+        }
+        showSuccessToast(`State ${stateLabel} deleted successfully!`, 'State Deleted');
         loadData();
       } catch (error) {
         console.error("Failed to delete state:", error);
-        alert("Failed to delete state.");
+        showErrorToast(error.response?.data?.message || 'Failed to delete state.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.state_name?.trim() || !formData.state_code?.toString().trim()) {
+      showWarningToast('Please fill in both State Name and State Code.', 'Validation Missing');
+      return;
+    }
+
     try {
       if (isEditing) {
-        await updateItem('states', editId, formData);
+        const res = await updateItem('states', editId, formData);
+        if (res && res.success === false) {
+          showErrorToast(res.message || 'Failed to update state.', 'Update Failed');
+          return;
+        }
+        setIsModalOpen(false);
+        showSuccessToast(`State "${formData.state_name}" updated successfully!`, 'State Updated');
       } else {
-        await createItem('states', formData);
+        const res = await createItem('states', formData);
+        if (res && res.success === false) {
+          showErrorToast(res.message || 'Failed to create state.', 'Creation Failed');
+          return;
+        }
+        setIsModalOpen(false);
+        showSuccessToast(`State "${formData.state_name}" added successfully!`, 'State Created');
       }
-      setIsModalOpen(false);
       loadData();
     } catch (error) {
       console.error("Failed to save state:", error);
-      alert("Failed to save state. Please ensure fields are valid.");
+      showErrorToast(error.response?.data?.message || 'Failed to save state. Please check fields.', 'Save Error');
     }
   };
 

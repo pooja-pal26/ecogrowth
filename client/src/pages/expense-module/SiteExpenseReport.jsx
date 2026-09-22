@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Loader2, Search, Calendar, RefreshCw, Plus, Building2, Layers, DollarSign } from 'lucide-react';
+import { Download, Loader2, Search, Calendar, RefreshCw, Plus, Building2, Layers } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getSiteExpenseReport } from '../../services/expenseService';
 
@@ -120,10 +120,16 @@ const SiteExpenseReport = () => {
     document.body.removeChild(link);
   };
 
+  const formatNumberOnly = (val) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) return '0.00';
+    return num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   const formatINR = (val) => {
     const num = parseFloat(val);
-    if (isNaN(num)) return '₹ 0.00';
-    return '₹ ' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (isNaN(num)) return '₹\u00A00.00';
+    return '₹\u00A0' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   return (
@@ -176,49 +182,57 @@ const SiteExpenseReport = () => {
 
       {/* KPI Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Site Expenses</p>
-            <h3 className="text-xl font-black text-slate-900 mt-1">{formatINR(totalAmount)}</h3>
-            <span className="text-xs text-teal-600 font-semibold">Accumulated transfers</span>
+        {/* Card 1: Total Site Expenses */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Site Expenses</p>
+            <div className="flex items-baseline gap-1 mt-1 text-slate-900" title={formatINR(totalAmount)}>
+              <span className="text-sm sm:text-base font-bold text-slate-600 select-none">₹</span>
+              <span className="text-lg sm:text-xl xl:text-2xl font-black tracking-tight text-slate-900 whitespace-nowrap">
+                {formatNumberOnly(totalAmount)}
+              </span>
+            </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600">
-            <DollarSign size={24} />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Allocated Site Clusters</p>
-            <h3 className="text-2xl font-bold text-slate-900 mt-1">{pagination.total}</h3>
-            <span className="text-xs text-blue-600 font-semibold">PO-Site groupings</span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-            <Layers size={24} />
+          <div className="mt-2">
+            <span className="text-[11px] sm:text-xs text-teal-600 font-semibold inline-block whitespace-nowrap">Accumulated transfers</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Current Session</p>
-            <h3 className="text-xl font-bold text-slate-900 mt-1">{session || 'All Years'}</h3>
-            <span className="text-xs text-indigo-600 font-semibold">Financial period</span>
+        {/* Card 2: Allocated Site Clusters */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Allocated Site Clusters</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1 truncate">{pagination.total}</h3>
+            <span className="text-[11px] sm:text-xs text-blue-600 font-semibold inline-block mt-1 whitespace-nowrap">PO-Site groupings</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-            <Calendar size={24} />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 flex-shrink-0 flex items-center justify-center text-blue-600">
+            <Layers size={20} />
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Quarter Period</p>
-            <h3 className="text-xl font-bold text-amber-600 mt-1">
+        {/* Card 3: Current Session */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Current Session</p>
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-1 truncate">{session || 'All Years'}</h3>
+            <span className="text-[11px] sm:text-xs text-indigo-600 font-semibold inline-block mt-1 whitespace-nowrap">Financial period</span>
+          </div>
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-indigo-50 flex-shrink-0 flex items-center justify-center text-indigo-600">
+            <Calendar size={20} />
+          </div>
+        </div>
+
+        {/* Card 4: Quarter Period */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Quarter Period</p>
+            <h3 className="text-lg sm:text-xl font-bold text-amber-600 mt-1 truncate">
               {quarter ? `Quarter ${quarter}` : 'All Quarters'}
             </h3>
-            <span className="text-xs text-amber-700 font-semibold">Cycle filter</span>
+            <span className="text-[11px] sm:text-xs text-amber-700 font-semibold inline-block mt-1 whitespace-nowrap">Cycle filter</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
-            <Building2 size={24} />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-50 flex-shrink-0 flex items-center justify-center text-amber-600">
+            <Building2 size={20} />
           </div>
         </div>
       </div>

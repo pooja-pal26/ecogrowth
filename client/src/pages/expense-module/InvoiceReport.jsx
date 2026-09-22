@@ -9,7 +9,7 @@ import {
   FileText,
   Search,
   RefreshCw,
-  DollarSign,
+  IndianRupee,
   Clock,
   CheckCircle2,
   AlertTriangle,
@@ -96,11 +96,25 @@ const InvoiceReport = () => {
     fetchInvoices();
   }, []);
 
-  // Format currency in INR
+  // Format currency in INR (with non-breaking space to prevent symbol wrapping)
   const formatCurrency = (val) => {
     const num = parseFloat(val);
     if (isNaN(num) || num === 0) return '-';
-    return '₹ ' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '₹\u00A0' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  // Format currency for full display / tooltips
+  const formatINR = (val) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) return '₹\u00A00.00';
+    return '₹\u00A0' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  // Format number only for KPI cards with dedicated rupee symbol span
+  const formatNumberOnly = (val) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) return '0.00';
+    return num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   // Format date DD/MM/YYYY
@@ -443,71 +457,81 @@ const InvoiceReport = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Invoices</p>
-            <h3 className="text-2xl font-bold text-gray-900 mt-1">{stats.totalInvoices}</h3>
-            <span className="text-xs text-blue-600 font-medium">Active records</span>
+        {/* Card 1: Total Invoices */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Invoices</p>
+            <div className="flex items-baseline mt-1">
+              <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+                {stats.totalInvoices || 0}
+              </span>
+            </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-            <FileText size={24} />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Invoice Value</p>
-            <h3 className="text-xl font-bold text-gray-900 mt-1">{formatCurrency(stats.totalInvoiceAmount)}</h3>
-            <span className="text-xs text-emerald-600 font-medium">Billed to clients</span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-            <DollarSign size={24} />
+          <div className="mt-2">
+            <span className="text-[11px] sm:text-xs text-blue-600 font-semibold inline-block whitespace-nowrap">Active records</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Received Amount</p>
-            <h3 className="text-xl font-bold text-gray-900 mt-1">{formatCurrency(stats.totalReceivedAmount)}</h3>
-            <span className="text-xs text-indigo-600 font-medium">Confirmed receipts</span>
+        {/* Card 2: Total Invoice Value */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Invoice Value</p>
+            <div className="flex items-baseline gap-1 mt-1 text-emerald-600" title={formatINR(stats.totalInvoiceAmount)}>
+              <span className="text-xs sm:text-sm font-bold text-emerald-700 select-none">₹</span>
+              <span className="text-sm sm:text-base xl:text-[17px] font-bold tracking-tight text-emerald-600 whitespace-nowrap">
+                {formatNumberOnly(stats.totalInvoiceAmount)}
+              </span>
+            </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-            <CheckCircle2 size={24} />
+          <div className="mt-2">
+            <span className="text-[11px] sm:text-xs text-emerald-600 font-semibold inline-block whitespace-nowrap">Billed to clients</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Pending Balance</p>
-            <h3 className="text-xl font-bold text-amber-600 mt-1">{formatCurrency(stats.totalPendingAmount)}</h3>
-            <span className="text-xs text-amber-700 font-medium">Outstanding recovery</span>
+        {/* Card 3: Received Amount */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Received Amount</p>
+            <div className="flex items-baseline gap-1 mt-1 text-teal-600" title={formatINR(stats.totalReceivedAmount)}>
+              <span className="text-xs sm:text-sm font-bold text-teal-700 select-none">₹</span>
+              <span className="text-sm sm:text-base xl:text-[17px] font-bold tracking-tight text-teal-600 whitespace-nowrap">
+                {formatNumberOnly(stats.totalReceivedAmount)}
+              </span>
+            </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
-            <Clock size={24} />
+          <div className="mt-2">
+            <span className="text-[11px] sm:text-xs text-teal-600 font-semibold inline-block whitespace-nowrap">Confirmed receipts</span>
+          </div>
+        </div>
+
+        {/* Card 4: Pending Balance */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Pending Balance</p>
+            <div className="flex items-baseline gap-1 mt-1 text-amber-600" title={formatINR(stats.totalPendingAmount)}>
+              <span className="text-xs sm:text-sm font-bold text-amber-700 select-none">₹</span>
+              <span className="text-sm sm:text-base xl:text-[17px] font-bold tracking-tight text-amber-600 whitespace-nowrap">
+                {formatNumberOnly(stats.totalPendingAmount)}
+              </span>
+            </div>
+          </div>
+          <div className="mt-2">
+            <span className="text-[11px] sm:text-xs text-amber-700 font-semibold inline-block whitespace-nowrap">Outstanding recovery</span>
           </div>
         </div>
       </div>
 
       {/* Main Panel matching PHP ecogrowth UI */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        {/* Dark Panel Header */}
-        <div className="bg-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        {/* EcoGrowth Theme Header */}
+        <div className="bg-gradient-to-r from-teal-800 via-emerald-800 to-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-emerald-500/20">
           <h3 className="text-lg font-bold tracking-wide">Invoice(s) Details</h3>
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/invoice-module/punch-invoice')}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition-all cursor-pointer"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl shadow-md transition-all cursor-pointer"
             >
               Punch Invoice
-            </button>
-            <button
-              onClick={handleExportCSV}
-              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-3 py-2 rounded-xl shadow-sm transition-all flex items-center justify-center cursor-pointer"
-              title="Export to Excel / CSV"
-            >
-              <svg className="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm1 7V3.5L18.5 9H15zM8.8 17.5l1.7-2.7-1.6-2.8h1.6l.8 1.7.8-1.7h1.6l-1.6 2.8 1.7 2.7h-1.6l-1-1.7-1 1.7H8.8z"/>
-              </svg>
             </button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Loader2, Search, Calendar, RefreshCw, Plus, Building2, Layers, DollarSign, UserCheck } from 'lucide-react';
+import { Download, Loader2, Search, Calendar, RefreshCw, Plus, Building2, Layers, UserCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getOfficeExpenseReport } from '../../services/expenseService';
 
@@ -117,10 +117,16 @@ const OfficeExpenseReport = () => {
     document.body.removeChild(link);
   };
 
+  const formatNumberOnly = (val) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) return '0.00';
+    return num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   const formatINR = (val) => {
     const num = parseFloat(val);
-    if (isNaN(num)) return '₹ 0.00';
-    return '₹ ' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (isNaN(num)) return '₹\u00A00.00';
+    return '₹\u00A0' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   return (
@@ -154,10 +160,10 @@ const OfficeExpenseReport = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/expense-module/create-new-expense')}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-sm hover:from-indigo-700 hover:to-purple-700 transition-all text-sm cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold rounded-xl shadow-sm hover:from-indigo-700 hover:to-violet-700 transition-all text-sm cursor-pointer"
           >
             <Plus size={16} />
-            Add New Expense
+            Add Office Expense
           </button>
           <button
             onClick={fetchData}
@@ -173,47 +179,55 @@ const OfficeExpenseReport = () => {
 
       {/* KPI Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Office Expenses</p>
-            <h3 className="text-xl font-black text-slate-900 mt-1">{formatINR(totalAmount)}</h3>
-            <span className="text-xs text-indigo-600 font-semibold">Settled transactions</span>
+        {/* Card 1: Total Office Expenses */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Office Expenses</p>
+            <div className="flex items-baseline gap-1 mt-1 text-slate-900" title={formatINR(totalAmount)}>
+              <span className="text-sm sm:text-base font-bold text-slate-600 select-none">₹</span>
+              <span className="text-lg sm:text-xl xl:text-2xl font-black tracking-tight text-slate-900 whitespace-nowrap">
+                {formatNumberOnly(totalAmount)}
+              </span>
+            </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-            <DollarSign size={24} />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Records</p>
-            <h3 className="text-2xl font-bold text-slate-900 mt-1">{pagination.total}</h3>
-            <span className="text-xs text-blue-600 font-semibold">Office vouchers</span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-            <Layers size={24} />
+          <div className="mt-2">
+            <span className="text-[11px] sm:text-xs text-indigo-600 font-semibold inline-block whitespace-nowrap">Settled transactions</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Participating Companies</p>
-            <h3 className="text-2xl font-bold text-slate-900 mt-1">{companies.length || 1}</h3>
-            <span className="text-xs text-purple-600 font-semibold">Operating entities</span>
+        {/* Card 2: Total Records */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Records</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1 truncate">{pagination.total}</h3>
+            <span className="text-[11px] sm:text-xs text-blue-600 font-semibold inline-block mt-1 whitespace-nowrap">Office vouchers</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
-            <Building2 size={24} />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 flex-shrink-0 flex items-center justify-center text-blue-600">
+            <Layers size={20} />
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Employees</p>
-            <h3 className="text-2xl font-bold text-emerald-600 mt-1">{data.length > 0 ? 'Active' : 'No activity'}</h3>
-            <span className="text-xs text-emerald-700 font-semibold">Internal staff transfers</span>
+        {/* Card 3: Participating Companies */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Participating Companies</p>
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-1 truncate">{companies.length || 1}</h3>
+            <span className="text-[11px] sm:text-xs text-purple-600 font-semibold inline-block mt-1 whitespace-nowrap">Operating entities</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-            <UserCheck size={24} />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-purple-50 flex-shrink-0 flex items-center justify-center text-purple-600">
+            <Building2 size={20} />
+          </div>
+        </div>
+
+        {/* Card 4: Active Employees */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Active Employees</p>
+            <h3 className="text-lg sm:text-xl font-bold text-emerald-600 mt-1 truncate">{data.length > 0 ? 'Active' : 'No activity'}</h3>
+            <span className="text-[11px] sm:text-xs text-emerald-700 font-semibold inline-block mt-1 whitespace-nowrap">Internal staff transfers</span>
+          </div>
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-50 flex-shrink-0 flex items-center justify-center text-emerald-600">
+            <UserCheck size={20} />
           </div>
         </div>
       </div>

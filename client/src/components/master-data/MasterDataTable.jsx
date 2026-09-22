@@ -29,19 +29,6 @@ const MasterDataTable = ({
 
   return (
     <div className="py-1 px-1 sm:px-2 w-full max-w-7xl mx-auto overflow-hidden">
-      <div className="mb-3 flex justify-between items-center">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">{title}</h1>
-          <nav className="text-xs sm:text-sm font-medium text-gray-500 mt-0.5 flex space-x-1.5">
-            <span className="hover:text-teal-600 cursor-pointer">Dashboard</span>
-            <span>/</span>
-            <span className="hover:text-teal-600 cursor-pointer">Master Data</span>
-            <span>/</span>
-            <span className="text-teal-700 font-semibold">{title}</span>
-          </nav>
-        </div>
-      </div>
-
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div 
           className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex justify-between items-center shadow-xs"

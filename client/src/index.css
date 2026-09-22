@@ -34,3 +34,38 @@
 .custom-sidebar-scroll::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.45);
 }
+
+/* Creative SweetAlert2 & Toast Styling for EcoGrowth */
+.swal2-container {
+  z-index: 99999 !important;
+}
+
+.swal2-popup.swal2-toast {
+  padding: 0.85rem 1.25rem !important;
+  box-shadow: 0 20px 30px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.08) !important;
+  border-radius: 1rem !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.swal2-popup.swal2-toast .swal2-title {
+  margin: 0 !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+}
+
+.swal2-popup.swal2-toast .swal2-html-container {
+  margin: 0.25rem 0 0 0 !important;
+  font-size: 0.8rem !important;
+}
+
+.swal2-popup.swal2-toast .swal2-icon {
+  margin: 0 0.75rem 0 0 !important;
+  transform: scale(0.85);
+}
+
+.swal2-timer-progress-bar {
+  height: 3px !important;
+  background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6) !important;
+  border-radius: 0 0 1rem 1rem !important;
+}
+

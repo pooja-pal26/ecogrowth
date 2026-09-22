@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Download, Loader2, Search, RefreshCw, Plus, Building2, Layers, DollarSign, ArrowRightLeft, CreditCard } from 'lucide-react';
+import { Download, Loader2, Search, RefreshCw, Plus, Building2, Layers, ArrowRightLeft, CreditCard } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getB2BFundTransferReport } from '../../services/expenseService';
 
@@ -114,10 +114,16 @@ const B2BFundTransferReport = () => {
     document.body.removeChild(link);
   };
 
+  const formatNumberOnly = (val) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) return '0.00';
+    return num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   const formatINR = (val) => {
     const num = parseFloat(val);
-    if (isNaN(num)) return '₹ 0.00';
-    return '₹ ' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (isNaN(num)) return '₹\u00A00.00';
+    return '₹\u00A0' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   return (
@@ -170,47 +176,55 @@ const B2BFundTransferReport = () => {
 
       {/* KPI Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Fund Transfers</p>
-            <h3 className="text-xl font-black text-slate-900 mt-1">{formatINR(totalAmount)}</h3>
-            <span className="text-xs text-sky-600 font-semibold">Total transfers sum</span>
+        {/* Card 1: Total Fund Transfers */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Fund Transfers</p>
+            <div className="flex items-baseline gap-1 mt-1 text-slate-900" title={formatINR(totalAmount)}>
+              <span className="text-sm sm:text-base font-bold text-slate-600 select-none">₹</span>
+              <span className="text-lg sm:text-xl xl:text-2xl font-black tracking-tight text-slate-900 whitespace-nowrap">
+                {formatNumberOnly(totalAmount)}
+              </span>
+            </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center text-sky-600">
-            <DollarSign size={24} />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Transactions</p>
-            <h3 className="text-2xl font-bold text-slate-900 mt-1">{pagination.total}</h3>
-            <span className="text-xs text-blue-600 font-semibold">Transfer entries</span>
-          </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-            <Layers size={24} />
+          <div className="mt-2">
+            <span className="text-[11px] sm:text-xs text-sky-600 font-semibold inline-block whitespace-nowrap">Total transfers sum</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Banking Channels</p>
-            <h3 className="text-2xl font-bold text-indigo-600 mt-1">Multi-Bank</h3>
-            <span className="text-xs text-indigo-700 font-semibold">NEFT / RTGS / Cheque</span>
+        {/* Card 2: Total Transactions */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Transactions</p>
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1 truncate">{pagination.total}</h3>
+            <span className="text-[11px] sm:text-xs text-blue-600 font-semibold inline-block mt-1 whitespace-nowrap">Transfer entries</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-            <CreditCard size={24} />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 flex-shrink-0 flex items-center justify-center text-blue-600">
+            <Layers size={20} />
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Status</p>
-            <h3 className="text-2xl font-bold text-emerald-600 mt-1">Live Synced</h3>
-            <span className="text-xs text-emerald-700 font-semibold">Real-time ledger data</span>
+        {/* Card 3: Banking Channels */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Banking Channels</p>
+            <h3 className="text-lg sm:text-xl font-bold text-indigo-600 mt-1 truncate">Multi-Bank</h3>
+            <span className="text-[11px] sm:text-xs text-indigo-700 font-semibold inline-block mt-1 whitespace-nowrap">NEFT / RTGS / Cheque</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-            <Building2 size={24} />
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-indigo-50 flex-shrink-0 flex items-center justify-center text-indigo-600">
+            <CreditCard size={20} />
+          </div>
+        </div>
+
+        {/* Card 4: Status */}
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+          <div className="min-w-0 flex-1 pr-2">
+            <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Status</p>
+            <h3 className="text-lg sm:text-xl font-bold text-emerald-600 mt-1 truncate">Live Synced</h3>
+            <span className="text-[11px] sm:text-xs text-emerald-700 font-semibold inline-block mt-1 whitespace-nowrap">Real-time ledger data</span>
+          </div>
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-50 flex-shrink-0 flex items-center justify-center text-emerald-600">
+            <Building2 size={20} />
           </div>
         </div>
       </div>
