@@ -130,10 +130,10 @@ const OfficeExpenseReport = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-[1550px] mx-auto space-y-6 font-sans">
+    <div className="w-full max-w-[1550px] mx-auto font-sans">
       {/* Page Title & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
-        <div>
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4"> */}
+        {/* <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Building2 className="text-indigo-600" size={26} />
             Office Expense Report
@@ -155,9 +155,9 @@ const OfficeExpenseReport = () => {
             <span>/</span>
             <span className="text-slate-800 font-semibold">Office Expense Report</span>
           </nav>
-        </div>
+        </div> */}
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/expense-module/create-new-expense')}
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold rounded-xl shadow-sm hover:from-indigo-700 hover:to-violet-700 transition-all text-sm cursor-pointer"
@@ -174,13 +174,13 @@ const OfficeExpenseReport = () => {
             <RefreshCw size={16} className={loading ? 'animate-spin text-indigo-600' : ''} />
             Refresh
           </button>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       {/* KPI Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"> */}
         {/* Card 1: Total Office Expenses */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Office Expenses</p>
             <div className="flex items-baseline gap-1 mt-1 text-slate-900" title={formatINR(totalAmount)}>
@@ -193,10 +193,10 @@ const OfficeExpenseReport = () => {
           <div className="mt-2">
             <span className="text-[11px] sm:text-xs text-indigo-600 font-semibold inline-block whitespace-nowrap">Settled transactions</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 2: Total Records */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Records</p>
             <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1 truncate">{pagination.total}</h3>
@@ -205,10 +205,10 @@ const OfficeExpenseReport = () => {
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 flex-shrink-0 flex items-center justify-center text-blue-600">
             <Layers size={20} />
           </div>
-        </div>
+        </div> */}
 
         {/* Card 3: Participating Companies */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Participating Companies</p>
             <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-1 truncate">{companies.length || 1}</h3>
@@ -217,10 +217,10 @@ const OfficeExpenseReport = () => {
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-purple-50 flex-shrink-0 flex items-center justify-center text-purple-600">
             <Building2 size={20} />
           </div>
-        </div>
+        </div> */}
 
         {/* Card 4: Active Employees */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Active Employees</p>
             <h3 className="text-lg sm:text-xl font-bold text-emerald-600 mt-1 truncate">{data.length > 0 ? 'Active' : 'No activity'}</h3>
@@ -230,33 +230,38 @@ const OfficeExpenseReport = () => {
             <UserCheck size={20} />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Report Card */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Card Header matching theme */}
-        <div className="bg-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div 
+          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-bold tracking-wide flex items-center">
               Office Expense Details
             </h2>
-            <span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide">
+            <span className="bg-white/20 text-white border border-white/30 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide backdrop-blur-xs">
               Total: {formatINR(totalAmount)}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <button 
               type="button"
-              onClick={handleExportCSV}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+              onClick={() => navigate('/expense-module/create-new-expense')}
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 shadow-sm transition-all backdrop-blur-md active:scale-95 cursor-pointer"
             >
-              <Download size={14} />
-              Export CSV
+              <Plus size={15} />
+              Add New Expense
             </button>
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-5">
           {/* Filters Bar */}
           <form onSubmit={handleFilterSubmit} className="flex flex-wrap items-end gap-3.5 mb-6 p-4 bg-slate-50/70 rounded-2xl border border-slate-200/80">
             <div className="flex-1 min-w-[150px]">
@@ -325,18 +330,29 @@ const OfficeExpenseReport = () => {
               </select>
               <span>entries</span>
             </div>
-            <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setCurrentPage(1);
-                }}
-                placeholder="Search by company, staff, remark..."
-                className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
-              />
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Search by company, staff, remark..."
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium"
+                />
+              </div>
+              <button 
+                type="button"
+                onClick={handleExportCSV}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer whitespace-nowrap"
+                title="Export CSV"
+              >
+                <Download size={14} />
+                <span>Export CSV</span>
+              </button>
             </div>
           </div>
 

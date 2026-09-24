@@ -386,10 +386,10 @@ const InvoiceReport = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-[1550px] mx-auto space-y-6">
+    <div className="w-full max-w-[1550px] mx-auto font-sans">
       {/* Header & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-200 pb-4">
-        <div>
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-200 pb-4"> */}
+        {/* <div>
           <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
             <FileText className="text-blue-600" size={26} />
             Invoice(s) Details
@@ -411,9 +411,9 @@ const InvoiceReport = () => {
             <span>/</span>
             <span className="text-gray-800 font-semibold">Invoice's Report</span>
           </nav>
-        </div>
+        </div> */}
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <button
             onClick={fetchInvoices}
             disabled={loading}
@@ -423,13 +423,13 @@ const InvoiceReport = () => {
             <RefreshCw size={16} className={loading ? 'animate-spin text-blue-600' : ''} />
             Refresh
           </button>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       {/* Dismissible Feedback Alert */}
       {feedback.message && (
         <div
-          className={`flex items-start justify-between p-4 rounded-xl border ${
+          className={`mb-3 flex items-start justify-between p-3.5 rounded-xl border ${
             feedback.type === 'error'
               ? 'bg-rose-50 border-rose-200 text-rose-800'
               : 'bg-emerald-50 border-emerald-200 text-emerald-800'
@@ -456,9 +456,9 @@ const InvoiceReport = () => {
       )}
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"> */}
         {/* Card 1: Total Invoices */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Invoices</p>
             <div className="flex items-baseline mt-1">
@@ -470,10 +470,10 @@ const InvoiceReport = () => {
           <div className="mt-2">
             <span className="text-[11px] sm:text-xs text-blue-600 font-semibold inline-block whitespace-nowrap">Active records</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 2: Total Invoice Value */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Invoice Value</p>
             <div className="flex items-baseline gap-1 mt-1 text-emerald-600" title={formatINR(stats.totalInvoiceAmount)}>
@@ -486,10 +486,10 @@ const InvoiceReport = () => {
           <div className="mt-2">
             <span className="text-[11px] sm:text-xs text-emerald-600 font-semibold inline-block whitespace-nowrap">Billed to clients</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 3: Received Amount */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Received Amount</p>
             <div className="flex items-baseline gap-1 mt-1 text-teal-600" title={formatINR(stats.totalReceivedAmount)}>
@@ -502,10 +502,10 @@ const InvoiceReport = () => {
           <div className="mt-2">
             <span className="text-[11px] sm:text-xs text-teal-600 font-semibold inline-block whitespace-nowrap">Confirmed receipts</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 4: Pending Balance */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Pending Balance</p>
             <div className="flex items-baseline gap-1 mt-1 text-amber-600" title={formatINR(stats.totalPendingAmount)}>
@@ -518,18 +518,23 @@ const InvoiceReport = () => {
           <div className="mt-2">
             <span className="text-[11px] sm:text-xs text-amber-700 font-semibold inline-block whitespace-nowrap">Outstanding recovery</span>
           </div>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       {/* Main Panel matching PHP ecogrowth UI */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         {/* EcoGrowth Theme Header */}
-        <div className="bg-gradient-to-r from-teal-800 via-emerald-800 to-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-emerald-500/20">
-          <h3 className="text-lg font-bold tracking-wide">Invoice(s) Details</h3>
+        <div 
+          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
+          <h3 className="text-base sm:text-lg font-bold tracking-wide">Invoice(s) Details</h3>
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate('/invoice-module/punch-invoice')}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl shadow-md transition-all cursor-pointer"
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
             >
               Punch Invoice
             </button>

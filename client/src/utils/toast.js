@@ -65,7 +65,7 @@ export const showInfoToast = (message, title = 'Notice') => {
 
 // Creative Deletion Confirmation Dialog matching EcoGrowth theme
 export const confirmDeleteDialog = async ({
-  title = 'Delete State?',
+  title = 'Delete Record?',
   text = 'Are you sure you want to delete this record? This action cannot be undone.',
   confirmButtonText = 'Yes, Delete',
   cancelButtonText = 'Cancel'
@@ -88,6 +88,44 @@ export const confirmDeleteDialog = async ({
       cancelButton: 'px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all cursor-pointer'
     }
   });
+};
+
+// Global Alert Replacement for all legacy alert() calls across the application
+export const setupGlobalAlerts = () => {
+  if (typeof window !== 'undefined') {
+    window.alert = (message) => {
+      const msg = String(message || '');
+      const lower = msg.toLowerCase();
+      if (
+        lower.includes('success') ||
+        lower.includes('added') ||
+        lower.includes('saved') ||
+        lower.includes('updated') ||
+        lower.includes('completed') ||
+        lower.includes('allocated successfully')
+      ) {
+        showSuccessToast(msg, 'Success');
+      } else if (
+        lower.includes('error') ||
+        lower.includes('failed') ||
+        lower.includes('cannot') ||
+        lower.includes('server')
+      ) {
+        showErrorToast(msg, 'Error');
+      } else if (
+        lower.includes('missing') ||
+        lower.includes('required') ||
+        lower.includes('please') ||
+        lower.includes('select') ||
+        lower.includes('enter') ||
+        lower.includes('mandatory')
+      ) {
+        showWarningToast(msg, 'Validation Required');
+      } else {
+        showInfoToast(msg, 'Notification');
+      }
+    };
+  }
 };
 
 export default Swal;

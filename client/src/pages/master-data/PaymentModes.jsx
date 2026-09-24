@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const PaymentModes = () => {
   const [data, setData] = useState([]);
@@ -77,27 +78,40 @@ const PaymentModes = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const item = data.find(d => (d._id || d.id) === id);
+    const label = item?.payment_mode || 'this payment mode';
+    const result = await confirmDeleteDialog({
+      title: 'Delete Payment Mode?',
+      text: `Are you sure you want to delete "${label}"? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('dynamic/paymentmodess', id);
+        showSuccessToast(`Payment Mode "${label}" deleted successfully.`, 'Payment Mode Deleted');
         loadData();
       } catch (error) {
-        alert('Failed to delete');
+        showErrorToast(error?.response?.data?.message || 'Failed to delete payment mode.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.payment_mode?.trim()) {
+      showWarningToast('Please enter the payment mode.', 'Validation Required');
+      return;
+    }
     try {
       if (isEditing) {
         await updateItem('dynamic/paymentmodess', editId, formData);
+        showSuccessToast(`Payment mode "${formData.payment_mode}" updated successfully!`, 'Payment Mode Updated');
       } else {
         await createItem('dynamic/paymentmodess', formData);
+        showSuccessToast(`Payment mode "${formData.payment_mode}" added successfully!`, 'Payment Mode Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
-      alert('Failed to save');
+      showErrorToast(error?.response?.data?.message || 'Failed to save payment mode.', 'Save Error');
     }
   };
 

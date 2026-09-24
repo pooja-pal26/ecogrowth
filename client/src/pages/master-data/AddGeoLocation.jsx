@@ -201,8 +201,13 @@ const AddGeoLocation = () => {
 
       {/* Main Form Card Matching PHP Screenshot */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        {/* Dark Card Header */}
-        <div className="bg-[#1e293b] text-white px-5 py-3.5 flex items-center justify-between">
+        {/* Header */}
+        <div 
+          className="text-white px-5 py-3.5 flex items-center justify-between shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
           <h2 className="text-base font-semibold tracking-wide">
             {editId ? 'Edit Location' : 'Add Location'}
           </h2>
@@ -531,9 +536,14 @@ const AddGeoLocation = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
           <div className="bg-white rounded-lg shadow-xl border border-gray-200 w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="bg-[#1e293b] text-white px-5 py-3.5 flex items-center justify-between">
+            <div 
+              className="text-white px-5 py-3.5 flex items-center justify-between shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <div className="flex items-center gap-2">
-                <Map className="w-5 h-5 text-sky-400" />
+                <Map className="w-5 h-5 text-teal-200" />
                 <h3 className="text-base font-semibold">
                   Site Map View {selectedMapSite?.site_name ? `- ${selectedMapSite.site_name} (${selectedMapSite.site_id || ''})` : ''}
                 </h3>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, confirmDeleteDialog } from '../../../utils/toast';
 
 const AllocatedSiteStatus = () => {
   const [data, setData] = useState([]);
@@ -76,12 +77,18 @@ const AllocatedSiteStatus = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const result = await confirmDeleteDialog({
+      title: 'Delete Allocated Site Status?',
+      text: 'Are you sure you want to delete this record? This action cannot be undone.'
+    });
+    if (result.isConfirmed) {
       try {
         await axios.delete(`http://localhost:5000/api/po-sites/allocated-sites/${id}`, { withCredentials: true });
+        showSuccessToast('Record deleted successfully.', 'Deleted');
         fetchData();
       } catch (error) {
         console.error('Error deleting record:', error);
+        showErrorToast('Failed to delete record.', 'Delete Failed');
       }
     }
   };
@@ -93,12 +100,13 @@ const AllocatedSiteStatus = () => {
           status: formData.status === 'Allocated' ? '1' : '0',
           close_status: formData.closeStatus
         }, { withCredentials: true });
+        showSuccessToast('Allocated site status updated successfully!', 'Status Updated');
       }
       fetchData();
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error saving data:', error);
-      alert('Error saving data');
+      showErrorToast('Failed to save status data.', 'Save Failed');
     }
   };
 

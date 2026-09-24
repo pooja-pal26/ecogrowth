@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
@@ -138,29 +139,42 @@ const ClientList = () => {
 
   const handleDelete = async (rowOrId) => {
     const targetId = rowOrId?._id || rowOrId?.id || rowOrId;
-    if (window.confirm("Are you sure you want to delete this client?")) {
+    const clientRecord = clients.find(c => (c._id || c.id) === targetId);
+    const clientName = clientRecord?.client_name ? `"${clientRecord.client_name}"` : 'this client';
+    const result = await confirmDeleteDialog({
+      title: 'Delete Client?',
+      text: `Are you sure you want to delete ${clientName}? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('clients', targetId);
+        showSuccessToast(`Client ${clientName} deleted successfully.`, 'Client Deleted');
         loadData();
       } catch (error) {
         console.error("Failed to delete client:", error);
-        alert("Failed to delete client.");
+        showErrorToast('Failed to delete client.', 'Delete Failed');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.client_name?.trim()) {
+      showWarningToast('Please enter the client name.', 'Validation Required');
+      return;
+    }
     try {
       if (isEditing) {
         await updateItem('clients', editId, formData);
+        showSuccessToast(`Client "${formData.client_name}" updated successfully!`, 'Client Updated');
       } else {
         await createItem('clients', formData);
+        showSuccessToast(`Client "${formData.client_name}" added successfully!`, 'Client Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
       console.error("Failed to save client:", error);
-      alert("Failed to save client. Please ensure fields are valid.");
+      showErrorToast("Failed to save client. Please ensure fields are valid.", 'Save Error');
     }
   };
 

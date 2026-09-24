@@ -174,7 +174,7 @@ const MonthlyInvoiceReport = () => {
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
             <Calendar className="text-blue-600" size={26} />
@@ -188,22 +188,27 @@ const MonthlyInvoiceReport = () => {
             <span className="text-gray-700">Monthly Invoice Report</span>
           </nav>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Container */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Header */}
-        <div className="bg-[#24292e] text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div 
+          className="text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
           <div>
             <h2 className="text-lg font-semibold tracking-wide">Monthly Invoice Report</h2>
-            <p className="text-xs text-gray-300 mt-0.5">Track monthly client billings, LTS margins, and vendor payouts</p>
+            <p className="text-xs text-white/80 mt-0.5">Track monthly client billings, LTS margins, and vendor payouts</p>
           </div>
           <button
             onClick={() => {
               setFormData(initialForm);
               setIsAddModalOpen(true);
             }}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm flex items-center gap-2"
+            className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-2 shadow-sm active:scale-95 cursor-pointer"
           >
             <Plus size={18} />
             Add Monthly Invoice
@@ -407,14 +412,19 @@ const MonthlyInvoiceReport = () => {
       {viewVendorsModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden">
-            <div className="bg-[#24292e] text-white px-6 py-4 flex justify-between items-center">
+            <div 
+              className="text-white px-6 py-4 flex justify-between items-center shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <div>
                 <h3 className="font-semibold text-base">Vendors Details</h3>
-                <p className="text-xs text-gray-300">{selectedVendors.clientName} ({selectedVendors.monthYear})</p>
+                <p className="text-xs text-white/80">{selectedVendors.clientName} ({selectedVendors.monthYear})</p>
               </div>
               <button
                 onClick={() => setViewVendorsModalOpen(false)}
-                className="text-gray-300 hover:text-white p-1"
+                className="text-white/80 hover:text-white p-1"
               >
                 <X size={20} />
               </button>
@@ -471,14 +481,19 @@ const MonthlyInvoiceReport = () => {
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl overflow-hidden my-auto max-h-[95vh] flex flex-col">
-            <div className="bg-[#24292e] text-white px-6 py-4 flex justify-between items-center">
+            <div 
+              className="text-white px-6 py-4 flex justify-between items-center shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <h3 className="font-semibold text-lg flex items-center gap-2">
-                <Calendar size={20} className="text-emerald-400" />
+                <Calendar size={20} className="text-teal-200" />
                 Add Monthly Invoice
               </h3>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-gray-300 hover:text-white p-1"
+                className="text-white/80 hover:text-white p-1"
               >
                 <X size={20} />
               </button>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const SiteDocuments = () => {
   const [data, setData] = useState([]);
@@ -81,27 +82,40 @@ const SiteDocuments = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const item = data.find(d => (d._id || d.id) === id);
+    const label = item?.document_name || 'this document';
+    const result = await confirmDeleteDialog({
+      title: 'Delete Site Document?',
+      text: `Are you sure you want to delete "${label}"? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('dynamic/sitedocumentss', id);
+        showSuccessToast(`Document "${label}" deleted successfully.`, 'Document Deleted');
         loadData();
       } catch (error) {
-        alert('Failed to delete');
+        showErrorToast(error?.response?.data?.message || 'Failed to delete site document.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.document_name?.trim()) {
+      showWarningToast('Please enter the document name.', 'Validation Required');
+      return;
+    }
     try {
       if (isEditing) {
         await updateItem('dynamic/sitedocumentss', editId, formData);
+        showSuccessToast(`Document "${formData.document_name}" updated successfully!`, 'Document Updated');
       } else {
         await createItem('dynamic/sitedocumentss', formData);
+        showSuccessToast(`Document "${formData.document_name}" added successfully!`, 'Document Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
-      alert('Failed to save');
+      showErrorToast(error?.response?.data?.message || 'Failed to save site document.', 'Save Error');
     }
   };
 

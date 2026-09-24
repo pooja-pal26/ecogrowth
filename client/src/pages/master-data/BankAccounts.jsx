@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const BankAccounts = () => {
   const [data, setData] = useState([]);
@@ -164,18 +165,33 @@ const BankAccounts = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this bank account?')) {
+    const item = data.find(d => (d._id || d.id) === id);
+    const accLabel = item?.bank_account_number || item?.bank_name ? `"${item.bank_name || ''} - ${item.bank_account_number || ''}"` : 'this bank account';
+    const result = await confirmDeleteDialog({
+      title: 'Delete Bank Account?',
+      text: `Are you sure you want to delete ${accLabel}? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('dynamic/bankaccountss', id);
+        showSuccessToast(`Bank account ${accLabel} deleted successfully.`, 'Account Deleted');
         loadData();
       } catch (error) {
         console.error(error);
-        alert('Failed to delete bank account');
+        showErrorToast('Failed to delete bank account.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.bank_name?.trim()) {
+      showWarningToast('Please select or enter the Bank Name.', 'Validation Required');
+      return;
+    }
+    if (!formData.bank_account_number?.trim()) {
+      showWarningToast('Please enter the Bank Account Number.', 'Validation Required');
+      return;
+    }
     try {
       const payload = {
         ...formData,
@@ -194,14 +210,16 @@ const BankAccounts = () => {
 
       if (isEditing) {
         await updateItem('dynamic/bankaccountss', editId, payload);
+        showSuccessToast(`Bank account "${formData.bank_account_number}" updated successfully!`, 'Account Updated');
       } else {
         await createItem('dynamic/bankaccountss', payload);
+        showSuccessToast(`Bank account "${formData.bank_account_number}" created successfully!`, 'Account Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
       console.error(error);
-      alert('Failed to save bank account');
+      showErrorToast('Failed to save bank account. Please check inputs.', 'Save Error');
     }
   };
 

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const CompanyVendor = () => {
   const [vendors, setVendors] = useState([]);
@@ -93,27 +94,52 @@ const CompanyVendor = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const item = vendors.find(d => (d._id || d.id) === id);
+    const label = item?.vendor_company_name || 'this vendor';
+    const result = await confirmDeleteDialog({
+      title: 'Delete Company Vendor?',
+      text: `Are you sure you want to delete "${label}"? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('company-vendors', id);
+        showSuccessToast(`Vendor "${label}" deleted successfully.`, 'Vendor Deleted');
         loadData();
       } catch (error) {
-        alert(error?.response?.data?.message || 'Failed to delete');
+        showErrorToast(error?.response?.data?.message || 'Failed to delete vendor.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.vendor_company_name?.trim()) {
+      showWarningToast('Please enter the vendor company name.', 'Validation Required');
+      return;
+    }
+    if (!formData.contact_person_name?.trim()) {
+      showWarningToast('Please enter the contact person name.', 'Validation Required');
+      return;
+    }
+    if (!formData.contact_number?.trim()) {
+      showWarningToast('Please enter the contact number.', 'Validation Required');
+      return;
+    }
+    if (!formData.pan_number?.trim()) {
+      showWarningToast('Please enter the PAN number.', 'Validation Required');
+      return;
+    }
     try {
       if (isEditing) {
         await updateItem('company-vendors', editId, formData);
+        showSuccessToast(`Vendor "${formData.vendor_company_name}" updated successfully!`, 'Vendor Updated');
       } else {
         await createItem('company-vendors', formData);
+        showSuccessToast(`Vendor "${formData.vendor_company_name}" added successfully!`, 'Vendor Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
-      alert(error?.response?.data?.message || 'Failed to save');
+      showErrorToast(error?.response?.data?.message || 'Failed to save company vendor.', 'Save Error');
     }
   };
 

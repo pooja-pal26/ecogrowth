@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const StateFor = () => {
   const [stateForList, setStateForList] = useState([]);
@@ -55,27 +56,40 @@ const StateFor = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const item = stateForList.find(d => (d._id || d.id) === id);
+    const label = item?.state_for || 'this record';
+    const result = await confirmDeleteDialog({
+      title: 'Delete State For?',
+      text: `Are you sure you want to delete "${label}"? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('dynamic/statefors', id);
+        showSuccessToast(`Record "${label}" deleted successfully.`, 'Record Deleted');
         loadData();
       } catch (error) {
-        alert('Failed to delete');
+        showErrorToast(error?.response?.data?.message || 'Failed to delete record.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.state_for?.trim()) {
+      showWarningToast('Please enter the State For value.', 'Validation Required');
+      return;
+    }
     try {
       if (isEditing) {
         await updateItem('dynamic/statefors', editId, formData);
+        showSuccessToast(`Record "${formData.state_for}" updated successfully!`, 'Record Updated');
       } else {
         await createItem('dynamic/statefors', formData);
+        showSuccessToast(`Record "${formData.state_for}" added successfully!`, 'Record Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
-      alert('Failed to save');
+      showErrorToast(error?.response?.data?.message || 'Failed to save record.', 'Save Error');
     }
   };
 

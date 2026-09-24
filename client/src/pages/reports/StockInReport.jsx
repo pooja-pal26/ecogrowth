@@ -288,7 +288,12 @@ const StockInReport = () => {
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-gray-600">
-            <thead className="bg-[#1e293b] text-white text-xs uppercase font-semibold">
+            <thead 
+              className="text-white text-xs uppercase font-semibold"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <tr>
                 <th className="px-4 py-3.5 w-12 text-center">#</th>
                 <th className="px-4 py-3.5">Stock In Date</th>
@@ -411,11 +416,16 @@ const StockInReport = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full overflow-hidden border border-gray-200">
-            {/* Modal Header matching PHP panel-heading */}
-            <div className="bg-[#1e293b] text-white px-6 py-4 flex items-center justify-between">
+            {/* Modal Header */}
+            <div 
+              className="text-white px-6 py-4 flex items-center justify-between shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <div>
                 <h3 className="text-lg font-bold">Stock Details</h3>
-                <p className="text-xs text-blue-200 mt-0.5">Itemized products received in this consignment</p>
+                <p className="text-xs text-white/80 mt-0.5">Itemized products received in this consignment</p>
               </div>
               <button
                 onClick={() => setIsModalOpen(false)}

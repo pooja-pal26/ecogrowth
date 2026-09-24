@@ -222,7 +222,7 @@ const GenerateInvoice = () => {
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
             <FileText className="text-blue-600" size={26} />
@@ -243,15 +243,20 @@ const GenerateInvoice = () => {
           <ArrowLeft size={16} />
           View Invoices List
         </button>
-      </div>
+      </div> */}
 
       {/* Main Container */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Step 1: Base Parameters */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="bg-[#24292e] text-white px-6 py-4">
+          <div 
+            className="text-white px-6 py-4 shadow-xs"
+            style={{
+              background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+            }}
+          >
             <h2 className="text-lg font-semibold tracking-wide">Invoice Generation Form</h2>
-            <p className="text-xs text-gray-300 mt-0.5"><span className="text-red-400 font-bold">*</span> Fields are mandatory</p>
+            <p className="text-xs text-white/80 mt-0.5"><span className="text-rose-300 font-bold">*</span> Fields are mandatory</p>
           </div>
 
           <div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -592,7 +597,12 @@ const GenerateInvoice = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-2 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[95vh] flex flex-col overflow-hidden my-auto">
             {/* Modal Actions Header */}
-            <div className="bg-[#24292e] text-white px-6 py-3 flex justify-between items-center print:hidden">
+            <div 
+              className="text-white px-6 py-3 flex justify-between items-center print:hidden shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <h3 className="font-semibold text-base flex items-center gap-2">
                 <Printer size={18} /> Tax Invoice Preview & Print
               </h3>

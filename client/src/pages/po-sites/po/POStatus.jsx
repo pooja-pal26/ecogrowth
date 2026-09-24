@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, confirmDeleteDialog } from '../../../utils/toast';
 
 const POStatus = () => {
   const [data, setData] = useState([]);
@@ -109,8 +110,13 @@ const POStatus = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const result = await confirmDeleteDialog({
+      title: 'Delete PO Status?',
+      text: 'Are you sure you want to delete this PO status record? This cannot be undone.'
+    });
+    if (result.isConfirmed) {
       setData(prev => prev.filter(v => (v.id || v._id) !== id));
+      showSuccessToast('PO Status record deleted successfully.', 'Record Deleted');
     }
   };
 
@@ -118,14 +124,16 @@ const POStatus = () => {
     try {
       if (isEditing) {
         await axios.put(`http://localhost:5000/api/po-sites/po-status/${editId}`, formData, { withCredentials: true });
+        showSuccessToast('PO Status updated successfully!', 'Status Updated');
       } else {
         await axios.post('http://localhost:5000/api/po-sites/po-status', formData, { withCredentials: true });
+        showSuccessToast('PO Status created successfully!', 'Status Created');
       }
       fetchData();
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error saving data:', error);
-      alert('Error saving data');
+      showErrorToast(error.response?.data?.message || 'Error saving data', 'Save Failed');
     }
   };
 

@@ -181,6 +181,9 @@ function App() {
 
           <Route path="/po-sites/incidents-reporting/incidents-report" element={<ProtectedRoute allowedRoles={['admin', 'management', 'project_manager', 'supervisor']}><Layout><IncidentsReport /></Layout></ProtectedRoute>} />
           <Route path="/po-sites/incidents-reporting/report-new-incident" element={<ProtectedRoute allowedRoles={['admin', 'management', 'project_manager', 'supervisor']}><Layout><ReportNewIncident /></Layout></ProtectedRoute>} />
+          <Route path="/po-sites/po-details" element={<Navigate to="/po-sites/po/po-details" replace />} />
+          <Route path="/po-sites/po-status" element={<Navigate to="/po-sites/po/po-status" replace />} />
+          <Route path="/po-sites/allocated-sites" element={<Navigate to="/po-sites/sites/allocated-site-list" replace />} />
 
           {/* Master Data routes */}
           <Route path="/master-data/state-list" element={<ProtectedRoute allowedRoles={['admin', 'management']}><Layout><StateList /></Layout></ProtectedRoute>} />

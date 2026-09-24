@@ -101,7 +101,10 @@
     "client_gst": "09AAATA3919Q3Z8",
     "is_active": "1",
     "created_by": "31",
-    "created_at": "2019-12-18 15:54:26"
+    "created_at": "2019-12-18 15:54:26",
+    "contact_number": "8052054444",
+    "updated_by": null,
+    "updatedAt": "2026-09-24T10:26:52.924Z"
   },
   {
     "_id": "6aa3f1273c200cb6cc5c995f",

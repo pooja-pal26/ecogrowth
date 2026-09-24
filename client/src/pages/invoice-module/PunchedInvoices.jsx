@@ -440,7 +440,7 @@ const PunchedInvoices = () => {
       )}
 
       {/* KPI Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="bg-white p-4 rounded-xl shadow-xs border border-gray-200 flex items-center gap-3.5">
           <div className="w-11 h-11 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
             <FileText size={20} />
@@ -490,14 +490,19 @@ const PunchedInvoices = () => {
             <h4 className="text-xl font-bold text-purple-700">{stats.markedForReviewCount}</h4>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Table Panel */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* Dark Panel Header matching PHP styling & user screenshot */}
-        <div className="bg-[#24292e] text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        {/* Panel Header */}
+        <div 
+          className="text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
           <div className="flex items-center gap-2.5">
-            <Receipt className="text-blue-400" size={22} />
+            <Receipt className="text-teal-200" size={22} />
             <h2 className="text-lg sm:text-xl font-bold tracking-tight">Invoice(s) Details</h2>
           </div>
 
@@ -505,7 +510,7 @@ const PunchedInvoices = () => {
             {/* Punch Invoice Green Button */}
             <Link
               to="/invoice-module/punch-invoice"
-              className="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg shadow-sm transition-all backdrop-blur-md active:scale-95 flex items-center gap-1.5 cursor-pointer"
             >
               Punch Invoice
             </Link>
@@ -845,7 +850,12 @@ const PunchedInvoices = () => {
       {isUpdateModalOpen && activeInvoice && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
-            <div className="bg-[#24292e] text-white px-6 py-4 flex items-center justify-between">
+            <div 
+              className="text-white px-6 py-4 flex items-center justify-between shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <h3 className="font-bold text-base">Update Invoice Details</h3>
               <button
                 onClick={() => setIsUpdateModalOpen(false)}
@@ -922,7 +932,12 @@ const PunchedInvoices = () => {
       {isAdviceModalOpen && activeInvoice && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
-            <div className="bg-[#24292e] text-white px-6 py-4 flex items-center justify-between">
+            <div 
+              className="text-white px-6 py-4 flex items-center justify-between shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <h3 className="font-bold text-base">Attach Payment Advice</h3>
               <button
                 onClick={() => setIsAdviceModalOpen(false)}

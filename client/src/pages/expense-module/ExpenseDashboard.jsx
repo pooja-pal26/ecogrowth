@@ -141,8 +141,8 @@ const ExpenseDashboard = () => {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
       {/* Top Header & Filters */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-        <div>
+      {/* <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100"> */}
+        {/* <div>
           <div className="flex flex-wrap items-center gap-2.5">
             <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">
               Expense Dashboard
@@ -154,12 +154,12 @@ const ExpenseDashboard = () => {
           <p className="text-xs sm:text-sm text-gray-500 mt-1">
             Site Expenses, Office Expenses, and Invoice vs Expense comparison
           </p>
-        </div>
+        </div> */}
 
         {/* Filter Controls */}
-        <div className="flex flex-wrap items-center gap-3">
+        {/* <div className="flex flex-wrap items-center gap-3"> */}
           {/* Year Filter */}
-          <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
+          {/* <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
             <Calendar size={16} className="text-gray-500 mr-2" />
             <span className="text-xs font-semibold text-gray-500 mr-2 uppercase">Year:</span>
             <select
@@ -171,10 +171,10 @@ const ExpenseDashboard = () => {
                 <option key={yr} value={yr}>{yr}</option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Zone Filter */}
-          <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
+          {/* <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
             <Filter size={16} className="text-gray-500 mr-2" />
             <span className="text-xs font-semibold text-gray-500 mr-2 uppercase">Zone:</span>
             <select
@@ -187,10 +187,10 @@ const ExpenseDashboard = () => {
                 <option key={z} value={z}>{z}</option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Refresh Button */}
-          <button
+          {/* <button
             onClick={() => fetchData(true)}
             disabled={refreshing}
             className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm active:scale-95 disabled:opacity-50"
@@ -198,14 +198,14 @@ const ExpenseDashboard = () => {
           >
             <RefreshCw size={15} className={refreshing ? 'animate-spin' : ''} />
             <span className="hidden sm:inline">Refresh</span>
-          </button>
-        </div>
-      </div>
+          </button> */}
+        {/* </div> */}
+      {/* </div> */}
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"> */}
         {/* Card 1: Site Expenses */}
-        <div className="bg-gradient-to-br from-emerald-500 to-teal-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
+        {/* <div className="bg-gradient-to-br from-emerald-500 to-teal-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
           <div className="absolute right-3 -bottom-3 opacity-15 pointer-events-none">
             <Building2 size={80} />
           </div>
@@ -226,10 +226,10 @@ const ExpenseDashboard = () => {
             <span>FY {selectedYear}</span>
             <span>On-site spends</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 2: Office Expenses */}
-        <div className="bg-gradient-to-br from-cyan-600 to-blue-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
+        {/* <div className="bg-gradient-to-br from-cyan-600 to-blue-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
           <div className="absolute right-3 -bottom-3 opacity-15 pointer-events-none">
             <Wallet size={80} />
           </div>
@@ -250,10 +250,10 @@ const ExpenseDashboard = () => {
             <span>FY {selectedYear}</span>
             <span>Operational</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 3: Total Invoiced Value */}
-        <div className="bg-gradient-to-br from-rose-600 to-red-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
+        {/* <div className="bg-gradient-to-br from-rose-600 to-red-700 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between">
           <div className="absolute right-3 -bottom-3 opacity-15 pointer-events-none">
             <Receipt size={80} />
           </div>
@@ -274,10 +274,10 @@ const ExpenseDashboard = () => {
             <span>Punched</span>
             <span>Approved Value</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 4: Net Variance / Profit-Loss */}
-        <div className={`p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between text-white ${
+        {/* <div className={`p-5 rounded-2xl shadow-lg relative overflow-hidden flex flex-col justify-between text-white ${
           kpi.netBalance >= 0 
             ? 'bg-gradient-to-br from-indigo-600 to-violet-800' 
             : 'bg-gradient-to-br from-amber-600 to-orange-700'
@@ -303,18 +303,23 @@ const ExpenseDashboard = () => {
             <span>Avg: {formatCompactINR(kpi.averageMonthlyExpense)}/mo</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* 3 Core Charts (Replicating PHP Ecogrowth) */}
       <div className="space-y-6">
         {/* Chart 1: Monthly Site Expense */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="bg-slate-800 text-white px-6 py-4 flex items-center justify-between">
+          <div 
+            className="text-white px-6 py-4 flex items-center justify-between shadow-xs"
+            style={{
+              background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+            }}
+          >
             <div className="flex items-center gap-2">
-              <Building2 size={18} className="text-emerald-400" />
+              <Building2 size={18} className="text-teal-200" />
               <h2 className="font-bold text-base sm:text-lg">Site Expense ({selectedYear})</h2>
             </div>
-            <span className="text-xs text-slate-300 font-mono">
+            <span className="text-xs text-white/90 font-mono bg-white/15 px-3 py-1 rounded-full border border-white/20">
               Total: {formatINR(kpi.totalSiteExpense)}
             </span>
           </div>
@@ -340,12 +345,17 @@ const ExpenseDashboard = () => {
 
         {/* Chart 2: Monthly Office Expense */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="bg-slate-800 text-white px-6 py-4 flex items-center justify-between">
+          <div 
+            className="text-white px-6 py-4 flex items-center justify-between shadow-xs"
+            style={{
+              background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+            }}
+          >
             <div className="flex items-center gap-2">
-              <Wallet size={18} className="text-cyan-400" />
+              <Wallet size={18} className="text-cyan-200" />
               <h2 className="font-bold text-base sm:text-lg">Office Expense ({selectedYear})</h2>
             </div>
-            <span className="text-xs text-slate-300 font-mono">
+            <span className="text-xs text-white/90 font-mono bg-white/15 px-3 py-1 rounded-full border border-white/20">
               Total: {formatINR(kpi.totalOfficeExpense)}
             </span>
           </div>
@@ -371,9 +381,14 @@ const ExpenseDashboard = () => {
 
         {/* Chart 3: Invoice vs Expense Comparison (Crimson vs Green, matching PHP) */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="bg-slate-800 text-white px-6 py-4 flex items-center justify-between">
+          <div 
+            className="text-white px-6 py-4 flex items-center justify-between shadow-xs"
+            style={{
+              background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+            }}
+          >
             <div className="flex items-center gap-2">
-              <BarChart3 size={18} className="text-rose-400" />
+              <BarChart3 size={18} className="text-rose-200" />
               <h2 className="font-bold text-base sm:text-lg">Invoice Vs Expense ({selectedYear})</h2>
             </div>
             <div className="flex items-center gap-4 text-xs">

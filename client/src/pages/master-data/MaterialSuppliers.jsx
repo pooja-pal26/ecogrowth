@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const MaterialSuppliers = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -98,27 +99,40 @@ const MaterialSuppliers = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const item = suppliers.find(d => (d._id || d.id) === id);
+    const label = item?.supplier_name || item?.name || 'this supplier';
+    const result = await confirmDeleteDialog({
+      title: 'Delete Material Supplier?',
+      text: `Are you sure you want to delete "${label}"? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('dynamic/materialsupplierss', id);
+        showSuccessToast(`Material Supplier "${label}" deleted successfully.`, 'Supplier Deleted');
         loadData();
       } catch (error) {
-        alert('Failed to delete');
+        showErrorToast(error?.response?.data?.message || 'Failed to delete supplier.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.supplier_name?.trim()) {
+      showWarningToast('Please enter the supplier name.', 'Validation Required');
+      return;
+    }
     try {
       if (isEditing) {
         await updateItem('dynamic/materialsupplierss', editId, formData);
+        showSuccessToast(`Supplier "${formData.supplier_name}" updated successfully!`, 'Supplier Updated');
       } else {
         await createItem('dynamic/materialsupplierss', formData);
+        showSuccessToast(`Supplier "${formData.supplier_name}" added successfully!`, 'Supplier Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
-      alert('Failed to save');
+      showErrorToast(error?.response?.data?.message || 'Failed to save material supplier.', 'Save Error');
     }
   };
 

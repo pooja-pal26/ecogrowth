@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const Transporters = () => {
   const [transporters, setTransporters] = useState([]);
@@ -98,17 +99,28 @@ const Transporters = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const item = transporters.find(d => (d._id || d.id) === id);
+    const label = item?.transporter_name || 'this transporter';
+    const result = await confirmDeleteDialog({
+      title: 'Delete Transporter?',
+      text: `Are you sure you want to delete "${label}"? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('dynamic/transporterss', id);
+        showSuccessToast(`Transporter "${label}" deleted successfully.`, 'Transporter Deleted');
         loadData();
       } catch (error) {
-        alert('Failed to delete');
+        showErrorToast(error?.response?.data?.message || 'Failed to delete transporter.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.transporter_name?.trim()) {
+      showWarningToast('Please enter the transporter name.', 'Validation Required');
+      return;
+    }
     try {
       const payload = {
         ...formData,
@@ -118,13 +130,15 @@ const Transporters = () => {
       };
       if (isEditing) {
         await updateItem('dynamic/transporterss', editId, payload);
+        showSuccessToast(`Transporter "${formData.transporter_name}" updated successfully!`, 'Transporter Updated');
       } else {
         await createItem('dynamic/transporterss', payload);
+        showSuccessToast(`Transporter "${formData.transporter_name}" added successfully!`, 'Transporter Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
-      alert('Failed to save');
+      showErrorToast(error?.response?.data?.message || 'Failed to save transporter.', 'Save Error');
     }
   };
 

@@ -445,7 +445,12 @@ const SummaryReport = () => {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-gray-600">
-                <thead className="bg-[#1e293b] text-white text-xs uppercase font-semibold">
+                <thead 
+                  className="text-white text-xs uppercase font-semibold"
+                  style={{
+                    background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+                  }}
+                >
                   <tr>
                     <th className="px-4 py-3.5 w-12 text-center">#</th>
                     <th className="px-4 py-3.5">Category</th>
@@ -666,7 +671,12 @@ const SummaryReport = () => {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-gray-600">
-                <thead className="bg-[#1e293b] text-white text-xs uppercase font-semibold">
+                <thead 
+                  className="text-white text-xs uppercase font-semibold"
+                  style={{
+                    background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+                  }}
+                >
                   <tr>
                     <th className="px-4 py-3.5 w-12 text-center">#</th>
                     <th className="px-4 py-3.5">Month</th>

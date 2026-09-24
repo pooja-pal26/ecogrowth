@@ -184,7 +184,7 @@ const ServicesProducts = () => {
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
       {/* Header & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
             <Layers className="text-blue-600" size={26} />
@@ -198,27 +198,32 @@ const ServicesProducts = () => {
             <span className="text-gray-700">Services & Products</span>
           </nav>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Panel */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Header */}
-        <div className="bg-[#24292e] text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div 
+          className="text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
           <div>
             <h2 className="text-lg font-semibold tracking-wide">Services/Products List</h2>
-            <p className="text-xs text-gray-300 mt-0.5">Manage billable services, products, HSN/SAC codes and tax rates</p>
+            <p className="text-xs text-white/80 mt-0.5">Manage billable services, products, HSN/SAC codes and tax rates</p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={loadData}
               title="Refresh List"
-              className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-lg text-sm transition-colors flex items-center justify-center"
+              className="bg-white/15 hover:bg-white/25 text-white border border-white/20 p-2 rounded-lg text-sm transition-colors flex items-center justify-center backdrop-blur-xs"
             >
               <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             </button>
             <button
               onClick={handleOpenAdd}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm flex items-center gap-2"
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-2 shadow-sm active:scale-95 cursor-pointer"
             >
               <Plus size={18} />
               Add Service/Product
@@ -405,14 +410,19 @@ const ServicesProducts = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
             {/* Modal Header */}
-            <div className="bg-[#24292e] text-white px-6 py-4 flex justify-between items-center">
+            <div 
+              className="text-white px-6 py-4 flex justify-between items-center shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <h3 className="font-semibold text-lg flex items-center gap-2">
-                <Layers size={20} className="text-emerald-400" />
+                <Layers size={20} className="text-teal-200" />
                 {isEditing ? 'Edit Service/Product' : 'Add Service/Product'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-gray-300 hover:text-white transition-colors p-1"
+                className="text-white/80 hover:text-white transition-colors p-1"
               >
                 <X size={20} />
               </button>

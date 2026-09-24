@@ -358,14 +358,16 @@ const Sidebar = ({ isOpen }) => {
 
   return (
     <aside 
-      className={`text-white transition-all duration-300 flex flex-col ${
-        isOpen ? 'w-64' : 'w-0 overflow-hidden'
-      } lg:w-64 fixed lg:static h-screen z-40 shadow-2xl`}
+      className={`text-white transition-all duration-300 flex flex-col shrink-0 h-screen shadow-2xl ${
+        isOpen 
+          ? 'w-64 fixed inset-y-0 left-0 lg:static z-40' 
+          : 'w-0 overflow-hidden fixed inset-y-0 left-0 lg:static z-40'
+      }`}
       style={{
         background: 'linear-gradient(175deg, #10b981 0%, #0d9488 15%, #0284c7 45%, #6366f1 75%, #a855f7 100%)'
       }}
     >
-      <div className="h-16 flex items-center justify-center px-4 bg-white border-b border-gray-200 shrink-0">
+      <div className="h-16 flex items-center justify-center px-4 bg-white border-b border-r border-gray-200 shrink-0">
         <NavLink to="/" className="flex items-center justify-center">
           <img 
             src="/assets/echo_growth.png" 

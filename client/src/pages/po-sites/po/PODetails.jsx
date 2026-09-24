@@ -249,9 +249,14 @@ const PODetails = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden">
-            <div className="px-6 py-4 bg-slate-800 text-white flex justify-between items-center">
+            <div 
+              className="px-6 py-4 text-white flex justify-between items-center shadow-xs"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
               <h3 className="text-lg font-medium">PO Number: {selectedPoNumber} Site(s) List</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-300 hover:text-white transition-colors">
+              <button onClick={() => setIsModalOpen(false)} className="text-white/80 hover:text-white transition-colors">
                 <X size={20} />
               </button>
             </div>

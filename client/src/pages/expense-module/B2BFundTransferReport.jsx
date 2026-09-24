@@ -127,9 +127,9 @@ const B2BFundTransferReport = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-[1550px] mx-auto space-y-6 font-sans">
+    <div className="w-full max-w-[1550px] mx-auto font-sans">
       {/* Page Title & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <ArrowRightLeft className="text-sky-600" size={26} />
@@ -171,13 +171,13 @@ const B2BFundTransferReport = () => {
             <RefreshCw size={16} className={loading ? 'animate-spin text-sky-600' : ''} />
             Refresh
           </button>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       {/* KPI Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"> */}
         {/* Card 1: Total Fund Transfers */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Fund Transfers</p>
             <div className="flex items-baseline gap-1 mt-1 text-slate-900" title={formatINR(totalAmount)}>
@@ -190,10 +190,10 @@ const B2BFundTransferReport = () => {
           <div className="mt-2">
             <span className="text-[11px] sm:text-xs text-sky-600 font-semibold inline-block whitespace-nowrap">Total transfers sum</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 2: Total Transactions */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Transactions</p>
             <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1 truncate">{pagination.total}</h3>
@@ -202,10 +202,10 @@ const B2BFundTransferReport = () => {
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 flex-shrink-0 flex items-center justify-center text-blue-600">
             <Layers size={20} />
           </div>
-        </div>
+        </div> */}
 
         {/* Card 3: Banking Channels */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Banking Channels</p>
             <h3 className="text-lg sm:text-xl font-bold text-indigo-600 mt-1 truncate">Multi-Bank</h3>
@@ -214,10 +214,10 @@ const B2BFundTransferReport = () => {
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-indigo-50 flex-shrink-0 flex items-center justify-center text-indigo-600">
             <CreditCard size={20} />
           </div>
-        </div>
+        </div> */}
 
         {/* Card 4: Status */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Status</p>
             <h3 className="text-lg sm:text-xl font-bold text-emerald-600 mt-1 truncate">Live Synced</h3>
@@ -227,42 +227,47 @@ const B2BFundTransferReport = () => {
             <Building2 size={20} />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main Report Card */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Card Header matching theme */}
-        <div className="bg-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div 
+          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
           <div className="flex items-center gap-3">
-            <h2 className="text-lg font-bold tracking-wide flex items-center">
+            <h2 className="text-base sm:text-lg font-bold tracking-wide flex items-center">
               Fund Transfer Details
             </h2>
-            <span className="bg-sky-500/20 text-sky-300 border border-sky-500/30 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide">
+            <span className="bg-white/20 text-white border border-white/30 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide backdrop-blur-xs">
               Total: {formatINR(totalAmount)}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <button 
               type="button"
-              onClick={handleExportCSV}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+              onClick={() => navigate('/expense-module/create-new-expense')}
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold flex items-center gap-1.5 shadow-sm transition-all backdrop-blur-md active:scale-95 cursor-pointer"
             >
-              <Download size={14} />
-              Export CSV
+              <Plus size={15} />
+              Add Fund Transfer
             </button>
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-5">
           {/* Filters Bar */}
-          <form onSubmit={handleFilterSubmit} className="flex flex-wrap items-end gap-3.5 mb-6 p-4 bg-slate-50/70 rounded-2xl border border-slate-200/80">
+          <form onSubmit={handleFilterSubmit} className="flex flex-wrap items-end gap-3.5 mb-4 p-3 sm:p-4 bg-slate-50/70 rounded-2xl border border-slate-200/80">
             <div className="flex-1 min-w-[150px]">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">From Date</label>
               <input
                 type="date"
                 value={fromDate}
                 onChange={(e) => setFromDate(e.target.value)}
-                className="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs font-medium focus:ring-2 focus:ring-sky-500 outline-none"
+                className="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none"
               />
             </div>
             <div className="flex-1 min-w-[150px]">
@@ -271,13 +276,13 @@ const B2BFundTransferReport = () => {
                 type="date"
                 value={toDate}
                 onChange={(e) => setToDate(e.target.value)}
-                className="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs font-medium focus:ring-2 focus:ring-sky-500 outline-none"
+                className="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none"
               />
             </div>
             <div className="flex items-center gap-2 pt-1">
               <button
                 type="submit"
-                className="bg-sky-600 text-white px-5 py-2 rounded-xl hover:bg-sky-700 transition-colors text-xs font-bold shadow-sm cursor-pointer"
+                className="bg-teal-600 text-white px-5 py-2 rounded-xl hover:bg-teal-700 transition-colors text-xs font-bold shadow-sm cursor-pointer"
               >
                 Submit
               </button>
@@ -301,7 +306,7 @@ const B2BFundTransferReport = () => {
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="mx-2 border border-slate-300 rounded-lg p-1.5 text-xs bg-white focus:ring-1 focus:ring-sky-500 outline-none"
+                className="mx-2 border border-slate-300 rounded-lg p-1.5 text-xs bg-white focus:ring-1 focus:ring-teal-500 outline-none"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -309,18 +314,29 @@ const B2BFundTransferReport = () => {
               </select>
               <span>entries</span>
             </div>
-            <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setCurrentPage(1);
-                }}
-                placeholder="Search by company, staff, PO, site..."
-                className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium"
-              />
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={15} />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Search by company, staff, PO, site..."
+                  className="w-full pl-9 pr-3 py-2 text-xs bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 font-medium"
+                />
+              </div>
+              <button 
+                type="button"
+                onClick={handleExportCSV}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer whitespace-nowrap"
+                title="Export CSV"
+              >
+                <Download size={14} />
+                <span>Export CSV</span>
+              </button>
             </div>
           </div>
 
@@ -328,7 +344,7 @@ const B2BFundTransferReport = () => {
           <div className="overflow-x-auto rounded-2xl border border-slate-200 relative shadow-sm">
             {loading && (
               <div className="absolute inset-0 bg-white/70 backdrop-blur-xs flex items-center justify-center z-10">
-                <Loader2 className="animate-spin text-sky-600" size={32} />
+                <Loader2 className="animate-spin text-teal-600" size={32} />
               </div>
             )}
             <table className="min-w-[1000px] w-full border-collapse text-xs text-left text-slate-600">
@@ -357,14 +373,14 @@ const B2BFundTransferReport = () => {
                   data.map((row, index) => (
                     <tr
                       key={index}
-                      className={`hover:bg-sky-50/40 transition-colors ${
+                      className={`hover:bg-teal-50/30 transition-colors ${
                         index % 2 === 1 ? 'bg-slate-50/50' : 'bg-white'
                       }`}
                     >
                       <td className="px-4 py-3 text-slate-500">{(currentPage - 1) * pageSize + index + 1}</td>
                       <td className="px-4 py-3 font-bold text-slate-800 whitespace-nowrap">{row.company}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-slate-600">{row.transfer_date}</td>
-                      <td className="px-4 py-3 text-sky-700 font-bold whitespace-nowrap">
+                      <td className="px-4 py-3 text-slate-800 font-bold whitespace-nowrap">
                         {row.transferred_to}
                       </td>
                       <td className="px-4 py-3 text-emerald-700 font-black whitespace-nowrap">
@@ -411,7 +427,7 @@ const B2BFundTransferReport = () => {
                       onClick={() => setCurrentPage(p)}
                       className={`px-3 py-1.5 border rounded-lg cursor-pointer ${
                         currentPage === p
-                          ? 'border-sky-600 bg-sky-50 text-sky-700 font-black'
+                          ? 'border-teal-600 bg-teal-50 text-teal-700 font-black'
                           : 'border-slate-300 hover:bg-slate-50 text-slate-700'
                       }`}
                     >

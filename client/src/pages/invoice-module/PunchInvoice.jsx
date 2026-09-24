@@ -295,17 +295,22 @@ const PunchInvoice = () => {
       {/* Main Form Panel matching PHP punch-invoice.phtml panel-primary */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Header */}
-        <div className="bg-[#24292e] text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div 
+          className="text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
           <div>
             <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
-              <Receipt className="text-blue-400" size={22} />
+              <Receipt className="text-teal-200" size={22} />
               Invoice Punching Form
             </h2>
-            <p className="text-xs text-gray-400 mt-0.5">Punch customer billed invoices and corresponding vendor costs</p>
+            <p className="text-xs text-white/80 mt-0.5">Punch customer billed invoices and corresponding vendor costs</p>
           </div>
           <Link
             to="/invoice-module/punched-invoices"
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm transition-colors self-start sm:self-auto cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg shadow-sm transition-all backdrop-blur-md active:scale-95 self-start sm:self-auto cursor-pointer"
           >
             <FileSpreadsheet size={15} />
             View Invoice List
@@ -328,10 +333,10 @@ const PunchInvoice = () => {
 
           {/* Core Invoice Section */}
           <div className="space-y-4">
-            <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+            {/* <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
               <Building2 size={16} className="text-blue-600" />
               Primary Site & Invoice Details
-            </h3>
+            </h3> */}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {/* State For */}
@@ -533,7 +538,7 @@ const PunchInvoice = () => {
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
                 <Building size={16} className="text-indigo-600" />
-                Vendor Invoice Details (Optional)
+                Vendor Invoice Details
               </h3>
               <span className="text-xs text-gray-400 font-medium">For profit margin & cost tracking</span>
             </div>

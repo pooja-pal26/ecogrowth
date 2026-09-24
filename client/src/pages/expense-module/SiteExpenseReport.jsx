@@ -133,9 +133,9 @@ const SiteExpenseReport = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-[1550px] mx-auto space-y-6 font-sans">
+    <div className="w-full max-w-[1550px] mx-auto font-sans">
       {/* Page Title & Breadcrumbs */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Building2 className="text-teal-600" size={26} />
@@ -178,12 +178,12 @@ const SiteExpenseReport = () => {
             Refresh
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* KPI Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"> */}
         {/* Card 1: Total Site Expenses */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex flex-col justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Total Site Expenses</p>
             <div className="flex items-baseline gap-1 mt-1 text-slate-900" title={formatINR(totalAmount)}>
@@ -196,10 +196,10 @@ const SiteExpenseReport = () => {
           <div className="mt-2">
             <span className="text-[11px] sm:text-xs text-teal-600 font-semibold inline-block whitespace-nowrap">Accumulated transfers</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Card 2: Allocated Site Clusters */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Allocated Site Clusters</p>
             <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1 truncate">{pagination.total}</h3>
@@ -208,10 +208,10 @@ const SiteExpenseReport = () => {
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-50 flex-shrink-0 flex items-center justify-center text-blue-600">
             <Layers size={20} />
           </div>
-        </div>
+        </div> */}
 
         {/* Card 3: Current Session */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Current Session</p>
             <h3 className="text-lg sm:text-xl font-bold text-slate-900 mt-1 truncate">{session || 'All Years'}</h3>
@@ -220,10 +220,10 @@ const SiteExpenseReport = () => {
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-indigo-50 flex-shrink-0 flex items-center justify-center text-indigo-600">
             <Calendar size={20} />
           </div>
-        </div>
+        </div> */}
 
         {/* Card 4: Quarter Period */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
+        {/* <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-sm flex items-center justify-between min-w-0 h-full hover:shadow-md transition-all">
           <div className="min-w-0 flex-1 pr-2">
             <p className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-tight whitespace-nowrap">Quarter Period</p>
             <h3 className="text-lg sm:text-xl font-bold text-amber-600 mt-1 truncate">
@@ -234,18 +234,23 @@ const SiteExpenseReport = () => {
           <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-50 flex-shrink-0 flex items-center justify-center text-amber-600">
             <Building2 size={20} />
           </div>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       {/* Main Report Card */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Card Header matching theme */}
-        <div className="bg-slate-900 text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div 
+          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-xs"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-bold tracking-wide flex items-center">
               Site Expense Details
             </h2>
-            <span className="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide">
+            <span className="bg-white/20 text-white border border-white/30 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide backdrop-blur-xs">
               Total: {formatINR(totalAmount)}
             </span>
           </div>
@@ -253,7 +258,7 @@ const SiteExpenseReport = () => {
             <button 
               type="button"
               onClick={handleExportCSV}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all backdrop-blur-md active:scale-95 cursor-pointer"
             >
               <Download size={14} />
               Export CSV
@@ -261,7 +266,7 @@ const SiteExpenseReport = () => {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-5">
           {/* Filters Bar */}
           <form onSubmit={handleFilterSubmit} className="flex flex-wrap items-end gap-3.5 mb-6 p-4 bg-slate-50/70 rounded-2xl border border-slate-200/80">
             <div className="flex-1 min-w-[140px]">

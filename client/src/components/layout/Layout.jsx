@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans text-gray-800">
       {/* Mobile overlay */}
-      {isSidebarOpen && window.innerWidth < 1024 && (
+      {isSidebarOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-30 lg:hidden" 
           onClick={() => setIsSidebarOpen(false)}
@@ -22,7 +22,7 @@ const Layout = ({ children }) => {
       
       <Sidebar isOpen={isSidebarOpen} />
       
-      <div className="flex flex-col flex-1 w-full overflow-hidden">
+      <div className="flex flex-col flex-1 w-full min-w-0 overflow-hidden">
         <Topbar toggleSidebar={toggleSidebar} />
         
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 flex flex-col">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem } from '../../services/masterDataApi';
 import MasterDataTable from '../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../components/master-data/MasterDataForm';
+import { showSuccessToast, showErrorToast, showWarningToast, confirmDeleteDialog } from '../../utils/toast';
 
 const BankNameList = () => {
   const [data, setData] = useState([]);
@@ -81,27 +82,40 @@ const BankNameList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this record?")) {
+    const item = data.find(d => (d._id || d.id) === id);
+    const label = item?.bank_name || 'this bank';
+    const result = await confirmDeleteDialog({
+      title: 'Delete Bank?',
+      text: `Are you sure you want to delete "${label}"? This action cannot be undone.`
+    });
+    if (result.isConfirmed) {
       try {
         await deleteItem('dynamic/banknamelists', id);
+        showSuccessToast(`Bank "${label}" deleted successfully.`, 'Bank Deleted');
         loadData();
       } catch (error) {
-        alert('Failed to delete');
+        showErrorToast(error.response?.data?.message || 'Failed to delete bank.', 'Delete Error');
       }
     }
   };
 
   const handleSubmit = async () => {
+    if (!formData.bank_name || !formData.bank_name.trim()) {
+      showWarningToast('Please enter the bank name.', 'Required Field');
+      return;
+    }
     try {
       if (isEditing) {
         await updateItem('dynamic/banknamelists', editId, formData);
+        showSuccessToast(`Bank "${formData.bank_name}" updated successfully!`, 'Bank Updated');
       } else {
         await createItem('dynamic/banknamelists', formData);
+        showSuccessToast(`Bank "${formData.bank_name}" added successfully!`, 'Bank Created');
       }
       setIsModalOpen(false);
       loadData();
     } catch (error) {
-      alert('Failed to save');
+      showErrorToast(error.response?.data?.message || 'Failed to save bank information.', 'Save Error');
     }
   };
 

@@ -373,36 +373,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/60 p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1550px] mx-auto">
-      {/* Header & Tagline (From PHP Page-Header & Tagline) */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-gray-200 pb-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
-            Dashboard
-          </h1>
-          <p className="text-xs sm:text-sm text-gray-500 italic mt-1 font-medium">
-            "Empowering Humanity by Addressing the toughest challenges of Energy Delivery"
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={fetchDashboardData}
-            className="flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors cursor-pointer"
-          >
-            <RefreshCw size={15} />
-            Refresh
-          </button>
-          <button
-            onClick={() => navigate('/expense-module/invoice-report')}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-colors cursor-pointer"
-          >
-            <FileSpreadsheet size={16} />
-            Invoice's Report
-          </button>
-        </div>
-      </div>
-
+    <div className="space-y-5 max-w-[1550px] mx-auto">
       {/* Filter Row (From PHP home/index.phtml line 512) */}
       <form
         onSubmit={handleFilterSubmit}
@@ -1105,22 +1076,22 @@ const Dashboard = () => {
           {/* Action Link at Bottom matching PHP */}
           <div className="p-3 border-t border-gray-100 text-center bg-gray-50/50">
             {recentTabLeft === 'po' && (
-              <Link to="/po-sites/po-status" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
+              <Link to="/po-sites/po/po-details" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
                 See all PO Details <ArrowRight size={13} />
               </Link>
             )}
             {recentTabLeft === 'po_sites' && (
-              <Link to="/po-sites/allocated-sites" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
+              <Link to="/po-sites/sites/allocated-site-list" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
                 See all PO Site Details <ArrowRight size={13} />
               </Link>
             )}
             {recentTabLeft === 'stock_in' && (
-              <Link to="/master-data/inventory" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
+              <Link to="/material-stock" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
                 See all Stocks In Details <ArrowRight size={13} />
               </Link>
             )}
             {recentTabLeft === 'stock_out' && (
-              <Link to="/master-data/deployments" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
+              <Link to="/material-stock" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
                 See all Stocks Out Details <ArrowRight size={13} />
               </Link>
             )}
@@ -1233,12 +1204,12 @@ const Dashboard = () => {
           {/* Action Link at Bottom matching PHP */}
           <div className="p-3 border-t border-gray-100 text-center bg-gray-50/50">
             {recentTabRight === 'officeExpense' && (
-              <Link to="/expense-module/office-expense" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
+              <Link to="/expense-module/office-expense-report" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
                 See all Office expense <ArrowRight size={13} />
               </Link>
             )}
             {recentTabRight === 'siteExpense' && (
-              <Link to="/expense-module/site-expense" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
+              <Link to="/expense-module/site-expense-report" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
                 See all Site Expense Details <ArrowRight size={13} />
               </Link>
             )}

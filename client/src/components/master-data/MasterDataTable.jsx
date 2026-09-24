@@ -28,7 +28,7 @@ const MasterDataTable = ({
   const paginatedData = filteredData.slice((currentPage - 1) * entries, currentPage * entries);
 
   return (
-    <div className="py-1 px-1 sm:px-2 w-full max-w-7xl mx-auto overflow-hidden">
+    <div className="w-full overflow-hidden">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div 
           className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex justify-between items-center shadow-xs"
