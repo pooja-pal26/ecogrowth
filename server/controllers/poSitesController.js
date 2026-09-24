@@ -834,6 +834,38 @@ exports.getPODetails = async (req, res) => {
 };
 
 /**
+ * Delete PO Details (soft delete PO and associated sites)
+ */
+exports.deletePODetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const poTable = jsonDb.getTable('tbl_po_details') || [];
+    const target = poTable.find(p => String(p.id || p._id) === String(id) || String(p.po_no) === String(id));
+    if (!target) {
+      return res.status(404).json({ success: false, message: 'PO not found' });
+    }
+    
+    // Soft delete PO record
+    jsonDb.update('tbl_po_details', target._id || target.id, { is_deleted: '1' });
+
+    // Also soft delete sites under this PO
+    if (target.po_no) {
+      const allSites = jsonDb.getTable('tbl_po_sites') || [];
+      allSites.forEach(s => {
+        if (String(s.po_no).trim() === String(target.po_no).trim()) {
+          jsonDb.update('tbl_po_sites', s._id || s.id, { is_deleted: '1' });
+        }
+      });
+    }
+
+    res.json({ success: true, message: 'PO and associated sites deleted successfully' });
+  } catch (e) {
+    console.error('Error deleting PO:', e);
+    res.status(500).json({ success: false, message: e.message });
+  }
+};
+
+/**
  * Get Site List by PO Number with Expenses & Allocations (matches PHP getSiteListByPoNumberAction)
  */
 exports.getSitesByPONumber = async (req, res) => {

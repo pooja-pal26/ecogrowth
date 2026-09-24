@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import MasterDataForm from '../../../components/master-data/MasterDataForm';
 import { showSuccessToast, showErrorToast, confirmDeleteDialog } from '../../../utils/toast';
@@ -146,6 +147,14 @@ const POStatus = () => {
         onAdd={handleAdd}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        extraButtons={
+          <Link
+            to="/po-sites/po/po-details"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 border border-emerald-500 rounded-lg shadow-sm transition-all active:scale-95 cursor-pointer"
+          >
+            PO Details
+          </Link>
+        }
       />
       <MasterDataForm
         isOpen={isModalOpen}

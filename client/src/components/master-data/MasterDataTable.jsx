@@ -10,7 +10,8 @@ const MasterDataTable = ({
   onDelete, 
   onExport,
   addButtonText,
-  renderActions
+  renderActions,
+  extraButtons
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [entries, setEntries] = useState(10);
@@ -39,7 +40,8 @@ const MasterDataTable = ({
           <h2 className="text-base sm:text-lg font-bold tracking-tight">
             {title.endsWith('List') ? title : `${title} List`}
           </h2>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            {extraButtons}
             {onExport && (
               <button 
                 onClick={onExport}

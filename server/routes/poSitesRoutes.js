@@ -24,6 +24,7 @@ router.delete('/incidents/:id', controller.deleteIncident);
 
 // PO Management Routes
 router.get('/po-details', controller.getPODetails);
+router.delete('/po-details/:id', controller.deletePODetails);
 router.post('/po-sites-list', controller.getSitesByPONumber);
 router.get('/po-sites-list', controller.getSitesByPONumber);
 router.get('/init-data', controller.getPOInitData);
