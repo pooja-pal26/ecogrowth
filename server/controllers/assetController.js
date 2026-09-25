@@ -557,6 +557,59 @@ exports.getAssignments = async (req, res) => {
 
 exports.assignAsset = async (req, res) => {
   try {
+    const rawAssets = jsonDb.getTable('assets') || [];
+
+    // Support batch assignment matching PHP format (arrays of asset_id, assigned_to) or array of objects
+    if (Array.isArray(req.body.assignments) || Array.isArray(req.body) || Array.isArray(req.body.asset_id)) {
+      const items = Array.isArray(req.body.assignments)
+        ? req.body.assignments
+        : Array.isArray(req.body)
+          ? req.body
+          : req.body.asset_id.map((aId, idx) => ({
+              asset_id: aId,
+              assigned_to: Array.isArray(req.body.assigned_to) ? req.body.assigned_to[idx] : req.body.assigned_to,
+              assign_date: req.body.assign_date
+            }));
+
+      const results = [];
+      for (const item of items) {
+        const chosenAssetId = String(item.asset_id || item.assetId || '');
+        const chosenUserId = String(item.assigned_to || item.assignedTo || item.employee_id || '');
+        const chosenDate = item.assign_date || new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+        if (!chosenAssetId || !chosenUserId) continue;
+
+        const asset = rawAssets.find(a => String(a.id || a._id) === chosenAssetId);
+        if (!asset) continue;
+
+        const newAssignment = jsonDb.insert('tbl_asset_assignments', {
+          asset_id: chosenAssetId,
+          assigned_to: chosenUserId,
+          assigned_by: String(req.user?.id || '1'),
+          assign_date: chosenDate.includes(':') ? chosenDate : `${chosenDate} 10:00:00`,
+          return_date: null,
+          condition_on_assign: item.condition_on_assign || asset.condition || 'Good',
+          condition_on_return: null,
+          notes: item.notes ? item.notes.trim() : 'Assigned to employee',
+          status: 'Active'
+        });
+
+        jsonDb.update('assets', chosenAssetId, {
+          status: 'Assigned',
+          assigned_to: chosenUserId,
+          condition: item.condition_on_assign || asset.condition || 'Good'
+        });
+
+        results.push(newAssignment);
+      }
+
+      return res.status(201).json({
+        success: true,
+        message: 'Assets assigned successfully',
+        data: results
+      });
+    }
+
     const {
       asset_id,
       assetId,
@@ -579,7 +632,6 @@ exports.assignAsset = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Please select an employee' });
     }
 
-    const rawAssets = jsonDb.getTable('assets') || [];
     const asset = rawAssets.find(a => String(a.id || a._id) === chosenAssetId);
     if (!asset) {
       return res.status(404).json({ success: false, message: 'Asset not found' });
@@ -625,6 +677,7 @@ exports.returnAsset = async (req, res) => {
     const {
       assignment_id,
       assignmentId,
+      id,
       asset_id,
       assetId,
       return_date,
@@ -637,10 +690,11 @@ exports.returnAsset = async (req, res) => {
     const rawAssignments = jsonDb.getTable('tbl_asset_assignments') || [];
     let asg = null;
 
-    if (assignment_id || assignmentId) {
-      const aId = String(assignment_id || assignmentId);
-      asg = rawAssignments.find(a => String(a.id || a._id) === aId);
-    } else if (asset_id || assetId) {
+    const targetId = String(assignment_id || assignmentId || id || req.params.id || '');
+    if (targetId) {
+      asg = rawAssignments.find(a => String(a.id || a._id) === targetId);
+    }
+    if (!asg && (asset_id || assetId)) {
       const astId = String(asset_id || assetId);
       asg = rawAssignments.find(a => String(a.asset_id) === astId && a.status === 'Active');
     }

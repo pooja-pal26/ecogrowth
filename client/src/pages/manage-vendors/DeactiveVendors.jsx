@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Building2, Search, Trash2, CheckCircle2, 
-  AlertCircle, X, ChevronLeft, ChevronRight, 
-  UserCheck, UserX, Building
+  Building2, Search, Trash2, LogIn, 
+  ChevronLeft, ChevronRight 
 } from 'lucide-react';
+import Swal from 'sweetalert2';
 import { 
   fetchVendors, 
   activateVendor, 
@@ -14,26 +14,11 @@ import {
 const DeactiveVendors = () => {
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notification, setNotification] = useState({ type: '', message: '' });
 
   // Search & Pagination
   const [searchQuery, setSearchQuery] = useState('');
+  const [pageSize, setPageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 10;
-
-  // Activate Confirmation Modal (matching PHP activateVendorProfile)
-  const [activateConfirm, setActivateConfirm] = useState({
-    isOpen: false,
-    vendor: null,
-    loading: false
-  });
-
-  // Delete Confirmation Modal (matching PHP deleteVendorProfile)
-  const [deleteConfirm, setDeleteConfirm] = useState({
-    isOpen: false,
-    vendor: null,
-    loading: false
-  });
 
   const loadData = async () => {
     try {
@@ -42,7 +27,7 @@ const DeactiveVendors = () => {
       setVendors(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error loading deactive vendors:', err);
-      showNotification('error', 'Failed to load deactivated vendor records.');
+      Swal.fire('Error !', 'Failed to load deactivated vendor records.', 'error');
     } finally {
       setLoading(false);
     }
@@ -51,20 +36,6 @@ const DeactiveVendors = () => {
   useEffect(() => {
     loadData();
   }, []);
-
-  const showNotification = (type, message) => {
-    setNotification({ type, message });
-    setTimeout(() => {
-      setNotification({ type: '', message: '' });
-    }, 4000);
-  };
-
-  // Metrics
-  const metrics = useMemo(() => {
-    const totalDeactive = vendors.length;
-    const withGst = vendors.filter(v => Boolean(v.gst_number)).length;
-    return { totalDeactive, withGst };
-  }, [vendors]);
 
   // Filtered List
   const filteredVendors = useMemo(() => {
@@ -88,287 +59,210 @@ const DeactiveVendors = () => {
   const paginatedVendors = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
     return filteredVendors.slice(start, start + pageSize);
-  }, [filteredVendors, currentPage]);
+  }, [filteredVendors, currentPage, pageSize]);
 
-  // Activate Handler
-  const handleConfirmActivate = async () => {
-    if (!activateConfirm.vendor) return;
-    try {
-      setActivateConfirm(prev => ({ ...prev, loading: true }));
-      const res = await activateVendor(activateConfirm.vendor.id || activateConfirm.vendor._id);
-      showNotification('success', res.message || 'Vendor Profile has been activated successfully.');
-      setActivateConfirm({ isOpen: false, vendor: null, loading: false });
-      loadData();
-    } catch (err) {
-      showNotification('error', err.message || 'Failed to activate vendor');
-      setActivateConfirm({ isOpen: false, vendor: null, loading: false });
+  // Activate Profile matching PHP activateVendorProfile
+  const handleActivate = async (vendor) => {
+    const result = await Swal.fire({
+      title: 'Are you sure!',
+      text: 'Do you want to activate clicked vendor profile?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#16a34a',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, activate',
+      cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await activateVendor(vendor.id || vendor._id);
+        Swal.fire({
+          title: 'Activated',
+          text: res.message || 'Vendor Profile has been activated successfully.',
+          icon: 'success'
+        });
+        loadData();
+      } catch (err) {
+        Swal.fire('Something Went Wrong!', err.message || 'Failed to activate vendor', 'error');
+      }
     }
   };
 
-  // Delete Handler
-  const handleConfirmDelete = async () => {
-    if (!deleteConfirm.vendor) return;
-    try {
-      setDeleteConfirm(prev => ({ ...prev, loading: true }));
-      const res = await deleteVendor(deleteConfirm.vendor.id || deleteConfirm.vendor._id);
-      showNotification('success', res.message || 'Vendor Profile has been deleted successfully.');
-      setDeleteConfirm({ isOpen: false, vendor: null, loading: false });
-      loadData();
-    } catch (err) {
-      showNotification('error', err.message || 'Failed to delete vendor');
-      setDeleteConfirm({ isOpen: false, vendor: null, loading: false });
+  // Delete Profile matching PHP deleteVendorProfile
+  const handleDelete = async (vendor) => {
+    const result = await Swal.fire({
+      title: 'Are you sure!',
+      text: 'Do you want to delete clicked vendor profile?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await deleteVendor(vendor.id || vendor._id);
+        Swal.fire({
+          title: 'Deleted',
+          text: res.message || 'Vendor Profile has been deleted successfully.',
+          icon: 'success'
+        });
+        loadData();
+      } catch (err) {
+        Swal.fire('Something Went Wrong!', err.message || 'Failed to delete vendor', 'error');
+      }
     }
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto space-y-6">
-      {/* Header matching PHP deactivated-vendor-list.phtml */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-gray-200 gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <UserX className="text-red-600" size={26} />
-            <span>Deactivated Vendor List</span>
-          </h1>
-          <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
-            <span>Dashboard</span>
-            <span>/</span>
-            <span>Manage Vendors</span>
-            <span>/</span>
-            <span className="text-gray-700">Deactive Vendors</span>
-          </nav>
-        </div>
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
+      {/* Header Banner matching PHP panel-heading (Deactivated Vendor List) */}
+      <div 
+        className="rounded-t-lg px-4 py-2.5 min-h-[44px] flex items-center justify-between shadow-sm"
+        style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)' }}
+      >
+        <h1 className="text-base font-bold tracking-tight text-white flex items-center gap-2">
+          <span>Deactivated Vendor List</span>
+        </h1>
         <Link
           to="/manage-vendors/active-vendors"
-          className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors"
         >
-          <Building2 size={18} />
+          <Building2 size={14} />
           <span>View All Vendors</span>
         </Link>
       </div>
 
-      {/* Notifications */}
-      {notification.message && (
-        <div className={`p-4 rounded-xl text-sm font-medium flex items-center space-x-3 border ${
-          notification.type === 'success'
-            ? 'bg-green-50 text-green-800 border-green-200'
-            : 'bg-red-50 text-red-800 border-red-200'
-        }`}>
-          {notification.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
-          <span>{notification.message}</span>
-        </div>
-      )}
+      {/* Main Table Card with clean white background */}
+      <div className="bg-white rounded-b-lg border-x border-b border-gray-200 shadow-sm overflow-hidden p-3 sm:p-4 space-y-3">
+        {/* Top Controls: Show entries & Search */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <span className="text-xs text-gray-600 font-medium">Show</span>
+            <select
+              value={pageSize}
+              onChange={(e) => { setPageSize(Number(e.target.value)); setCurrentPage(1); }}
+              className="border border-gray-300 rounded px-2 py-1 text-xs bg-white focus:outline-none focus:border-teal-500"
+            >
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+            <span className="text-xs text-gray-600 font-medium">entries</span>
+          </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xs flex items-center space-x-4">
-          <div className="p-3 bg-red-50 text-red-600 rounded-xl">
-            <UserX size={22} />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Deactivated Vendors</p>
-            <h3 className="text-2xl font-bold text-red-700 mt-0.5">{metrics.totalDeactive}</h3>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xs flex items-center space-x-4">
-          <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-            <Building size={22} />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">GST Records on File</p>
-            <h3 className="text-2xl font-bold text-amber-700 mt-0.5">{metrics.withGst}</h3>
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
+              placeholder="Search..."
+              className="w-full pl-8 pr-3 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:border-teal-500"
+            />
           </div>
         </div>
-      </div>
 
-      {/* Search Bar */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
-        <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-            placeholder="Search vendor name, proprietor, contact person, phone..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-          />
-        </div>
-      </div>
-
-      {/* Main Table matching PHP deactivated-vendor-list.phtml */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {/* Data Table matching PHP deactivatedVendorDetails table */}
         {loading ? (
-          <div className="p-12 text-center text-gray-500">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-600 border-r-transparent mb-3" />
-            <p className="text-sm font-medium">Loading deactivated vendors...</p>
+          <div className="py-12 text-center text-gray-500">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-teal-600 border-r-transparent mb-2" />
+            <p className="text-xs font-medium">Loading Deactivated Vendors...</p>
           </div>
         ) : paginatedVendors.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">
-            <UserX className="mx-auto text-gray-300 mb-3" size={48} />
-            <p className="text-base font-semibold text-gray-700">No Deactivated Vendors Found !</p>
-            <p className="text-sm text-gray-500 mt-1">
-              {searchQuery ? 'No vendors matched your search criteria.' : 'There are currently no deactivated vendors.'}
-            </p>
+          <div className="py-10 text-center text-gray-500">
+            <Building2 className="mx-auto text-gray-300 mb-2" size={40} />
+            <p className="text-sm font-semibold text-gray-700">No Deactivated Vendor Found !</p>
           </div>
         ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-sm">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200 text-gray-700 font-semibold text-xs uppercase tracking-wider">
-                    <th className="py-3.5 px-4 w-12 text-center">#</th>
-                    <th className="py-3.5 px-4">Vendor Name</th>
-                    <th className="py-3.5 px-4">Proprietor/Director Name</th>
-                    <th className="py-3.5 px-4">Contact Person</th>
-                    <th className="py-3.5 px-4">Contact Number</th>
-                    <th className="py-3.5 px-4 text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 text-gray-700">
-                  {paginatedVendors.map((vendor, idx) => (
-                    <tr key={vendor.id} className="hover:bg-gray-50/75 transition-colors">
-                      <td className="py-3 px-4 text-center font-medium text-gray-400">
-                        {(currentPage - 1) * pageSize + idx + 1}.
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-gray-900">
-                        {vendor.vendor_name}
-                      </td>
-                      <td className="py-3 px-4 text-gray-800">
-                        {vendor.prop_director_name || '-'}
-                      </td>
-                      <td className="py-3 px-4 text-gray-800">
-                        {vendor.contact_person || '-'}
-                      </td>
-                      <td className="py-3 px-4 font-mono text-gray-700 text-xs">
-                        {vendor.contact_number || '-'}
-                      </td>
-                      <td className="py-3 px-4 text-center space-x-2 whitespace-nowrap">
-                        {/* Activate Profile matching PHP activateVendorProfile */}
+          <div className="overflow-x-auto border border-gray-200 rounded">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-gray-100 text-gray-700 font-semibold border-b border-gray-200">
+                  <th className="py-2.5 px-3 w-10 text-center whitespace-nowrap">#</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Vendor Name</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Proprietor/Director Name</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Contact Person</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Contact Number</th>
+                  <th className="py-2.5 px-3 text-center whitespace-nowrap">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 text-gray-700">
+                {paginatedVendors.map((vendor, idx) => (
+                  <tr key={vendor.id || idx} className="hover:bg-blue-50/40 transition-colors">
+                    <td className="py-2 px-3 text-center font-medium text-gray-500 whitespace-nowrap">
+                      {(currentPage - 1) * pageSize + idx + 1}
+                    </td>
+                    <td className="py-2 px-3 font-semibold text-gray-900 whitespace-nowrap">
+                      {vendor.vendor_name}
+                    </td>
+                    <td className="py-2 px-3 whitespace-nowrap">
+                      {vendor.prop_director_name || '-'}
+                    </td>
+                    <td className="py-2 px-3 whitespace-nowrap">
+                      {vendor.contact_person || '-'}
+                    </td>
+                    <td className="py-2 px-3 whitespace-nowrap">
+                      {vendor.contact_number || '-'}
+                    </td>
+                    <td className="py-2 px-3 text-center whitespace-nowrap">
+                      <div className="flex items-center justify-center space-x-2.5">
+                        {/* Activate Profile matching PHP <i class="fa fa-sign-in" style="color: #1DAA29;"> */}
                         <button
-                          onClick={() => setActivateConfirm({ isOpen: true, vendor, loading: false })}
+                          onClick={() => handleActivate(vendor)}
                           title="Activate Profile"
-                          className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-md transition-colors"
+                          className="text-[#1DAA29] hover:opacity-80 transition-opacity p-0.5"
                         >
-                          <UserCheck size={16} />
+                          <LogIn size={17} />
                         </button>
 
-                        {/* Delete Profile matching PHP deleteVendorProfile */}
+                        {/* Delete Profile matching PHP <i class="fa fa-trash" style="color: red;"> */}
                         <button
-                          onClick={() => setDeleteConfirm({ isOpen: true, vendor, loading: false })}
+                          onClick={() => handleDelete(vendor)}
                           title="Delete Profile"
-                          className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors"
+                          className="text-red-600 hover:opacity-80 transition-opacity p-0.5"
                         >
-                          <Trash2 size={16} />
+                          <Trash2 size={17} />
                         </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination Controls */}
-            <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-3.5 border-t border-gray-200 bg-gray-50/50 text-xs text-gray-600 gap-3">
-              <div>
-                Showing <strong className="text-gray-800">{(currentPage - 1) * pageSize + 1}</strong> to{' '}
-                <strong className="text-gray-800">
-                  {Math.min(currentPage * pageSize, filteredVendors.length)}
-                </strong>{' '}
-                of <strong className="text-gray-800">{filteredVendors.length}</strong> records
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  className="px-3 py-1.5 border border-gray-300 rounded-lg disabled:opacity-40 hover:bg-white transition-colors"
-                >
-                  <ChevronLeft size={14} />
-                </button>
-                <span className="font-semibold text-gray-700">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                  className="px-3 py-1.5 border border-gray-300 rounded-lg disabled:opacity-40 hover:bg-white transition-colors"
-                >
-                  <ChevronRight size={14} />
-                </button>
-              </div>
-            </div>
-          </>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
+
+        {/* Pagination Controls */}
+        <div className="flex flex-col sm:flex-row items-center justify-between pt-2 gap-2 text-xs text-gray-600">
+          <div>
+            Showing {(currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, filteredVendors.length)} of {filteredVendors.length} entries
+          </div>
+          <div className="flex items-center space-x-1">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              className="px-2.5 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50 transition-colors"
+            >
+              Previous
+            </button>
+            <span className="px-3 py-1 font-semibold text-gray-700 bg-gray-100 rounded border border-gray-200">
+              {currentPage} / {totalPages}
+            </span>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              className="px-2.5 py-1 border border-gray-300 rounded disabled:opacity-40 hover:bg-gray-50 transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
-
-      {/* Activate Confirmation Modal matching PHP activateVendorProfile */}
-      {activateConfirm.isOpen && activateConfirm.vendor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-gray-100 text-center space-y-4">
-            <div className="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
-              <UserCheck size={24} />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-gray-800">Are you sure!</h3>
-              <p className="text-sm text-gray-600 mt-1">
-                Do you want to activate clicked vendor profile?
-              </p>
-              <p className="text-xs font-semibold text-gray-700 mt-1">({activateConfirm.vendor.vendor_name})</p>
-            </div>
-            <div className="flex justify-center space-x-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setActivateConfirm({ isOpen: false, vendor: null, loading: false })}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={activateConfirm.loading}
-                onClick={handleConfirmActivate}
-                className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
-              >
-                {activateConfirm.loading ? 'Activating...' : 'Yes, activate'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal matching PHP deleteVendorProfile */}
-      {deleteConfirm.isOpen && deleteConfirm.vendor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-gray-100 text-center space-y-4">
-            <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto">
-              <Trash2 size={24} />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-gray-800">Are you sure!</h3>
-              <p className="text-sm text-gray-600 mt-1">
-                Do you want to delete clicked vendor profile?
-              </p>
-              <p className="text-xs font-semibold text-gray-700 mt-1">({deleteConfirm.vendor.vendor_name})</p>
-            </div>
-            <div className="flex justify-center space-x-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setDeleteConfirm({ isOpen: false, vendor: null, loading: false })}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={deleteConfirm.loading}
-                onClick={handleConfirmDelete}
-                className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
-              >
-                {deleteConfirm.loading ? 'Deleting...' : 'Yes, delete'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

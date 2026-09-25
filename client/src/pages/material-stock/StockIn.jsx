@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Trash2, ArrowLeft, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, ArrowLeft, Layers } from 'lucide-react';
+import Swal from 'sweetalert2';
 import { 
   fetchMaterialMasterData, 
   fetchProductsByType, 
@@ -43,8 +44,7 @@ const StockIn = () => {
   };
 
   const [items, setItems] = useState([initialRow]);
-  const [loading, setLoading] = useState(false);
-  const [swalAlert, setSwalAlert] = useState({ isOpen: false, title: '', text: '', icon: 'info' });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const loadMaster = async () => {
@@ -128,48 +128,23 @@ const StockIn = () => {
 
     // Validations matching PHP validateData() in material-stock-in.phtml
     if (!headerForm.dateOfStockIn) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Missing',
-        text: 'Please select date of stock in.',
-        icon: 'info'
-      });
+      Swal.fire('Missing', 'Please select date of stock in.', 'info');
       return;
     }
     if (!headerForm.supplier) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Missing',
-        text: 'Please select supplier.',
-        icon: 'info'
-      });
+      Swal.fire('Missing', 'Please select supplier.', 'info');
       return;
     }
     if (!headerForm.recieved_by) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Error',
-        text: 'Please enter reciever name.',
-        icon: 'error'
-      });
+      Swal.fire('Error', 'Please enter reciever name.', 'error');
       return;
     }
     if (!headerForm.bill_no.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Error',
-        text: 'Please enter bill number.',
-        icon: 'error'
-      });
+      Swal.fire('Error', 'Please enter bill number.', 'error');
       return;
     }
     if (!headerForm.bill_date) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Missing',
-        text: 'Please select bill date.',
-        icon: 'info'
-      });
+      Swal.fire('Missing', 'Please select bill date.', 'info');
       return;
     }
 
@@ -177,104 +152,90 @@ const StockIn = () => {
     for (let i = 0; i < items.length; i++) {
       const row = items[i];
       if (!row.product_category) {
-        setSwalAlert({
-          isOpen: true,
-          title: 'Missing',
-          text: `Please select Product Category for row ${i + 1}.`,
-          icon: 'info'
-        });
+        Swal.fire('Missing', `Please select Product Category for row ${i + 1}.`, 'info');
         return;
       }
       if (!row.product_id) {
-        setSwalAlert({
-          isOpen: true,
-          title: 'Missing',
-          text: `Please select Product Name for row ${i + 1}.`,
-          icon: 'info'
-        });
+        Swal.fire('Missing', `Please select Product Name for row ${i + 1}.`, 'info');
         return;
       }
       if (!row.quantity || parseFloat(row.quantity) <= 0) {
-        setSwalAlert({
-          isOpen: true,
-          title: 'Missing',
-          text: `Please enter a valid quantity for row ${i + 1}.`,
-          icon: 'info'
-        });
+        Swal.fire('Missing', `Please enter a valid positive quantity for row ${i + 1}.`, 'info');
         return;
       }
     }
 
     try {
-      setLoading(true);
-      const payload = {
+      setSubmitting(true);
+      await submitStockIn({
         ...headerForm,
         items
-      };
-      const res = await submitStockIn(payload);
-      setSwalAlert({
-        isOpen: true,
+      });
+      Swal.fire({
         title: 'Success !',
-        text: res.message || 'Stock details have been saved successfully.',
+        text: 'Stock details have been saved successfully.',
         icon: 'success'
-      });
-      setTimeout(() => {
+      }).then(() => {
         navigate('/material-stock/material-stock-report');
-      }, 1500);
-    } catch (err) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Error !',
-        text: err.message || 'Failed to save stock in details.',
-        icon: 'error'
       });
+    } catch (err) {
+      Swal.fire('Error !', err.message || 'Failed to save stock in details.', 'error');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="p-3 sm:p-5 w-full max-w-7xl mx-auto space-y-4 font-sans">
-      {/* Top Header matching PHP panel-primary / panel-heading */}
-      <div className="flex justify-between items-center bg-[#337ab7] text-white px-5 py-3 rounded-t-md shadow-xs">
-        <h3 className="text-base sm:text-lg font-bold">Material Stock In</h3>
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3 font-sans">
+      {/* Header Banner matching PHP panel-primary / panel-heading */}
+      <div 
+        className="rounded-t-lg px-4 py-2.5 min-h-[44px] flex items-center justify-between shadow-sm"
+        style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)' }}
+      >
+        <h1 className="text-base font-bold tracking-tight text-white flex items-center gap-2">
+          <span>Material Stock In</span>
+        </h1>
         <Link
           to="/material-stock/material-stock-report"
-          className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-3.5 py-1.5 rounded text-sm font-semibold transition-colors shadow-xs"
+          className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors"
         >
-          View Stock Report
+          <Layers size={14} />
+          <span>View Stock Report</span>
         </Link>
       </div>
 
-      {/* Main Container matching PHP .mainDiv background #DCF2FE */}
-      <div className="bg-[#DCF2FE] p-3 sm:p-5 rounded-md border border-[#bce8f1]">
-        <div className="mb-3">
-          <span className="text-sm font-bold text-[#D60019]">* Fields are mandatory.</span>
+      {/* Main Form Body with clean white background */}
+      <div className="bg-white rounded-b-lg border-x border-b border-gray-200 shadow-sm p-4 sm:p-5 space-y-4">
+        {/* Mandatory notice */}
+        <div className="text-red-600 font-bold text-xs sm:text-sm">
+          * Fields are mandatory.
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Header Inputs: 4 columns matching PHP material-stock-in.phtml */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Row 1: Header Info */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                Date of Stock In<span className="text-red-600 font-bold">*</span>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Date of Stock In <span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="date"
                 value={headerForm.dateOfStockIn}
                 onChange={(e) => handleHeaderChange('dateOfStockIn', e.target.value)}
-                className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
+                className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                required
               />
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                Supplier<span className="text-red-600 font-bold">*</span>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Supplier <span className="text-red-600 font-bold">*</span>
               </label>
               <select
                 value={headerForm.supplier}
                 onChange={(e) => handleHeaderChange('supplier', e.target.value)}
-                className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
+                className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                required
               >
                 <option value="">Select Supplier</option>
                 {masterData.suppliers.map(s => (
@@ -284,13 +245,14 @@ const StockIn = () => {
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                Recieved By<span className="text-red-600 font-bold">*</span>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Recieved By <span className="text-red-600 font-bold">*</span>
               </label>
               <select
                 value={headerForm.recieved_by}
                 onChange={(e) => handleHeaderChange('recieved_by', e.target.value)}
-                className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
+                className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                required
               >
                 <option value="">Select Reciever</option>
                 {masterData.users.map(u => (
@@ -300,220 +262,177 @@ const StockIn = () => {
             </div>
 
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                Bill/Challan Number<span className="text-red-600 font-bold">*</span>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Bill/Challan Number <span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter Challan Number"
                 value={headerForm.bill_no}
                 onChange={(e) => handleHeaderChange('bill_no', e.target.value)}
-                className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
+                className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                required
               />
             </div>
           </div>
 
-          {/* Row 2: Bill Date & Remarks */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Row 2: Bill Date and Remarks */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                Bill/Challan Date<span className="text-red-600 font-bold">*</span>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Bill/Challan Date <span className="text-red-600 font-bold">*</span>
               </label>
               <input
                 type="date"
                 value={headerForm.bill_date}
                 onChange={(e) => handleHeaderChange('bill_date', e.target.value)}
-                className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
+                className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                required
               />
             </div>
 
-            <div className="sm:col-span-3">
-              <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
                 Remarks (if any)
               </label>
               <textarea
-                rows="1"
+                rows={2}
                 placeholder="Enter remarks here"
                 value={headerForm.remarks}
                 onChange={(e) => handleHeaderChange('remarks', e.target.value)}
-                className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
+                className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
               />
             </div>
           </div>
 
-          {/* Multi-Row Product Details Table matching PHP #productDetailsTable */}
-          <div className="mt-4 bg-white rounded-md border-2 border-gray-800 overflow-hidden shadow-xs">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-sm">
+          {/* Row 3: Product Details Multi-Row Table matching PHP productDetailsTable */}
+          <div className="pt-2 border-t border-gray-200">
+            <h3 className="text-xs font-bold text-gray-700 mb-2">Product Items</h3>
+            <div className="overflow-x-auto border border-gray-200 rounded">
+              <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-gray-100 text-gray-800 border-b-2 border-gray-800 font-bold text-xs uppercase">
-                    <th className="py-2.5 px-3 border-r border-gray-800">Product Type</th>
-                    <th className="py-2.5 px-3 border-r border-gray-800">Product Name</th>
-                    <th className="py-2.5 px-3 border-r border-gray-800">Brand</th>
-                    <th className="py-2.5 px-3 border-r border-gray-800 w-24">Unit</th>
-                    <th className="py-2.5 px-3 border-r border-gray-800 w-28">Quantity</th>
+                  <tr className="bg-gray-100 text-gray-700 font-semibold border-b border-gray-200">
+                    <th className="py-2.5 px-3 min-w-[180px]">Product Type</th>
+                    <th className="py-2.5 px-3 min-w-[200px]">Product Name</th>
+                    <th className="py-2.5 px-3 min-w-[150px]">Brand</th>
+                    <th className="py-2.5 px-3 w-24">Unit</th>
+                    <th className="py-2.5 px-3 w-28">Quantity</th>
                     <th className="py-2.5 px-3 w-16 text-center">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-800">
-                  {items.map((row, index) => {
-                    const rowProducts = productsCache[row.product_category] || [];
+                <tbody className="divide-y divide-gray-100">
+                  {items.map((row, idx) => (
+                    <tr key={row.id || idx} className="hover:bg-blue-50/20">
+                      <td className="py-2 px-3">
+                        <select
+                          value={row.product_category}
+                          onChange={(e) => handleCategoryChange(idx, e.target.value)}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                          required
+                        >
+                          <option value="">Select Product Category</option>
+                          {masterData.productTypes.map(pt => (
+                            <option key={pt.id} value={pt.id}>{pt.product_type_name}</option>
+                          ))}
+                        </select>
+                      </td>
 
-                    return (
-                      <tr key={row.id} className="hover:bg-blue-50/30">
-                        {/* Product Type */}
-                        <td className="p-2 border-r border-gray-800">
-                          <select
-                            value={row.product_category}
-                            onChange={(e) => handleCategoryChange(index, e.target.value)}
-                            className="w-full px-2.5 py-1.5 bg-white border border-gray-300 rounded text-xs sm:text-sm focus:border-blue-500 outline-none"
+                      <td className="py-2 px-3">
+                        <select
+                          value={row.product_id}
+                          onChange={(e) => handleProductChange(idx, e.target.value)}
+                          disabled={!row.product_category}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500 disabled:bg-gray-100"
+                          required
+                        >
+                          <option value="">Select Product</option>
+                          {(productsCache[row.product_category] || []).map(p => (
+                            <option key={p.id} value={p.id}>
+                              {p.product_name} {p.price ? `(${p.price})` : ''}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
+
+                      <td className="py-2 px-3">
+                        <select
+                          value={row.brand}
+                          onChange={(e) => handleItemChange(idx, 'brand', e.target.value)}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                        >
+                          <option value="">Select Product Brand</option>
+                          {masterData.brands.map(b => (
+                            <option key={b.id} value={b.id}>{b.brand_name}</option>
+                          ))}
+                        </select>
+                      </td>
+
+                      <td className="py-2 px-3">
+                        <input
+                          type="text"
+                          value={row.unit}
+                          readOnly
+                          placeholder="-"
+                          className="w-full px-2 py-1 border border-gray-200 rounded text-xs bg-gray-50 text-gray-600 focus:outline-none text-center"
+                        />
+                      </td>
+
+                      <td className="py-2 px-3">
+                        <input
+                          type="number"
+                          min="1"
+                          step="any"
+                          value={row.quantity}
+                          onChange={(e) => handleItemChange(idx, 'quantity', e.target.value)}
+                          placeholder="Qty"
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500 text-right font-medium"
+                          required
+                        />
+                      </td>
+
+                      <td className="py-2 px-3 text-center">
+                        {items.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteRow(idx)}
+                            className="text-red-500 hover:text-red-700 p-1 rounded transition-colors"
+                            title="Delete Row"
                           >
-                            <option value="">Select Product Category</option>
-                            {masterData.productTypes.map(t => (
-                              <option key={t.id} value={t.id}>{t.product_type_name}</option>
-                            ))}
-                          </select>
-                        </td>
-
-                        {/* Product Name */}
-                        <td className="p-2 border-r border-gray-800">
-                          <select
-                            value={row.product_id}
-                            onChange={(e) => handleProductChange(index, e.target.value)}
-                            disabled={!row.product_category}
-                            className="w-full px-2.5 py-1.5 bg-white border border-gray-300 rounded text-xs sm:text-sm focus:border-blue-500 outline-none disabled:bg-gray-100"
-                          >
-                            <option value="">Select Product</option>
-                            {rowProducts.map(p => (
-                              <option key={p.id} value={p.id}>
-                                {p.product_name} {p.price ? `(${p.price})` : ''}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-
-                        {/* Brand */}
-                        <td className="p-2 border-r border-gray-800">
-                          <select
-                            value={row.brand}
-                            onChange={(e) => handleItemChange(index, 'brand', e.target.value)}
-                            className="w-full px-2.5 py-1.5 bg-white border border-gray-300 rounded text-xs sm:text-sm focus:border-blue-500 outline-none"
-                          >
-                            <option value="">Select Product Brand</option>
-                            {masterData.brands.map(b => (
-                              <option key={b.id} value={b.id}>{b.brand_name}</option>
-                            ))}
-                          </select>
-                        </td>
-
-                        {/* Unit (readonly) */}
-                        <td className="p-2 border-r border-gray-800">
-                          <input
-                            type="text"
-                            readOnly
-                            value={row.unit}
-                            className="w-full px-2.5 py-1.5 bg-gray-100 border border-gray-300 rounded text-xs sm:text-sm text-gray-700 outline-none"
-                            placeholder="Unit"
-                          />
-                        </td>
-
-                        {/* Quantity */}
-                        <td className="p-2 border-r border-gray-800">
-                          <input
-                            type="number"
-                            min="1"
-                            step="any"
-                            value={row.quantity}
-                            onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                            className="w-full px-2.5 py-1.5 bg-white border border-gray-300 rounded text-xs sm:text-sm focus:border-blue-500 outline-none font-mono"
-                            placeholder="Qty"
-                            required
-                          />
-                        </td>
-
-                        {/* Delete Row Action */}
-                        <td className="p-2 text-center">
-                          {items.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteRow(index)}
-                              title="Delete Row"
-                              className="p-1.5 text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                            <Trash2 size={16} />
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
+
+            {/* Add More Product Button matching PHP addMoreRow */}
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={handleAddMoreRow}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow-xs transition-colors"
+              >
+                <Plus size={14} />
+                <span>Add More Product</span>
+              </button>
+            </div>
           </div>
 
-          {/* Action Row matching PHP: Add More Product button on left, Save button on right */}
-          <div className="flex justify-between items-center pt-2">
-            <button
-              type="button"
-              onClick={handleAddMoreRow}
-              className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-4 py-2 rounded text-sm font-semibold flex items-center space-x-1.5 shadow-sm transition-colors cursor-pointer"
-            >
-              <Plus size={16} />
-              <span>Add More Product</span>
-            </button>
-
+          {/* Form Action: Save */}
+          <div className="flex justify-end pt-3 border-t border-gray-200">
             <button
               type="submit"
-              disabled={loading}
-              className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-7 py-2 rounded text-sm font-bold shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
+              disabled={submitting}
+              className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors disabled:opacity-50"
             >
-              {loading ? 'Saving...' : 'Save'}
+              {submitting ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>
       </div>
-
-      {/* SweetAlert Notification Modal */}
-      {swalAlert.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-sm w-full p-6 text-center animate-in fade-in zoom-in duration-200">
-            <div className="flex justify-center mb-4">
-              {swalAlert.icon === 'error' && (
-                <div className="w-16 h-16 rounded-full border-4 border-red-200 flex items-center justify-center bg-red-50 text-red-600 text-3xl font-bold">
-                  &times;
-                </div>
-              )}
-              {swalAlert.icon === 'info' && (
-                <div className="w-16 h-16 rounded-full border-4 border-blue-200 flex items-center justify-center bg-blue-50 text-blue-600 text-3xl font-bold">
-                  !
-                </div>
-              )}
-              {swalAlert.icon === 'success' && (
-                <div className="w-16 h-16 rounded-full border-4 border-green-200 flex items-center justify-center bg-green-50 text-green-600 text-3xl font-bold">
-                  &#10003;
-                </div>
-              )}
-            </div>
-
-            <h3 className="text-lg font-bold text-gray-800 mb-2">
-              {swalAlert.title}
-            </h3>
-
-            <p className="text-sm text-gray-600 mb-6">
-              {swalAlert.text}
-            </p>
-
-            <button
-              type="button"
-              onClick={() => setSwalAlert({ isOpen: false, title: '', text: '', icon: 'info' })}
-              className="w-full bg-[#7cd1f9] hover:bg-[#68c6f3] text-white font-bold py-2 px-4 rounded transition-colors text-sm uppercase cursor-pointer"
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

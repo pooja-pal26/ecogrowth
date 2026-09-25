@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Building2, ArrowLeft, ArrowRight, Upload, X } from 'lucide-react';
+import Swal from 'sweetalert2';
 import { 
   fetchVendorMasterData, 
   createVendor, 
@@ -27,10 +29,9 @@ const AddNewVendor = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [swalAlert, setSwalAlert] = useState({ isOpen: false, title: '', text: '', icon: 'error', tabTarget: '', focusField: '' });
-  const [successMsg, setSuccessMsg] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  // Initial Form State matching PHP tbl_vendor and tbl_vendor_bank_and_gst_details
+  // Form State matching PHP tbl_vendor and tbl_vendor_bank_and_gst_details
   const initialForm = {
     // 1. Basic Details
     nameOfCompany: '',
@@ -179,14 +180,12 @@ const AddNewVendor = () => {
   };
 
   const handleFileChange = (field, e) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (!file) return;
 
-    // Validate image format matching PHP: jpg, jpeg, png, gif
     const validExtensions = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
     if (!validExtensions.includes(file.type)) {
-      setSwalAlert({
-        isOpen: true,
+      Swal.fire({
         title: 'Image Type Not Supported!',
         text: 'Image type not supported. Please upload JPG, JPEG, PNG or GIF Images only.',
         icon: 'error'
@@ -211,10 +210,6 @@ const AddNewVendor = () => {
     { id: 'documnetAttachment', label: 'Attach Documents' }
   ];
 
-  const handleTabClick = (tabId) => {
-    setActiveTab(tabId);
-  };
-
   const handleNext = () => {
     const currentIndex = tabList.findIndex(t => t.id === activeTab);
     if (currentIndex < tabList.length - 1) {
@@ -229,1029 +224,869 @@ const AddNewVendor = () => {
     }
   };
 
-  const closeSwalAlert = () => {
-    if (swalAlert.tabTarget) {
-      setActiveTab(swalAlert.tabTarget);
+  // Validations matching PHP validateInputData() in create-vendor.phtml
+  const validateForm = () => {
+    if (!formData.nameOfCompany || !formData.nameOfCompany.trim()) {
+      Swal.fire({
+        title: 'Company Name Missing !',
+        text: 'Please Enter Company Name.',
+        icon: 'error'
+      }).then(() => {
+        setActiveTab('basicDetails');
+      });
+      return false;
     }
-    const focusTarget = swalAlert.focusField;
-    setSwalAlert({ isOpen: false, title: '', text: '', icon: 'error', tabTarget: '', focusField: '' });
-    if (focusTarget) {
-      setTimeout(() => {
-        const el = document.getElementById(focusTarget);
-        if (el) el.focus();
-      }, 100);
+
+    if (!formData.propDirName || !formData.propDirName.trim()) {
+      Swal.fire({
+        title: 'Prop/Dir Name Missing !',
+        text: 'Please Enter Proprietor/Director Name.',
+        icon: 'error'
+      }).then(() => {
+        setActiveTab('basicDetails');
+      });
+      return false;
     }
+
+    if (!formData.contactPerson || !formData.contactPerson.trim()) {
+      Swal.fire({
+        title: 'Contact Person Missing !',
+        text: 'Please Enter Contact Person Name.',
+        icon: 'error'
+      }).then(() => {
+        setActiveTab('basicDetails');
+      });
+      return false;
+    }
+
+    if (!formData.contactNumber || !formData.contactNumber.trim()) {
+      Swal.fire({
+        title: 'Expense Amount Missing !',
+        text: 'Please Enter Transfer Amount.',
+        icon: 'error'
+      }).then(() => {
+        setActiveTab('basicDetails');
+      });
+      return false;
+    }
+
+    if (!formData.address || !formData.address.trim()) {
+      Swal.fire({
+        title: 'Address Missing !',
+        text: 'Please Enter Address.',
+        icon: 'error'
+      }).then(() => {
+        setActiveTab('basicDetails');
+      });
+      return false;
+    }
+
+    if (!formData.bankName) {
+      Swal.fire({
+        title: 'Bank Name Missing !',
+        text: 'Please Select Bank Name.',
+        icon: 'error'
+      }).then(() => {
+        setActiveTab('bankGstDetails');
+      });
+      return false;
+    }
+
+    if (!formData.bankAccountNumber || !formData.bankAccountNumber.trim()) {
+      Swal.fire({
+        title: 'Bank Account Missing !',
+        text: 'Please Enter Bank Account Number.',
+        icon: 'error'
+      }).then(() => {
+        setActiveTab('bankGstDetails');
+      });
+      return false;
+    }
+
+    if (!formData.bankNeftCode || !formData.bankNeftCode.trim()) {
+      Swal.fire({
+        title: 'Bank IFSC Missing !',
+        text: 'Please Enter Bank IFS Code.',
+        icon: 'error'
+      }).then(() => {
+        setActiveTab('bankGstDetails');
+      });
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
-
-    // Validations matching PHP validateInputData() in create-vendor.phtml
-    if (!formData.nameOfCompany || !formData.nameOfCompany.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Company Name Missing !',
-        text: 'Please Enter Company Name.',
-        icon: 'error',
-        tabTarget: 'basicDetails',
-        focusField: 'nameOfCompany'
-      });
-      return;
-    }
-    if (!formData.propDirName || !formData.propDirName.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Prop/Dir Name Missing !',
-        text: 'Please Enter Proprietor/Director Name.',
-        icon: 'error',
-        tabTarget: 'basicDetails',
-        focusField: 'propDirName'
-      });
-      return;
-    }
-    if (!formData.contactPerson || !formData.contactPerson.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Contact Person Missing !',
-        text: 'Please Enter Contact Person Name.',
-        icon: 'error',
-        tabTarget: 'basicDetails',
-        focusField: 'contactPerson'
-      });
-      return;
-    }
-    if (!formData.contactNumber || !formData.contactNumber.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Expense Amount Missing !',
-        text: 'Please Enter Transfer Amount.',
-        icon: 'error',
-        tabTarget: 'basicDetails',
-        focusField: 'contactNumber'
-      });
-      return;
-    }
-    if (!formData.address || !formData.address.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Address Missing !',
-        text: 'Please Enter Address.',
-        icon: 'error',
-        tabTarget: 'basicDetails',
-        focusField: 'address'
-      });
-      return;
-    }
-    if (!formData.bankName || !formData.bankName.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Bank Name Missing !',
-        text: 'Please Select Bank Name.',
-        icon: 'error',
-        tabTarget: 'bankGstDetails',
-        focusField: 'bankName'
-      });
-      return;
-    }
-    if (!formData.bankAccountNumber || !formData.bankAccountNumber.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Bank Account Missing !',
-        text: 'Please Enter Bank Account Number.',
-        icon: 'error',
-        tabTarget: 'bankGstDetails',
-        focusField: 'bankAccountNumber'
-      });
-      return;
-    }
-    if (!formData.bankNeftCode || !formData.bankNeftCode.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Bank IFSC Missing !',
-        text: 'Please Enter Bank IFS Code.',
-        icon: 'error',
-        tabTarget: 'bankGstDetails',
-        focusField: 'bankNeftCode'
-      });
-      return;
-    }
-    if (!formData.panNumber || !formData.panNumber.trim()) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'PAN Number Missing !',
-        text: 'Please Enter PAN Number.',
-        icon: 'error',
-        tabTarget: 'financialDetails',
-        focusField: 'panNumber'
-      });
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
-      setLoading(true);
-      let res;
+      setSubmitting(true);
       if (isEditMode) {
-        res = await updateVendor(id, formData);
-        setSuccessMsg(res.message || 'Vendor details has been updated successfully.');
-        setSwalAlert({
-          isOpen: true,
+        await updateVendor(id, formData);
+        Swal.fire({
           title: 'Success !',
-          text: res.message || 'Vendor details has been updated successfully.',
+          text: 'Vendor details updated successfully',
           icon: 'success'
+        }).then(() => {
+          navigate('/manage-vendors/active-vendors');
         });
       } else {
-        res = await createVendor(formData);
-        setSuccessMsg(res.message || 'Vendor details has been saved successfully.');
-        setSwalAlert({
-          isOpen: true,
+        await createVendor(formData);
+        Swal.fire({
           title: 'Success !',
-          text: res.message || 'Vendor details has been saved successfully.',
+          text: 'Vendor has been created successfully',
           icon: 'success'
+        }).then(() => {
+          navigate('/manage-vendors/active-vendors');
         });
       }
-
-      setTimeout(() => {
-        navigate('/manage-vendors/active-vendors');
-      }, 1500);
     } catch (err) {
-      setSwalAlert({
-        isOpen: true,
-        title: 'Error !',
-        text: err.message || 'Failed to save vendor details',
-        icon: 'error'
-      });
+      Swal.fire('Error !', err.message || 'Failed to save vendor details. Please try again.', 'error');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="p-2 sm:p-4 w-full max-w-7xl mx-auto space-y-3 font-sans">
-      {/* Top Header matching PHP panel-heading */}
-      <div className="flex justify-between items-center bg-[#337ab7] text-white px-5 py-3 rounded-t-md shadow-sm">
-        <h3 className="text-base sm:text-lg font-bold">
-          {isEditMode ? 'Edit Vendor Details' : 'Add New Vendor'}
-        </h3>
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
+      {/* Header Banner matching PHP panel-heading (Add New Vendor) */}
+      <div 
+        className="rounded-t-lg px-4 py-2.5 min-h-[44px] flex items-center justify-between shadow-sm"
+        style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)' }}
+      >
+        <h1 className="text-base font-bold tracking-tight text-white flex items-center gap-2">
+          <span>{isEditMode ? 'Edit Vendor Info' : 'Add New Vendor'}</span>
+        </h1>
         <Link
           to="/manage-vendors/active-vendors"
-          className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-4 py-1.5 rounded text-sm font-semibold transition-colors shadow-sm"
+          className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors"
         >
-          View All Vendor
+          <Building2 size={14} />
+          <span>View All Vendor</span>
         </Link>
       </div>
 
-      {/* Main Form Box matching PHP .mainDiv */}
-      <div className="bg-[#DCF2FE] p-2.5 sm:p-3.5 rounded-md border border-[#bce8f1]">
-        {/* Inner Border Box matching PHP .siteExpenseDiv */}
-        <div className="border-[5px] border-[#b0d5ea] bg-[#DCF2FE] rounded-md p-3 sm:p-5 shadow-xs">
-          
-          {/* Header Banner matching PHP H2 */}
-          <div className="text-center mb-4">
-            <h2 className="text-sm sm:text-base md:text-xl font-bold text-[#EAECEB] bg-[#74817E] py-2 px-4 rounded-md tracking-wider uppercase underline">
-              VENDOR EVALUATION FORM - NEW VENDOR
-            </h2>
-          </div>
-
-          {/* Wizard Nav Tabs matching PHP #formTab .nav-tabs and User Screenshot 1-to-1 */}
-          <div className="mb-0 overflow-x-auto">
-            <ul className="flex flex-wrap items-end gap-1 border-b-2 border-[#5c8bd6] pb-0">
-              {tabList.map((tab) => {
-                const isActive = activeTab === tab.id;
-                return (
-                  <li key={tab.id} className="inline-block">
-                    <button
-                      type="button"
-                      onClick={() => handleTabClick(tab.id)}
-                      className={`px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base font-bold rounded-t-md transition-all cursor-pointer select-none ${
-                        isActive
-                          ? 'bg-white text-gray-800 border-2 border-b-0 border-[#5c8bd6] relative z-10 shadow-sm'
-                          : 'bg-[#5c8bd6] text-white hover:bg-[#4a7ec9]'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-
-          {/* Form Content Container directly under tabs */}
-          <div className="bg-[#DCF2FE] pt-4 pb-2 px-1">
-            <div className="mb-3">
-              <span className="text-sm sm:text-base font-bold text-[#D60019]">* Fields are mandatory.</span>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              {/* TAB 1: Vendor Details */}
-              {activeTab === 'basicDetails' && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Company/Vendor Name<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="nameOfCompany"
-                        placeholder="Enter company/vndor name"
-                        value={formData.nameOfCompany}
-                        onChange={(e) => handleChange('nameOfCompany', e.target.value.replace(/[^a-zA-Z0-9. ]/g, ''))}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Proprietor/Director Name<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="propDirName"
-                        placeholder="Enter proprietor/director name"
-                        value={formData.propDirName}
-                        onChange={(e) => handleChange('propDirName', e.target.value.replace(/[^a-zA-Z. ]/g, ''))}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Contact Person<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="contactPerson"
-                        placeholder="Enter contact person name"
-                        value={formData.contactPerson}
-                        onChange={(e) => handleChange('contactPerson', e.target.value.replace(/[^a-zA-Z. ]/g, ''))}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Contact Number<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="contactNumber"
-                        maxLength={10}
-                        placeholder="Enter contact number"
-                        value={formData.contactNumber}
-                        onChange={(e) => handleChange('contactNumber', e.target.value.replace(/[^0-9]/g, ''))}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Email ID
-                      </label>
-                      <input
-                        type="email"
-                        id="emailId"
-                        placeholder="Enter email ID"
-                        value={formData.emailId}
-                        onChange={(e) => handleChange('emailId', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Address<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <textarea
-                        rows="2"
-                        id="address"
-                        placeholder="Enter Address"
-                        value={formData.address}
-                        onChange={(e) => handleChange('address', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Registered/Head Office Address
-                      </label>
-                      <textarea
-                        rows="2"
-                        id="regHeadOfficeAddress"
-                        placeholder="Enter Registered/Head Office Address"
-                        value={formData.regHeadOfficeAddress}
-                        onChange={(e) => handleChange('regHeadOfficeAddress', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Navigation Buttons: Next on bottom right */}
-                  <div className="flex justify-end pt-3">
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-5 py-2 rounded text-sm font-semibold flex items-center space-x-1 shadow-sm transition-colors cursor-pointer"
-                    >
-                      <span>Next</span>
-                      <span className="text-base font-bold">&rarr;</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: Bank Details */}
-              {activeTab === 'bankGstDetails' && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Bank Name<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <select
-                        id="bankName"
-                        value={formData.bankName}
-                        onChange={(e) => handleChange('bankName', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.bankList.map(b => (
-                          <option key={b.id} value={b.bank_name}>{b.bank_name}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Bank Branch Name
-                      </label>
-                      <input
-                        type="text"
-                        id="bankBranchName"
-                        placeholder="Enter bank branch name"
-                        value={formData.bankBranchName}
-                        onChange={(e) => handleChange('bankBranchName', e.target.value.replace(/[^a-zA-Z. ]/g, ''))}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Bank Address
-                      </label>
-                      <input
-                        type="text"
-                        id="bankAddress"
-                        placeholder="Enter bank address "
-                        value={formData.bankAddress}
-                        onChange={(e) => handleChange('bankAddress', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Bank Contact Number
-                      </label>
-                      <input
-                        type="text"
-                        id="bankContactNumber"
-                        placeholder="Enter bank contact number"
-                        value={formData.bankContactNumber}
-                        onChange={(e) => handleChange('bankContactNumber', e.target.value.replace(/[^0-9\-_]/g, ''))}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Bank Account Number<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="bankAccountNumber"
-                        placeholder="Enter bank account number"
-                        value={formData.bankAccountNumber}
-                        onChange={(e) => handleChange('bankAccountNumber', e.target.value.replace(/[^0-9]/g, ''))}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Bank MICR Code
-                      </label>
-                      <input
-                        type="text"
-                        id="bankMicrCode"
-                        placeholder="Enter bank MICR code"
-                        value={formData.bankMicrCode}
-                        onChange={(e) => handleChange('bankMicrCode', e.target.value.toUpperCase())}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm uppercase text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Bank RTGS (IFS) Code
-                      </label>
-                      <input
-                        type="text"
-                        id="bankRtgsCode"
-                        placeholder="Enter bank RTGS (IFS) name"
-                        value={formData.bankRtgsCode}
-                        onChange={(e) => handleChange('bankRtgsCode', e.target.value.toUpperCase())}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm uppercase text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Bank NEFT (IFS) Code<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="bankNeftCode"
-                        placeholder="Enter bank NEFT (IFS) name"
-                        value={formData.bankNeftCode}
-                        onChange={(e) => handleChange('bankNeftCode', e.target.value.toUpperCase())}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm uppercase text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Navigation Buttons: Previous and Next together on bottom right matching PHP */}
-                  <div className="flex justify-end items-center space-x-2 pt-3">
-                    <button
-                      type="button"
-                      onClick={handlePrev}
-                      className="bg-[#f0ad4e] hover:bg-[#ec971f] text-white px-4 py-2 rounded text-sm font-semibold flex items-center space-x-1 shadow-sm transition-colors cursor-pointer"
-                    >
-                      <span className="text-base font-bold">&larr;</span>
-                      <span>Previous</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-5 py-2 rounded text-sm font-semibold flex items-center space-x-1 shadow-sm transition-colors cursor-pointer"
-                    >
-                      <span>Next</span>
-                      <span className="text-base font-bold">&rarr;</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 3: Financial & GST Details (Matches User Screenshot 1-to-1) */}
-              {activeTab === 'financialDetails' && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Registration Number
-                      </label>
-                      <input
-                        type="text"
-                        id="registrationNumber"
-                        placeholder="Enter registration number"
-                        value={formData.registrationNumber}
-                        onChange={(e) => handleChange('registrationNumber', e.target.value.toUpperCase())}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm uppercase text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        PAN Number<span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="panNumber"
-                        maxLength={10}
-                        placeholder="Enter PAN number"
-                        value={formData.panNumber}
-                        onChange={(e) => handleChange('panNumber', e.target.value.toUpperCase())}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm uppercase text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        ESI Number
-                      </label>
-                      <input
-                        type="text"
-                        id="esiNumber"
-                        placeholder="Enter ESI number"
-                        value={formData.esiNumber}
-                        onChange={(e) => handleChange('esiNumber', e.target.value.toUpperCase())}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm uppercase text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        PF Number
-                      </label>
-                      <input
-                        type="text"
-                        id="pfNumber"
-                        placeholder="Enter PF number"
-                        value={formData.pfNumber}
-                        onChange={(e) => handleChange('pfNumber', e.target.value.toUpperCase())}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm uppercase text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        GST Number
-                      </label>
-                      <input
-                        type="text"
-                        id="gstNumber"
-                        placeholder="Enter GST number"
-                        value={formData.gstNumber}
-                        onChange={(e) => handleChange('gstNumber', e.target.value.toUpperCase())}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm uppercase text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        GST State
-                      </label>
-                      <select
-                        id="gstState"
-                        value={formData.gstState}
-                        onChange={(e) => handleChange('gstState', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.states.map(s => (
-                          <option key={s.id} value={s.state_name}>{s.state_name}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Annual Company Turnover
-                      </label>
-                      <select
-                        id="annualTurnover"
-                        value={formData.annualTurnover}
-                        onChange={(e) => handleChange('annualTurnover', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.annualTurnoverList.map(t => (
-                          <option key={t.id} value={t.annual_turnover}>{t.annual_turnover}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Audited Balance Sheet (last 3 years)
-                      </label>
-                      <select
-                        id="auditedBalanceSheet"
-                        value={formData.auditedBalanceSheet}
-                        onChange={(e) => handleChange('auditedBalanceSheet', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Amount of Work can be handled in one year
-                      </label>
-                      <select
-                        id="annualWorkHandleCapacity"
-                        value={formData.annualWorkHandleCapacity}
-                        onChange={(e) => handleChange('annualWorkHandleCapacity', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.workHandlingAmountList.map(w => (
-                          <option key={w.id} value={w.work_handling_amount}>{w.work_handling_amount}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Navigation Buttons: Previous and Next together on bottom right matching PHP */}
-                  <div className="flex justify-end items-center space-x-2 pt-3">
-                    <button
-                      type="button"
-                      onClick={handlePrev}
-                      className="bg-[#f0ad4e] hover:bg-[#ec971f] text-white px-4 py-2 rounded text-sm font-semibold flex items-center space-x-1 shadow-sm transition-colors cursor-pointer"
-                    >
-                      <span className="text-base font-bold">&larr;</span>
-                      <span>Previous</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-5 py-2 rounded text-sm font-semibold flex items-center space-x-1 shadow-sm transition-colors cursor-pointer"
-                    >
-                      <span>Next</span>
-                      <span className="text-base font-bold">&rarr;</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 4: Other Details */}
-              {activeTab === 'otherDetails' && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Type of Organization
-                      </label>
-                      <select
-                        id="organizationType"
-                        value={formData.organizationType}
-                        onChange={(e) => handleChange('organizationType', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.organizationTypeList.map(o => (
-                          <option key={o.id} value={o.organization_type}>{o.organization_type}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Total Team Available
-                      </label>
-                      <select
-                        id="totalTeam"
-                        value={formData.totalTeam}
-                        onChange={(e) => handleChange('totalTeam', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.teamStrengthList.map(t => (
-                          <option key={t.id} value={t.team_strength}>{t.team_strength}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Plant and Machinery
-                      </label>
-                      <select
-                        id="plantAndMechnery"
-                        value={formData.plantAndMechnery}
-                        onChange={(e) => handleChange('plantAndMechnery', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        <option value="owned">Owned</option>
-                        <option value="hired">Hired</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Organization Chart
-                      </label>
-                      <select
-                        id="organizationChart"
-                        value={formData.organizationChart}
-                        onChange={(e) => handleChange('organizationChart', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Interested in other work
-                      </label>
-                      <select
-                        id="interestOtherWorkType"
-                        value={formData.interestOtherWorkType}
-                        onChange={(e) => handleChange('interestOtherWorkType', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Association with Logimetrix
-                      </label>
-                      <select
-                        id="associationWithRil"
-                        value={formData.associationWithRil}
-                        onChange={(e) => handleChange('associationWithRil', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.associationYearsList.map(a => (
-                          <option key={a.id} value={a.association_years}>{a.association_years}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Geographical Presense
-                      </label>
-                      <select
-                        id="geographicalPresence"
-                        value={formData.geographicalPresence}
-                        onChange={(e) => handleChange('geographicalPresence', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.geographicalPresenceList.map(g => (
-                          <option key={g.id} value={g.geographical_presence}>{g.geographical_presence}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Major Clients
-                      </label>
-                      <select
-                        id="majorClients"
-                        value={formData.majorClients}
-                        onChange={(e) => handleChange('majorClients', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.vendorMajorClientsList.map(m => (
-                          <option key={m.id} value={m.major_clients}>{m.major_clients}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        SOP-QAP Sign Off
-                      </label>
-                      <select
-                        id="sopQapSignOff"
-                        value={formData.sopQapSignOff}
-                        onChange={(e) => handleChange('sopQapSignOff', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        SOP for Quality (Manual)
-                      </label>
-                      <select
-                        id="sopForQuality"
-                        value={formData.sopForQuality}
-                        onChange={(e) => handleChange('sopForQuality', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Relative Experience
-                      </label>
-                      <select
-                        id="experience"
-                        value={formData.experience}
-                        onChange={(e) => handleChange('experience', e.target.value)}
-                        className="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-gray-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none shadow-xs"
-                      >
-                        <option value="">Please Select</option>
-                        {masterData.relativeExperienceList.map(r => (
-                          <option key={r.id} value={r.experience}>{r.experience}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Navigation Buttons: Previous and Next together on bottom right matching PHP */}
-                  <div className="flex justify-end items-center space-x-2 pt-3">
-                    <button
-                      type="button"
-                      onClick={handlePrev}
-                      className="bg-[#f0ad4e] hover:bg-[#ec971f] text-white px-4 py-2 rounded text-sm font-semibold flex items-center space-x-1 shadow-sm transition-colors cursor-pointer"
-                    >
-                      <span className="text-base font-bold">&larr;</span>
-                      <span>Previous</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white px-5 py-2 rounded text-sm font-semibold flex items-center space-x-1 shadow-sm transition-colors cursor-pointer"
-                    >
-                      <span>Next</span>
-                      <span className="text-base font-bold">&rarr;</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 5: Attach Documents */}
-              {activeTab === 'documnetAttachment' && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Experience Certificate
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        id="experienceCertificate"
-                        onChange={(e) => handleFileChange('experienceCertificate', e)}
-                        className="w-full px-2 py-1 bg-white border border-gray-300 rounded text-xs text-gray-700 focus:border-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        PAN Card <span className="text-red-600 font-bold">*</span>
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        id="panCard"
-                        onChange={(e) => handleFileChange('panCard', e)}
-                        className="w-full px-2 py-1 bg-white border border-gray-300 rounded text-xs text-gray-700 focus:border-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        GST Registration
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        id="gstDocument"
-                        onChange={(e) => handleFileChange('gstDocument', e)}
-                        className="w-full px-2 py-1 bg-white border border-gray-300 rounded text-xs text-gray-700 focus:border-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-800 mb-1">
-                        Registration Certificate
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        id="registrationCertificate"
-                        onChange={(e) => handleFileChange('registrationCertificate', e)}
-                        className="w-full px-2 py-1 bg-white border border-gray-300 rounded text-xs text-gray-700 focus:border-blue-500 outline-none shadow-xs"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Previews Row matching PHP image tags (200px x 80px) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      {previews.experienceCertificate && (
-                        <img
-                          id="expCertificateImage"
-                          src={previews.experienceCertificate}
-                          alt="Experience Certificate Preview"
-                          className="w-[200px] h-[80px] object-contain border border-gray-300 bg-white rounded-md p-1 shadow-xs"
-                        />
-                      )}
-                    </div>
-
-                    <div>
-                      {previews.panCard && (
-                        <img
-                          id="panCardImage"
-                          src={previews.panCard}
-                          alt="PAN Card Preview"
-                          className="w-[200px] h-[80px] object-contain border border-gray-300 bg-white rounded-md p-1 shadow-xs"
-                        />
-                      )}
-                    </div>
-
-                    <div>
-                      {previews.gstDocument && (
-                        <img
-                          id="gstCertificateImage"
-                          src={previews.gstDocument}
-                          alt="GST Certificate Preview"
-                          className="w-[200px] h-[80px] object-contain border border-gray-300 bg-white rounded-md p-1 shadow-xs"
-                        />
-                      )}
-                    </div>
-
-                    <div>
-                      {previews.registrationCertificate && (
-                        <img
-                          id="registrationImage"
-                          src={previews.registrationCertificate}
-                          alt="Registration Certificate Preview"
-                          className="w-[200px] h-[80px] object-contain border border-gray-300 bg-white rounded-md p-1 shadow-xs"
-                        />
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Navigation Buttons: Previous and Save/Update Details together on bottom right matching PHP */}
-                  <div className="flex justify-end items-center space-x-2 pt-3">
-                    <button
-                      type="button"
-                      onClick={handlePrev}
-                      className="bg-[#f0ad4e] hover:bg-[#ec971f] text-white px-4 py-2 rounded text-sm font-semibold flex items-center space-x-1 shadow-sm transition-colors cursor-pointer"
-                    >
-                      <span className="text-base font-bold">&larr;</span>
-                      <span>Previous</span>
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="bg-[#337ab7] hover:bg-[#286090] text-white px-6 py-2 rounded text-sm font-semibold transition-colors shadow-sm disabled:opacity-50 cursor-pointer"
-                    >
-                      {loading ? 'Saving...' : isEditMode ? 'Update Details' : 'Save Details'}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </form>
-          </div>
+      {/* Main Form Container with clean white background */}
+      <div className="bg-white rounded-b-lg border-x border-b border-gray-200 shadow-sm p-4 sm:p-5 space-y-4">
+        {/* Sub Header matching PHP VENDOR EVALUATION FORM */}
+        <div className="bg-slate-700 text-slate-100 text-center py-2 px-3 rounded text-xs sm:text-sm font-bold tracking-wide">
+          VENDOR EVALUATION FORM - {isEditMode ? 'UPDATE VENDOR' : 'NEW VENDOR'}
         </div>
-      </div>
 
-      {/* SweetAlert Modal matching PHP swal() exactly */}
-      {swalAlert.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-sm w-full p-6 text-center animate-in fade-in zoom-in duration-200">
-            <div className="flex justify-center mb-4">
-              {swalAlert.icon === 'error' ? (
-                <div className="w-16 h-16 rounded-full border-4 border-red-200 flex items-center justify-center bg-red-50 text-red-600 text-3xl font-bold">
-                  &times;
-                </div>
-              ) : (
-                <div className="w-16 h-16 rounded-full border-4 border-green-200 flex items-center justify-center bg-green-50 text-green-600 text-3xl font-bold">
-                  &#10003;
-                </div>
-              )}
-            </div>
-
-            <h3 className="text-lg font-bold text-gray-800 mb-2">
-              {swalAlert.title}
-            </h3>
-
-            <p className="text-sm text-gray-600 mb-6">
-              {swalAlert.text}
-            </p>
-
+        {/* Tab Navigation */}
+        <div className="border-b border-gray-200 flex space-x-1 overflow-x-auto text-xs font-semibold pb-1">
+          {tabList.map(tab => (
             <button
+              key={tab.id}
               type="button"
-              onClick={closeSwalAlert}
-              className="w-full bg-[#7cd1f9] hover:bg-[#68c6f3] text-white font-bold py-2 px-4 rounded transition-colors text-sm uppercase cursor-pointer"
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-3.5 py-1.5 border-b-2 font-medium transition-colors whitespace-nowrap ${
+                activeTab === tab.id
+                  ? 'border-teal-600 text-teal-700 bg-teal-50/50 rounded-t'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
             >
-              OK
+              {tab.label}
             </button>
-          </div>
+          ))}
         </div>
-      )}
+
+        {/* Mandatory notice */}
+        <div className="text-red-600 font-bold text-xs">
+          * Fields are mandatory.
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* TAB 1: VENDOR DETAILS */}
+          {activeTab === 'basicDetails' && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Company/Vendor Name <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="nameOfCompany"
+                    value={formData.nameOfCompany}
+                    onChange={(e) => handleChange('nameOfCompany', e.target.value.replace(/[^a-zA-Z0-9. ]/g, ''))}
+                    placeholder="Enter company/vendor name"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Proprietor/Director Name <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="propDirName"
+                    value={formData.propDirName}
+                    onChange={(e) => handleChange('propDirName', e.target.value.replace(/[^a-zA-Z. ]/g, ''))}
+                    placeholder="Enter proprietor/director name"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Contact Person <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="contactPerson"
+                    value={formData.contactPerson}
+                    onChange={(e) => handleChange('contactPerson', e.target.value.replace(/[^a-zA-Z. ]/g, ''))}
+                    placeholder="Enter contact person name"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Contact Number <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="contactNumber"
+                    maxLength={10}
+                    value={formData.contactNumber}
+                    onChange={(e) => handleChange('contactNumber', e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="Enter contact number"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Email ID</label>
+                  <input
+                    type="email"
+                    id="emailId"
+                    value={formData.emailId}
+                    onChange={(e) => handleChange('emailId', e.target.value)}
+                    placeholder="Enter email ID"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Address <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    id="address"
+                    value={formData.address}
+                    onChange={(e) => handleChange('address', e.target.value)}
+                    placeholder="Enter Address"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Registered/Head Office Address</label>
+                  <textarea
+                    rows={2}
+                    id="regHeadOfficeAddress"
+                    value={formData.regHeadOfficeAddress}
+                    onChange={(e) => handleChange('regHeadOfficeAddress', e.target.value)}
+                    placeholder="Enter Registered/Head Office Address"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors"
+                >
+                  <span>Next</span>
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: BANK DETAILS */}
+          {activeTab === 'bankGstDetails' && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Bank Name <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <select
+                    id="bankName"
+                    value={formData.bankName}
+                    onChange={(e) => handleChange('bankName', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.bankList.map(b => (
+                      <option key={b.id} value={b.bank_name}>{b.bank_name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Bank Branch Name</label>
+                  <input
+                    type="text"
+                    id="bankBranchName"
+                    value={formData.bankBranchName}
+                    onChange={(e) => handleChange('bankBranchName', e.target.value.replace(/[^a-zA-Z. ]/g, ''))}
+                    placeholder="Enter bank branch name"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Bank Address</label>
+                  <input
+                    type="text"
+                    id="bankAddress"
+                    value={formData.bankAddress}
+                    onChange={(e) => handleChange('bankAddress', e.target.value)}
+                    placeholder="Enter bank address"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Bank Contact Number</label>
+                  <input
+                    type="text"
+                    id="bankContactNumber"
+                    value={formData.bankContactNumber}
+                    onChange={(e) => handleChange('bankContactNumber', e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="Enter bank contact number"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Bank Account Number <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="bankAccountNumber"
+                    value={formData.bankAccountNumber}
+                    onChange={(e) => handleChange('bankAccountNumber', e.target.value.replace(/[^0-9]/g, ''))}
+                    placeholder="Enter bank account number"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Bank MICR Code</label>
+                  <input
+                    type="text"
+                    id="bankMicrCode"
+                    value={formData.bankMicrCode}
+                    onChange={(e) => handleChange('bankMicrCode', e.target.value.toUpperCase())}
+                    placeholder="Enter bank MICR code"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Bank RTGS (IFS) Code</label>
+                  <input
+                    type="text"
+                    id="bankRtgsCode"
+                    value={formData.bankRtgsCode}
+                    onChange={(e) => handleChange('bankRtgsCode', e.target.value.toUpperCase())}
+                    placeholder="Enter bank RTGS code"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    Bank NEFT (IFS) Code <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="bankNeftCode"
+                    value={formData.bankNeftCode}
+                    onChange={(e) => handleChange('bankNeftCode', e.target.value.toUpperCase())}
+                    placeholder="Enter bank NEFT code"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-between pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-semibold shadow transition-colors"
+                >
+                  <ArrowLeft size={14} />
+                  <span>Previous</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors"
+                >
+                  <span>Next</span>
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: FINANCIAL & GST DETAILS */}
+          {activeTab === 'financialDetails' && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Registration Number</label>
+                  <input
+                    type="text"
+                    id="registrationNumber"
+                    value={formData.registrationNumber}
+                    onChange={(e) => handleChange('registrationNumber', e.target.value.toUpperCase())}
+                    placeholder="Enter registration number"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    PAN Number <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="panNumber"
+                    maxLength={10}
+                    value={formData.panNumber}
+                    onChange={(e) => handleChange('panNumber', e.target.value.toUpperCase())}
+                    placeholder="Enter PAN number"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">ESI Number</label>
+                  <input
+                    type="text"
+                    id="esiNumber"
+                    value={formData.esiNumber}
+                    onChange={(e) => handleChange('esiNumber', e.target.value.toUpperCase())}
+                    placeholder="Enter ESI number"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">PF Number</label>
+                  <input
+                    type="text"
+                    id="pfNumber"
+                    value={formData.pfNumber}
+                    onChange={(e) => handleChange('pfNumber', e.target.value.toUpperCase())}
+                    placeholder="Enter PF number"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">GST Number</label>
+                  <input
+                    type="text"
+                    id="gstNumber"
+                    maxLength={15}
+                    value={formData.gstNumber}
+                    onChange={(e) => handleChange('gstNumber', e.target.value.toUpperCase())}
+                    placeholder="Enter GST number"
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">GST State</label>
+                  <select
+                    id="gstState"
+                    value={formData.gstState}
+                    onChange={(e) => handleChange('gstState', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.states.map(s => (
+                      <option key={s.id} value={s.state_name}>{s.state_name}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Annual Company Turnover</label>
+                  <select
+                    id="annualTurnover"
+                    value={formData.annualTurnover}
+                    onChange={(e) => handleChange('annualTurnover', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.annualTurnoverList.map(a => (
+                      <option key={a.id} value={a.annual_turnover}>{a.annual_turnover}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Audited Balance Sheet (last 3 years)</label>
+                  <select
+                    id="auditedBalanceSheet"
+                    value={formData.auditedBalanceSheet}
+                    onChange={(e) => handleChange('auditedBalanceSheet', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Amount of Work handled in one year</label>
+                  <select
+                    id="annualWorkHandleCapacity"
+                    value={formData.annualWorkHandleCapacity}
+                    onChange={(e) => handleChange('annualWorkHandleCapacity', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.workHandlingAmountList.map(w => (
+                      <option key={w.id} value={w.work_handling_amount}>{w.work_handling_amount}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-between pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-semibold shadow transition-colors"
+                >
+                  <ArrowLeft size={14} />
+                  <span>Previous</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors"
+                >
+                  <span>Next</span>
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: OTHER DETAILS */}
+          {activeTab === 'otherDetails' && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Type of Organization</label>
+                  <select
+                    id="organizationType"
+                    value={formData.organizationType}
+                    onChange={(e) => handleChange('organizationType', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.organizationTypeList.map(o => (
+                      <option key={o.id} value={o.organization_type}>{o.organization_type}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Total Team Available</label>
+                  <select
+                    id="totalTeam"
+                    value={formData.totalTeam}
+                    onChange={(e) => handleChange('totalTeam', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.teamStrengthList.map(t => (
+                      <option key={t.id} value={t.team_strength}>{t.team_strength}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Plant and Machinery</label>
+                  <select
+                    id="plantAndMechnery"
+                    value={formData.plantAndMechnery}
+                    onChange={(e) => handleChange('plantAndMechnery', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    <option value="owned">Owned</option>
+                    <option value="hired">Hired</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Organization Chart</label>
+                  <select
+                    id="organizationChart"
+                    value={formData.organizationChart}
+                    onChange={(e) => handleChange('organizationChart', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Interested in other work</label>
+                  <select
+                    id="interestOtherWorkType"
+                    value={formData.interestOtherWorkType}
+                    onChange={(e) => handleChange('interestOtherWorkType', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Association with Logimetrix</label>
+                  <select
+                    id="associationWithRil"
+                    value={formData.associationWithRil}
+                    onChange={(e) => handleChange('associationWithRil', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.associationYearsList.map(a => (
+                      <option key={a.id} value={a.association_years}>{a.association_years}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Geographical Presence</label>
+                  <select
+                    id="geographicalPresence"
+                    value={formData.geographicalPresence}
+                    onChange={(e) => handleChange('geographicalPresence', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.geographicalPresenceList.map(g => (
+                      <option key={g.id} value={g.geographical_presence}>{g.geographical_presence}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Major Clients</label>
+                  <select
+                    id="majorClients"
+                    value={formData.majorClients}
+                    onChange={(e) => handleChange('majorClients', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.vendorMajorClientsList.map(m => (
+                      <option key={m.id} value={m.major_clients}>{m.major_clients}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">SOP-QAP Sign Off</label>
+                  <select
+                    id="sopQapSignOff"
+                    value={formData.sopQapSignOff}
+                    onChange={(e) => handleChange('sopQapSignOff', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">SOP for Quality (Manual)</label>
+                  <select
+                    id="sopForQuality"
+                    value={formData.sopForQuality}
+                    onChange={(e) => handleChange('sopForQuality', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Relative Experience</label>
+                  <select
+                    id="experience"
+                    value={formData.experience}
+                    onChange={(e) => handleChange('experience', e.target.value)}
+                    className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:border-teal-500"
+                  >
+                    <option value="">Please Select</option>
+                    {masterData.relativeExperienceList.map(r => (
+                      <option key={r.id} value={r.experience}>{r.experience}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-between pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-semibold shadow transition-colors"
+                >
+                  <ArrowLeft size={14} />
+                  <span>Previous</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors"
+                >
+                  <span>Next</span>
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: ATTACH DOCUMENTS */}
+          {activeTab === 'documnetAttachment' && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                {/* 1. Experience Certificate */}
+                <div className="p-3 border border-gray-200 rounded-lg bg-gray-50/50 flex flex-col justify-between">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Experience Certificate</label>
+                  <input
+                    type="file"
+                    id="experienceCertificate"
+                    accept="image/*"
+                    onChange={(e) => handleFileChange('experienceCertificate', e)}
+                    className="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-200 file:text-gray-700"
+                  />
+                  {previews.experienceCertificate && (
+                    <img src={previews.experienceCertificate} alt="Preview" className="w-full h-24 object-contain mt-2 border border-gray-300 rounded bg-white" />
+                  )}
+                </div>
+
+                {/* 2. PAN Card */}
+                <div className="p-3 border border-gray-200 rounded-lg bg-gray-50/50 flex flex-col justify-between">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">
+                    PAN Card <span className="text-red-600 font-bold">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    id="panCard"
+                    accept="image/*"
+                    onChange={(e) => handleFileChange('panCard', e)}
+                    className="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-200 file:text-gray-700"
+                  />
+                  {previews.panCard && (
+                    <img src={previews.panCard} alt="Preview" className="w-full h-24 object-contain mt-2 border border-gray-300 rounded bg-white" />
+                  )}
+                </div>
+
+                {/* 3. GST Document */}
+                <div className="p-3 border border-gray-200 rounded-lg bg-gray-50/50 flex flex-col justify-between">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">GST Registration</label>
+                  <input
+                    type="file"
+                    id="gstDocument"
+                    accept="image/*"
+                    onChange={(e) => handleFileChange('gstDocument', e)}
+                    className="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-200 file:text-gray-700"
+                  />
+                  {previews.gstDocument && (
+                    <img src={previews.gstDocument} alt="Preview" className="w-full h-24 object-contain mt-2 border border-gray-300 rounded bg-white" />
+                  )}
+                </div>
+
+                {/* 4. Registration Certificate */}
+                <div className="p-3 border border-gray-200 rounded-lg bg-gray-50/50 flex flex-col justify-between">
+                  <label className="block text-xs font-semibold text-gray-700 mb-1">Registration Certificate</label>
+                  <input
+                    type="file"
+                    id="registrationCertificate"
+                    accept="image/*"
+                    onChange={(e) => handleFileChange('registrationCertificate', e)}
+                    className="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-gray-200 file:text-gray-700"
+                  />
+                  {previews.registrationCertificate && (
+                    <img src={previews.registrationCertificate} alt="Preview" className="w-full h-24 object-contain mt-2 border border-gray-300 rounded bg-white" />
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-between pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs font-semibold shadow transition-colors"
+                >
+                  <ArrowLeft size={14} />
+                  <span>Previous</span>
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors disabled:opacity-50"
+                >
+                  {submitting ? 'Saving...' : 'Save Details'}
+                </button>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
     </div>
   );
 };

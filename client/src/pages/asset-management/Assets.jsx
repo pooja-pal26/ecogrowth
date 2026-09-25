@@ -1,815 +1,531 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Package, Plus, Search, Filter, Eye, Edit2, Trash2, CheckCircle2, 
-  AlertCircle, ShieldCheck, Wrench, Clock, X, ChevronLeft, ChevronRight, 
-  ArrowUpDown, UserCheck, Calendar, DollarSign, MapPin
-} from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, Ban, LogIn, X } from 'lucide-react';
 import { fetchAssets, fetchAssetInitData, createAsset, updateAsset, deleteAsset } from '../../services/assetApi';
+import { showSuccessToast, showErrorToast } from '../../utils/toast';
+import Swal from 'sweetalert2';
 
 const Assets = () => {
   const [assets, setAssets] = useState([]);
-  const [initData, setInitData] = useState({
-    types: [],
-    employees: [],
-    availableAssets: [],
-    conditions: ['New', 'Good', 'Fair', 'Needs Repair'],
-    statuses: ['Available', 'Assigned', 'In Maintenance', 'Archived'],
-    locations: []
-  });
-
+  const [assetTypes, setAssetTypes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notification, setNotification] = useState({ type: '', message: '' });
-
-  // Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('');
-  const [selectedCondition, setSelectedCondition] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('');
-
-  // Sorting
-  const [sortField, setSortField] = useState('id');
-  const [sortOrder, setSortOrder] = useState('desc'); // 'asc' | 'desc'
-
-  // Pagination
+  const [entries, setEntries] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 8;
 
   // Modals
-  const [isAddEditOpen, setIsAddEditOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  const [isViewOpen, setIsViewOpen] = useState(false);
-  const [viewAsset, setViewAsset] = useState(null);
-
-  const [deleteConfirm, setDeleteConfirm] = useState({
-    isOpen: false,
-    asset: null,
-    loading: false
+  // Add / Edit Form State matching PHP asset.phtml
+  const [formData, setFormData] = useState({
+    asset_type: '',
+    asset_code: '',
+    asset_name: '',
+    warranty_date: ''
   });
 
-  const initialForm = {
-    code: '',
-    name: '',
-    asset_type_id: '',
-    serial_number: '',
-    purchase_date: new Date().toISOString().substring(0, 10),
-    warranty_date: '',
-    purchase_cost: '',
-    value: '',
-    condition: 'Good',
-    status: 'Available',
-    location: 'Head Office Lucknow',
-    assigned_to: '',
-    notes: ''
-  };
-
-  const [formData, setFormData] = useState(initialForm);
-  const [formError, setFormError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-
-  const loadAll = async () => {
+  const loadData = async () => {
     try {
       setLoading(true);
-      const [assetList, masterData] = await Promise.all([
+      const [assetsData, initData] = await Promise.all([
         fetchAssets(),
         fetchAssetInitData()
       ]);
-      setAssets(Array.isArray(assetList) ? assetList : []);
-      if (masterData) setInitData(masterData);
+      setAssets(Array.isArray(assetsData) ? assetsData : []);
+      if (initData && Array.isArray(initData.types)) {
+        setAssetTypes(initData.types.filter(t => String(t.is_active) !== '2' && String(t.is_active) !== '0'));
+      }
     } catch (err) {
       console.error('Error loading assets data:', err);
-      showNotification('error', 'Failed to load assets data.');
+      showErrorToast('Failed to load asset details.', 'Error !');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadAll();
+    loadData();
   }, []);
 
-  const showNotification = (type, message) => {
-    setNotification({ type, message });
-    setTimeout(() => {
-      setNotification({ type: '', message: '' });
-    }, 4000);
+  // Format date to DD/MM/YYYY matching PHP date('d/m/Y', strtotime(...))
+  const formatDisplayDate = (dStr) => {
+    if (!dStr) return '-';
+    const d = new Date(dStr);
+    if (isNaN(d.getTime())) return dStr;
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
-  // Top Metrics
-  const metrics = useMemo(() => {
-    const total = assets.length;
-    const available = assets.filter(a => a.status === 'Available').length;
-    const assigned = assets.filter(a => a.status === 'Assigned').length;
-    const maintenance = assets.filter(a => a.status === 'In Maintenance' || a.condition === 'Needs Repair').length;
-    return { total, available, assigned, maintenance };
-  }, [assets]);
-
-  // Filtering & Sorting
-  const filteredAndSortedAssets = useMemo(() => {
-    let result = [...assets];
-
-    // Search query
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(a => 
-        (a.code || '').toLowerCase().includes(q) ||
-        (a.name || '').toLowerCase().includes(q) ||
-        (a.serial_number || '').toLowerCase().includes(q) ||
-        (a.typeName || '').toLowerCase().includes(q) ||
-        (a.location || '').toLowerCase().includes(q) ||
-        (a.assignedToName || '').toLowerCase().includes(q)
-      );
-    }
-
-    // Type filter
-    if (selectedType) {
-      result = result.filter(a => String(a.asset_type_id) === String(selectedType));
-    }
-
-    // Status filter
-    if (selectedStatus) {
-      result = result.filter(a => a.status === selectedStatus);
-    }
-
-    // Condition filter
-    if (selectedCondition) {
-      result = result.filter(a => a.condition === selectedCondition);
-    }
-
-    // Location filter
-    if (selectedLocation) {
-      result = result.filter(a => a.location === selectedLocation);
-    }
-
-    // Sorting
-    result.sort((a, b) => {
-      let valA = a[sortField] || '';
-      let valB = b[sortField] || '';
-
-      if (sortField === 'value' || sortField === 'purchase_cost') {
-        valA = parseFloat(valA || 0);
-        valB = parseFloat(valB || 0);
-      } else if (sortField === 'id') {
-        valA = parseInt(valA || 0, 10);
-        valB = parseInt(valB || 0, 10);
-      } else {
-        valA = String(valA).toLowerCase();
-        valB = String(valB).toLowerCase();
+  // Convert to ISO date YYYY-MM-DD for <input type="date">
+  const toInputDate = (dStr) => {
+    if (!dStr) return '';
+    if (dStr.includes('/')) {
+      const parts = dStr.split('/');
+      if (parts.length === 3) {
+        return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
       }
+    }
+    const d = new Date(dStr);
+    if (isNaN(d.getTime())) return '';
+    return d.toISOString().substring(0, 10);
+  };
 
-      if (valA < valB) return sortOrder === 'asc' ? -1 : 1;
-      if (valA > valB) return sortOrder === 'asc' ? 1 : -1;
-      return 0;
+  // Search logic
+  const filteredAssets = useMemo(() => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return assets;
+    return assets.filter(a => {
+      const code = (a.code || '').toLowerCase();
+      const name = (a.name || '').toLowerCase();
+      const type = (a.typeName || a.type || '').toLowerCase();
+      const warranty = formatDisplayDate(a.warranty_date).toLowerCase();
+      return code.includes(q) || name.includes(q) || type.includes(q) || warranty.includes(q);
     });
-
-    return result;
-  }, [assets, searchQuery, selectedType, selectedStatus, selectedCondition, selectedLocation, sortField, sortOrder]);
+  }, [assets, searchQuery]);
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(filteredAndSortedAssets.length / pageSize));
+  const totalPages = Math.ceil(filteredAssets.length / entries) || 1;
   const paginatedAssets = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return filteredAndSortedAssets.slice(start, start + pageSize);
-  }, [filteredAndSortedAssets, currentPage]);
+    const start = (currentPage - 1) * entries;
+    return filteredAssets.slice(start, start + entries);
+  }, [filteredAssets, currentPage, entries]);
 
-  const handleSort = (field) => {
-    if (sortField === field) {
-      setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'));
-    } else {
-      setSortField(field);
-      setSortOrder('asc');
-    }
-  };
-
+  // Open Add Modal matching PHP #addAssetModal
   const handleOpenAdd = () => {
-    setFormData(initialForm);
-    setFormError('');
-    setIsEditing(false);
-    setEditId(null);
-    setIsAddEditOpen(true);
+    setFormData({
+      asset_type: '',
+      asset_code: '',
+      asset_name: '',
+      warranty_date: ''
+    });
+    setIsAddModalOpen(true);
   };
 
+  // Open Edit Modal matching PHP editDeactiveActiveDeleteAsset(id, 'edit')
   const handleOpenEdit = (asset) => {
     setFormData({
-      code: asset.code || '',
-      name: asset.name || '',
-      asset_type_id: asset.asset_type_id || '',
-      serial_number: asset.serial_number || '',
-      purchase_date: asset.purchase_date || '',
-      warranty_date: asset.warranty_date || '',
-      purchase_cost: asset.purchase_cost || asset.value || '',
-      value: asset.value || asset.purchase_cost || '',
-      condition: asset.condition || 'Good',
-      status: asset.status || 'Available',
-      location: asset.location || '',
-      assigned_to: asset.assigned_to || '',
-      notes: asset.notes || ''
+      asset_type: asset.asset_type_id || '',
+      asset_code: asset.code || '',
+      asset_name: asset.name || '',
+      warranty_date: toInputDate(asset.warranty_date)
     });
-    setFormError('');
-    setIsEditing(true);
     setEditId(asset.id || asset._id);
-    setIsAddEditOpen(true);
+    setIsEditModalOpen(true);
   };
 
-  const handleOpenView = (asset) => {
-    setViewAsset(asset);
-    setIsViewOpen(true);
-  };
-
-  const handleFormSubmit = async (e) => {
+  // Submit Add Asset matching PHP submitAssetForm click handler
+  const handleAddSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim()) {
-      setFormError('Asset Name is required');
+
+    if (!formData.asset_type) {
+      showErrorToast('Please select asset type.', 'Asset Type Missing !');
       return;
     }
-    if (!formData.asset_type_id) {
-      setFormError('Please select an Asset Type');
+    if (!formData.asset_code.trim()) {
+      showErrorToast('Please enter asset code.', 'Asset Code Missing !');
+      return;
+    }
+    if (!formData.asset_name.trim()) {
+      showErrorToast('Please enter asset name.', 'Asset Name Missing !');
       return;
     }
 
     try {
       setSubmitting(true);
-      setFormError('');
+      const payload = {
+        asset_type_id: formData.asset_type,
+        code: formData.asset_code.trim(),
+        name: formData.asset_name.trim(),
+        warranty_date: formData.warranty_date || ''
+      };
 
-      if (isEditing) {
-        await updateAsset(editId, formData);
-        showNotification('success', 'Asset updated successfully!');
-      } else {
-        await createAsset(formData);
-        showNotification('success', 'Asset created successfully!');
-      }
-
-      setIsAddEditOpen(false);
-      loadAll();
+      await createAsset(payload);
+      showSuccessToast('Asset has been saved successfully.', 'Saved Successfully');
+      setIsAddModalOpen(false);
+      loadData();
     } catch (err) {
-      setFormError(err.message || 'Operation failed');
+      showErrorToast(err.response?.data?.message || err.message || 'Failed to save asset.', 'Error !');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleConfirmDelete = async () => {
-    if (!deleteConfirm.asset) return;
+  // Submit Edit Asset matching PHP editAssetFormSubmit
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.asset_type) {
+      showErrorToast('Please select asset type.', 'Asset Type Missing !');
+      return;
+    }
+    if (!formData.asset_code.trim()) {
+      showErrorToast('Please enter asset code.', 'Asset Code Missing !');
+      return;
+    }
+    if (!formData.asset_name.trim()) {
+      showErrorToast('Please enter asset name.', 'Asset Name Missing !');
+      return;
+    }
+
     try {
-      setDeleteConfirm(prev => ({ ...prev, loading: true }));
-      await deleteAsset(deleteConfirm.asset.id || deleteConfirm.asset._id);
-      showNotification('success', `Asset "${deleteConfirm.asset.name}" archived/deleted.`);
-      setDeleteConfirm({ isOpen: false, asset: null, loading: false });
-      loadAll();
+      setSubmitting(true);
+      const payload = {
+        asset_type_id: formData.asset_type,
+        code: formData.asset_code.trim(),
+        name: formData.asset_name.trim(),
+        warranty_date: formData.warranty_date || ''
+      };
+
+      await updateAsset(editId, payload);
+      showSuccessToast('Asset has been updated successfully.', 'Updated Successfully');
+      setIsEditModalOpen(false);
+      setEditId(null);
+      loadData();
     } catch (err) {
-      showNotification('error', err.message || 'Failed to delete asset');
-      setDeleteConfirm({ isOpen: false, asset: null, loading: false });
+      showErrorToast(err.response?.data?.message || err.message || 'Failed to update asset.', 'Error !');
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const clearAllFilters = () => {
-    setSearchQuery('');
-    setSelectedType('');
-    setSelectedStatus('');
-    setSelectedCondition('');
-    setSelectedLocation('');
-    setCurrentPage(1);
+  // Activate / Deactivate / Delete matching PHP editDeactiveActiveDeleteAsset
+  const handleAction = async (asset, action) => {
+    const assetId = asset.id || asset._id;
+    const actionLabel = action === 'deactivate' ? 'deactivate' : action === 'activate' ? 'activate' : 'delete';
+
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you want to ${actionLabel} clicked asset ?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: `Yes, ${actionLabel}`,
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: action === 'delete' ? '#ef4444' : action === 'deactivate' ? '#d97706' : '#16a34a'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        if (action === 'delete') {
+          await deleteAsset(assetId);
+          showSuccessToast('Asset has been deleted successfully.', 'Deleted');
+        } else if (action === 'deactivate') {
+          await updateAsset(assetId, { is_active: '0', status: 'Inactive' });
+          showSuccessToast('Asset has been deactivated successfully.', 'Deactivated');
+        } else if (action === 'activate') {
+          await updateAsset(assetId, { is_active: '1', status: 'Available' });
+          showSuccessToast('Asset has been activated successfully.', 'Activated');
+        }
+        loadData();
+      } catch (err) {
+        showErrorToast(err.response?.data?.message || err.message || `Failed to ${actionLabel} asset.`, 'Failed !');
+      }
+    }
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-gray-200 gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <Package className="text-green-600" size={26} />
-            <span>Asset Details</span>
-          </h1>
-          <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
-            <span>Dashboard</span>
-            <span>/</span>
-            <span>Asset Management</span>
-            <span>/</span>
-            <span className="text-gray-700">Asset Details</span>
-          </nav>
-        </div>
-        <div className="flex items-center space-x-3">
-          <a
-            href="/asset-management/asset-assignments"
-            className="flex items-center space-x-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
-          >
-            <UserCheck size={16} />
-            <span>Assigned Systems</span>
-          </a>
-          <button
-            onClick={handleOpenAdd}
-            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-colors"
-          >
-            <Plus size={18} />
-            <span>Add New Asset</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Notifications */}
-      {notification.message && (
-        <div className={`p-4 rounded-xl text-sm font-medium flex items-center space-x-3 border ${
-          notification.type === 'success'
-            ? 'bg-green-50 text-green-800 border-green-200'
-            : 'bg-red-50 text-red-800 border-red-200'
-        }`}>
-          {notification.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
-          <span>{notification.message}</span>
-        </div>
-      )}
-
-      {/* Metric Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xs flex items-center space-x-4">
-          <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-            <Package size={24} />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Assets</p>
-            <h3 className="text-2xl font-bold text-gray-800 mt-0.5">{metrics.total}</h3>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xs flex items-center space-x-4">
-          <div className="p-3 bg-green-50 text-green-600 rounded-xl">
-            <ShieldCheck size={24} />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Available</p>
-            <h3 className="text-2xl font-bold text-green-700 mt-0.5">{metrics.available}</h3>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xs flex items-center space-x-4">
-          <div className="p-3 bg-amber-50 text-amber-600 rounded-xl">
-            <UserCheck size={24} />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">In-Use / Assigned</p>
-            <h3 className="text-2xl font-bold text-amber-700 mt-0.5">{metrics.assigned}</h3>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xs flex items-center space-x-4">
-          <div className="p-3 bg-red-50 text-red-600 rounded-xl">
-            <Wrench size={24} />
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Maintenance</p>
-            <h3 className="text-2xl font-bold text-red-700 mt-0.5">{metrics.maintenance}</h3>
-          </div>
-        </div>
-      </div>
-
-      {/* Filter and Search Bar */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
-          {/* Search */}
-          <div className="relative md:col-span-2">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-              placeholder="Search code, name, serial, location..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
-            />
-          </div>
-
-          {/* Type Filter */}
-          <div>
-            <select
-              value={selectedType}
-              onChange={(e) => { setSelectedType(e.target.value); setCurrentPage(1); }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
-            >
-              <option value="">All Asset Types</option>
-              {(initData.types || []).map(t => (
-                <option key={t.id} value={t.id}>{t.name || t.type}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Status Filter */}
-          <div>
-            <select
-              value={selectedStatus}
-              onChange={(e) => { setSelectedStatus(e.target.value); setCurrentPage(1); }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
-            >
-              <option value="">All Statuses</option>
-              <option value="Available">Available</option>
-              <option value="Assigned">Assigned</option>
-              <option value="In Maintenance">In Maintenance</option>
-              <option value="Archived">Archived</option>
-            </select>
-          </div>
-
-          {/* Condition Filter */}
-          <div>
-            <select
-              value={selectedCondition}
-              onChange={(e) => { setSelectedCondition(e.target.value); setCurrentPage(1); }}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
-            >
-              <option value="">All Conditions</option>
-              <option value="New">New</option>
-              <option value="Good">Good</option>
-              <option value="Fair">Fair</option>
-              <option value="Needs Repair">Needs Repair</option>
-            </select>
-          </div>
-        </div>
-
-        {(searchQuery || selectedType || selectedStatus || selectedCondition || selectedLocation) && (
-          <div className="flex justify-between items-center pt-2 text-xs text-gray-500">
-            <span>Showing filtered results ({filteredAndSortedAssets.length} found)</span>
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
+      {/* Main Panel matching PHP asset.phtml panel-primary */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {/* Panel Header */}
+        <div 
+          className="text-white px-4 py-2.5 flex flex-wrap justify-between items-center gap-2 shadow-xs min-h-[44px]"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
+        >
+          <h2 className="text-base font-bold tracking-tight">Asset Details</h2>
+          <div className="flex items-center gap-2">
             <button
-              onClick={clearAllFilters}
-              className="text-green-700 hover:text-green-900 font-semibold underline"
+              onClick={handleOpenAdd}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-all active:scale-95 cursor-pointer"
             >
-              Reset Filters
+              <Plus size={14} />
+              <span>Add New Asset</span>
             </button>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Main Asset Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {loading ? (
-          <div className="p-12 text-center text-gray-500">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-green-600 border-r-transparent mb-3" />
-            <p className="text-sm font-medium">Loading asset inventory...</p>
-          </div>
-        ) : paginatedAssets.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">
-            <Package className="mx-auto text-gray-300 mb-3" size={48} />
-            <p className="text-base font-semibold text-gray-700">No Assets Found</p>
-            <p className="text-sm text-gray-500 mt-1">
-              Try adjusting your search criteria or add new equipment to the system.
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-sm">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold text-xs uppercase tracking-wider">
-                    <th className="py-3.5 px-4 cursor-pointer" onClick={() => handleSort('code')}>
-                      <div className="flex items-center space-x-1">
-                        <span>Asset Code</span>
-                        <ArrowUpDown size={12} />
-                      </div>
-                    </th>
-                    <th className="py-3.5 px-4 cursor-pointer" onClick={() => handleSort('name')}>
-                      <div className="flex items-center space-x-1">
-                        <span>Asset Name</span>
-                        <ArrowUpDown size={12} />
-                      </div>
-                    </th>
-                    <th className="py-3.5 px-4">Type</th>
-                    <th className="py-3.5 px-4">Serial No.</th>
-                    <th className="py-3.5 px-4 cursor-pointer text-center" onClick={() => handleSort('status')}>
-                      <div className="flex items-center justify-center space-x-1">
-                        <span>Status</span>
-                        <ArrowUpDown size={12} />
-                      </div>
-                    </th>
-                    <th className="py-3.5 px-4">Assigned To</th>
-                    <th className="py-3.5 px-4">Location</th>
-                    <th className="py-3.5 px-4 cursor-pointer text-right" onClick={() => handleSort('value')}>
-                      <div className="flex items-center justify-end space-x-1">
-                        <span>Value (₹)</span>
-                        <ArrowUpDown size={12} />
-                      </div>
-                    </th>
-                    <th className="py-3.5 px-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 text-gray-700">
-                  {paginatedAssets.map((asset) => (
-                    <tr key={asset.id} className="hover:bg-gray-50/75 transition-colors">
-                      <td className="py-3 px-4 font-mono font-bold text-gray-800 text-xs">
-                        {asset.code}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="font-semibold text-gray-900 block">{asset.name}</span>
-                        <span className="text-xs text-gray-400">{asset.condition} condition</span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-700">
-                          {asset.typeName}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 font-mono text-xs text-gray-500">
-                        {asset.serial_number || '-'}
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                          asset.status === 'Available'
-                            ? 'bg-green-100 text-green-800'
-                            : asset.status === 'Assigned'
-                            ? 'bg-blue-100 text-blue-800'
-                            : asset.status === 'In Maintenance'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-gray-200 text-gray-700'
-                        }`}>
-                          {asset.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        {asset.assigned_to ? (
-                          <span className="font-medium text-gray-800 flex items-center gap-1.5">
-                            <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                            {asset.assignedToName}
-                          </span>
-                        ) : (
-                          <span className="text-gray-400 italic">Unassigned</span>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 text-gray-600 text-xs truncate max-w-[150px]">
-                        {asset.location || '-'}
-                      </td>
-                      <td className="py-3 px-4 text-right font-medium text-gray-800">
-                        {asset.value ? `₹${parseFloat(asset.value).toLocaleString('en-IN')}` : '-'}
-                      </td>
-                      <td className="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
-                        <button
-                          onClick={() => handleOpenView(asset)}
-                          title="View Details"
-                          className="p-1.5 text-gray-600 hover:text-green-600 hover:bg-green-50 rounded-md transition-colors"
-                        >
-                          <Eye size={16} />
-                        </button>
-                        <button
-                          onClick={() => handleOpenEdit(asset)}
-                          title="Edit Asset"
-                          className="p-1.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <button
-                          onClick={() => setDeleteConfirm({ isOpen: true, asset, loading: false })}
-                          title="Delete/Archive Asset"
-                          className="p-1.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination Controls */}
-            <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-3.5 border-t border-gray-200 bg-gray-50/50 text-xs text-gray-600 gap-3">
-              <div>
-                Showing <strong className="text-gray-800">{(currentPage - 1) * pageSize + 1}</strong> to{' '}
-                <strong className="text-gray-800">
-                  {Math.min(currentPage * pageSize, filteredAndSortedAssets.length)}
-                </strong>{' '}
-                of <strong className="text-gray-800">{filteredAndSortedAssets.length}</strong> items
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  className="p-1.5 rounded-md border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <span className="font-semibold px-2">Page {currentPage} of {totalPages}</span>
-                <button
-                  disabled={currentPage >= totalPages}
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  className="p-1.5 rounded-md border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Add / Edit Asset Modal */}
-      {isAddEditOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden border border-gray-100 my-8">
-            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-              <h3 className="text-lg font-bold text-gray-800">
-                {isEditing ? 'Edit Asset Details' : 'Add New Asset to Inventory'}
-              </h3>
-              <button
-                onClick={() => setIsAddEditOpen(false)}
-                className="text-gray-400 hover:text-gray-600 p-1 rounded-md"
+        {/* Panel Body */}
+        <div className="p-3.5 sm:p-4 bg-white">
+          {/* Controls: Show Entries & Search matching DataTable */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 w-full">
+            <div className="flex items-center text-xs text-gray-600">
+              <span>Show</span>
+              <select
+                value={entries}
+                onChange={(e) => {
+                  setEntries(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="mx-1.5 border border-gray-300 rounded px-2 py-1 text-xs bg-white focus:ring-1 focus:ring-teal-500 focus:outline-none"
               >
-                <X size={18} />
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+              </select>
+              <span>entries</span>
+            </div>
+
+            <div className="flex items-center w-full sm:w-auto">
+              <label className="text-xs font-semibold text-gray-700 mr-2 shrink-0">Search:</label>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search..."
+                className="border border-gray-300 rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-teal-500 focus:border-teal-500 w-full sm:w-56 focus:outline-none bg-white text-gray-800"
+              />
+            </div>
+          </div>
+
+          {/* Table matching PHP #assetTypeListTable in asset.phtml */}
+          <div className="overflow-x-auto border border-gray-200 rounded-lg">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="bg-gray-50/80 text-gray-700 uppercase text-xs border-b border-gray-200 font-bold">
+                  <th className="px-3.5 py-2 w-12 text-center">#</th>
+                  <th className="px-3.5 py-2">Code</th>
+                  <th className="px-3.5 py-2">Name</th>
+                  <th className="px-3.5 py-2">Asset Type</th>
+                  <th className="px-3.5 py-2">Warranty Date</th>
+                  <th className="px-3.5 py-2">Status</th>
+                  <th className="px-3.5 py-2 text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={7} className="px-4 py-8 text-center text-gray-400 bg-gray-50/50">
+                      Loading assets...
+                    </td>
+                  </tr>
+                ) : paginatedAssets.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="px-4 py-6 text-center text-gray-400 bg-gray-50/50">
+                      No data available in table
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedAssets.map((asset, index) => {
+                    const isActive = String(asset.is_active) === '1' || asset.status === 'Active' || asset.status === 'Available' || asset.status === 'Assigned';
+                    return (
+                      <tr key={asset.id || asset._id || index} className="border-b border-gray-100 hover:bg-teal-50/25 transition-colors">
+                        <td className="px-3.5 py-2 text-center text-gray-500 font-medium">
+                          {(currentPage - 1) * entries + index + 1}
+                        </td>
+                        <td className="px-3.5 py-2 font-medium text-gray-800">
+                          {asset.code}
+                        </td>
+                        <td className="px-3.5 py-2 font-medium text-gray-800">
+                          {asset.name}
+                        </td>
+                        <td className="px-3.5 py-2 font-medium text-gray-800">
+                          {asset.typeName || asset.type || '-'}
+                        </td>
+                        <td className="px-3.5 py-2 font-medium text-gray-800">
+                          {formatDisplayDate(asset.warranty_date)}
+                        </td>
+                        <td className="px-3.5 py-2 font-medium">
+                          <span className={isActive ? 'text-green-600 font-semibold' : 'text-gray-500'}>
+                            {isActive ? 'Active' : 'Deactive'}
+                          </span>
+                        </td>
+                        <td className="px-3.5 py-2 text-center">
+                          <div className="flex items-center justify-center gap-3">
+                            {isActive ? (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenEdit(asset)}
+                                  title="Edit Asset"
+                                  className="text-[#1DAA29] hover:opacity-80 transition-opacity cursor-pointer"
+                                >
+                                  <Edit2 size={15} />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleAction(asset, 'deactivate')}
+                                  title="Deactivate Asset"
+                                  className="text-[#D66F00] hover:opacity-80 transition-opacity cursor-pointer"
+                                >
+                                  <Ban size={15} />
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleAction(asset, 'activate')}
+                                  title="Activate Asset"
+                                  className="text-[#1DAA29] hover:opacity-80 transition-opacity cursor-pointer"
+                                >
+                                  <LogIn size={15} />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleAction(asset, 'delete')}
+                                  title="Delete Asset"
+                                  className="text-red-600 hover:opacity-80 transition-opacity cursor-pointer"
+                                >
+                                  <Trash2 size={15} />
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination Footer */}
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-3 gap-3 text-xs text-gray-500 w-full pt-2 border-t border-gray-100">
+            <div>
+              Showing {filteredAssets.length > 0 ? (currentPage - 1) * entries + 1 : 0} to {Math.min(currentPage * entries, filteredAssets.length)} of {filteredAssets.length} entries
+            </div>
+            <div className="flex flex-wrap justify-center gap-1">
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs cursor-pointer"
+              >
+                Previous
+              </button>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`px-2.5 py-1 border rounded text-xs transition-colors cursor-pointer ${
+                    currentPage === i + 1
+                      ? 'border-transparent bg-gradient-to-r from-teal-500 to-purple-600 text-white font-semibold shadow-xs'
+                      : 'border-gray-300 hover:bg-gray-50 text-gray-700'
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages || totalPages === 0}
+                className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs cursor-pointer"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Add Asset Modal matching PHP #addAssetModal */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl overflow-hidden border border-gray-200">
+            <div 
+              className="text-white px-4 py-2.5 flex justify-between items-center shadow-xs min-h-[44px]"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
+              <h3 className="font-bold text-base tracking-tight">Add Asset</h3>
+              <button onClick={() => setIsAddModalOpen(false)} className="text-white/80 hover:text-white transition-colors cursor-pointer">
+                <X size={16} />
               </button>
             </div>
 
-            <form onSubmit={handleFormSubmit} className="p-6 space-y-4">
-              {formError && (
-                <div className="p-3 bg-red-50 text-red-700 text-sm rounded-lg flex items-center gap-2 border border-red-200">
-                  <AlertCircle size={16} />
-                  <span>{formError}</span>
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleAddSubmit} className="p-4 bg-white space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                {/* Asset Type */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Asset Code
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.code}
-                    onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                    placeholder="Auto-generated if blank (e.g. AST-009)"
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Asset Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. Dell XPS 15, Honda Generator"
-                    required
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Asset Type / Category <span className="text-red-500">*</span>
+                  <label htmlFor="asset_type" className="block text-xs font-semibold text-gray-700 mb-1">
+                    Asset Type <span className="text-red-500 font-bold">*</span>
                   </label>
                   <select
-                    value={formData.asset_type_id}
-                    onChange={(e) => setFormData({ ...formData, asset_type_id: e.target.value })}
+                    id="asset_type"
+                    value={formData.asset_type}
+                    onChange={(e) => setFormData({ ...formData, asset_type: e.target.value })}
                     required
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
+                    className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-800 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                   >
-                    <option value="">Select Asset Category</option>
-                    {(initData.types || []).map(t => (
-                      <option key={t.id} value={t.id}>{t.name || t.type}</option>
+                    <option value="">Please Select</option>
+                    {assetTypes.map(at => (
+                      <option key={at.id || at._id} value={at.id || at._id}>
+                        {at.type || at.name}
+                      </option>
                     ))}
                   </select>
                 </div>
 
+                {/* Asset Code */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Serial Number / Barcode
+                  <label htmlFor="asset_code" className="block text-xs font-semibold text-gray-700 mb-1">
+                    Asset Code <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input
                     type="text"
-                    value={formData.serial_number}
-                    onChange={(e) => setFormData({ ...formData, serial_number: e.target.value })}
-                    placeholder="e.g. SN-8921-X"
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                    id="asset_code"
+                    value={formData.asset_code}
+                    onChange={(e) => setFormData({ ...formData, asset_code: e.target.value })}
+                    placeholder="Enter Asset Code"
+                    required
+                    className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-800 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                   />
                 </div>
 
+                {/* Asset Name */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Purchase Date
+                  <label htmlFor="asset_name" className="block text-xs font-semibold text-gray-700 mb-1">
+                    Asset Name <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input
-                    type="date"
-                    value={formData.purchase_date}
-                    onChange={(e) => setFormData({ ...formData, purchase_date: e.target.value })}
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none bg-white"
+                    type="text"
+                    id="asset_name"
+                    value={formData.asset_name}
+                    onChange={(e) => setFormData({ ...formData, asset_name: e.target.value })}
+                    placeholder="Enter Asset Name"
+                    required
+                    className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-800 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                   />
                 </div>
 
+                {/* Warranty Date */}
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Warranty Expiry Date
+                  <label htmlFor="warranty_date" className="block text-xs font-semibold text-gray-700 mb-1">
+                    Warranty Date
                   </label>
                   <input
                     type="date"
+                    id="warranty_date"
                     value={formData.warranty_date}
                     onChange={(e) => setFormData({ ...formData, warranty_date: e.target.value })}
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none bg-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Asset Value / Cost (₹)
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.value || formData.purchase_cost}
-                    onChange={(e) => setFormData({ ...formData, value: e.target.value, purchase_cost: e.target.value })}
-                    placeholder="e.g. 45000"
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Current Condition
-                  </label>
-                  <select
-                    value={formData.condition}
-                    onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
-                  >
-                    <option value="New">New</option>
-                    <option value="Good">Good</option>
-                    <option value="Fair">Fair</option>
-                    <option value="Needs Repair">Needs Repair</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Location / Department
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    placeholder="e.g. Head Office Lucknow, Warehouse"
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Status
-                  </label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
-                  >
-                    <option value="Available">Available</option>
-                    <option value="Assigned">Assigned</option>
-                    <option value="In Maintenance">In Maintenance</option>
-                    <option value="Archived">Archived</option>
-                  </select>
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Assigned Employee (Optional)
-                  </label>
-                  <select
-                    value={formData.assigned_to || ''}
-                    onChange={(e) => {
-                      const empId = e.target.value;
-                      setFormData({ 
-                        ...formData, 
-                        assigned_to: empId,
-                        status: empId ? 'Assigned' : formData.status 
-                      });
-                    }}
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-green-500 outline-none"
-                  >
-                    <option value="">-- No Employee Assigned (Available) --</option>
-                    {(initData.employees || []).map(u => (
-                      <option key={u.id} value={u.id}>{u.name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Notes & Specifications
-                  </label>
-                  <textarea
-                    rows="2"
-                    value={formData.notes}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    placeholder="Model specs, configuration, accessories included..."
-                    className="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                    className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-800 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100">
+              <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
                 <button
                   type="button"
-                  onClick={() => setIsAddEditOpen(false)}
-                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="px-3 py-1.5 border border-gray-300 text-gray-700 rounded text-xs hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 shadow-xs"
+                  className="px-5 py-1.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded text-xs shadow-sm transition-all disabled:opacity-50 cursor-pointer"
                 >
-                  {submitting ? 'Saving...' : (isEditing ? 'Save Changes' : 'Create Asset')}
+                  {submitting ? 'Saving...' : 'Save'}
                 </button>
               </div>
             </form>
@@ -817,126 +533,109 @@ const Assets = () => {
         </div>
       )}
 
-      {/* View Asset Details Modal */}
-      {isViewOpen && viewAsset && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-xl overflow-hidden border border-gray-100">
-            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-              <div>
-                <span className="font-mono text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded">
-                  {viewAsset.code}
-                </span>
-                <h3 className="text-lg font-bold text-gray-800 mt-1">{viewAsset.name}</h3>
-              </div>
-              <button
-                onClick={() => setIsViewOpen(false)}
-                className="text-gray-400 hover:text-gray-600 p-1 rounded-md"
-              >
-                <X size={18} />
+      {/* Edit Asset Modal matching PHP #editAssetNameModal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl overflow-hidden border border-gray-200">
+            <div 
+              className="text-white px-4 py-2.5 flex justify-between items-center shadow-xs min-h-[44px]"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+              }}
+            >
+              <h3 className="font-bold text-base tracking-tight">Edit Asset</h3>
+              <button onClick={() => setIsEditModalOpen(false)} className="text-white/80 hover:text-white transition-colors cursor-pointer">
+                <X size={16} />
               </button>
             </div>
 
-            <div className="p-6 space-y-4 text-sm">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Category</p>
-                  <p className="font-medium text-gray-800 mt-0.5">{viewAsset.typeName}</p>
+            <form onSubmit={handleEditSubmit} className="p-4 bg-white space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                {/* Asset Type */}
+                <div>
+                  <label htmlFor="edit_asset_type" className="block text-xs font-semibold text-gray-700 mb-1">
+                    Asset Type <span className="text-red-500 font-bold">*</span>
+                  </label>
+                  <select
+                    id="edit_asset_type"
+                    value={formData.asset_type}
+                    onChange={(e) => setFormData({ ...formData, asset_type: e.target.value })}
+                    required
+                    className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-800 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+                  >
+                    <option value="">Please Select</option>
+                    {assetTypes.map(at => (
+                      <option key={at.id || at._id} value={at.id || at._id}>
+                        {at.type || at.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Status</p>
-                  <p className="font-medium text-gray-800 mt-0.5">{viewAsset.status}</p>
+
+                {/* Asset Code */}
+                <div>
+                  <label htmlFor="edit_asset_code" className="block text-xs font-semibold text-gray-700 mb-1">
+                    Asset Code <span className="text-red-500 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="edit_asset_code"
+                    value={formData.asset_code}
+                    onChange={(e) => setFormData({ ...formData, asset_code: e.target.value })}
+                    placeholder="Enter Asset Code"
+                    required
+                    className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-800 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+                  />
                 </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Serial Number</p>
-                  <p className="font-mono font-medium text-gray-800 mt-0.5">{viewAsset.serial_number || '-'}</p>
+
+                {/* Asset Name */}
+                <div>
+                  <label htmlFor="edit_asset_name" className="block text-xs font-semibold text-gray-700 mb-1">
+                    Asset Name <span className="text-red-500 font-bold">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="edit_asset_name"
+                    value={formData.asset_name}
+                    onChange={(e) => setFormData({ ...formData, asset_name: e.target.value })}
+                    placeholder="Enter Asset Name"
+                    required
+                    className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-800 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+                  />
                 </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Condition</p>
-                  <p className="font-medium text-gray-800 mt-0.5">{viewAsset.condition}</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Location</p>
-                  <p className="font-medium text-gray-800 mt-0.5">{viewAsset.location}</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Value / Cost</p>
-                  <p className="font-medium text-gray-800 mt-0.5">
-                    {viewAsset.value ? `₹${parseFloat(viewAsset.value).toLocaleString('en-IN')}` : '-'}
-                  </p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Purchase Date</p>
-                  <p className="font-medium text-gray-800 mt-0.5">{viewAsset.purchase_date || '-'}</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Warranty Expiry</p>
-                  <p className="font-medium text-gray-800 mt-0.5">{viewAsset.warranty_date || '-'}</p>
+
+                {/* Warranty Date */}
+                <div>
+                  <label htmlFor="edit_warranty_date" className="block text-xs font-semibold text-gray-700 mb-1">
+                    Warranty Date
+                  </label>
+                  <input
+                    type="date"
+                    id="edit_warranty_date"
+                    value={formData.warranty_date}
+                    onChange={(e) => setFormData({ ...formData, warranty_date: e.target.value })}
+                    className="w-full border border-gray-300 rounded px-2.5 py-1.5 text-xs bg-white text-gray-800 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
+                  />
                 </div>
               </div>
 
-              <div className="bg-blue-50/70 border border-blue-100 p-3 rounded-lg">
-                <p className="text-xs text-blue-600 font-semibold uppercase">Currently Assigned To</p>
-                <p className="font-bold text-gray-800 mt-0.5">
-                  {viewAsset.assignedToName || 'Unassigned / In Stockroom'}
-                </p>
+              <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="px-3 py-1.5 border border-gray-300 text-gray-700 rounded text-xs hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-5 py-1.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded text-xs shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+                >
+                  {submitting ? 'Updating...' : 'Update'}
+                </button>
               </div>
-
-              {viewAsset.notes && (
-                <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-xs text-gray-400 font-semibold uppercase">Notes</p>
-                  <p className="text-gray-700 mt-0.5">{viewAsset.notes}</p>
-                </div>
-              )}
-            </div>
-
-            <div className="flex justify-end p-4 border-t border-gray-100 bg-gray-50/50">
-              <button
-                type="button"
-                onClick={() => setIsViewOpen(false)}
-                className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium hover:bg-gray-900 transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete / Archive Confirmation Modal */}
-      {deleteConfirm.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-gray-100 space-y-4">
-            <div className="flex items-center space-x-3 text-red-600">
-              <div className="p-3 bg-red-100 rounded-full">
-                <Trash2 size={24} />
-              </div>
-              <div>
-                <h4 className="font-bold text-gray-800 text-lg">Archive / Delete Asset</h4>
-                <p className="text-xs text-gray-500">Record will be archived and marked inactive.</p>
-              </div>
-            </div>
-
-            <p className="text-sm text-gray-600">
-              Are you sure you want to remove <strong className="text-gray-800">{deleteConfirm.asset?.code} ({deleteConfirm.asset?.name})</strong> from active inventory?
-            </p>
-
-            <div className="flex justify-end space-x-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setDeleteConfirm({ isOpen: false, asset: null, loading: false })}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                disabled={deleteConfirm.loading}
-                onClick={handleConfirmDelete}
-                className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
-              >
-                {deleteConfirm.loading ? 'Deleting...' : 'Yes, Delete'}
-              </button>
-            </div>
+            </form>
           </div>
         </div>
       )}
