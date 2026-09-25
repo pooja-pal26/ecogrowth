@@ -30,6 +30,8 @@ router.delete('/po-details/:id', controller.deletePODetails);
 router.post('/po-sites-list', controller.getSitesByPONumber);
 router.get('/po-sites-list', controller.getSitesByPONumber);
 router.get('/init-data', controller.getPOInitData);
+router.get('/get-site-matrix-data/:site_id', controller.getSiteMatrixData);
+router.get('/get-site-matrix-data', controller.getSiteMatrixData);
 router.post('/add-po-and-sites', controller.addPOAndSites);
 router.post('/add-po-sites', controller.addPOSites);
 

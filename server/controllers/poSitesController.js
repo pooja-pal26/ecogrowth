@@ -1305,3 +1305,24 @@ exports.addPOSites = async (req, res) => {
     res.status(500).json({ flag: false, title: 'Error', message: err.message });
   }
 };
+
+/**
+ * Get Site Matrix details by site_id (matches PHP ManagePoSiteController::getSiteMatrixDataAction)
+ */
+exports.getSiteMatrixData = async (req, res) => {
+  try {
+    const site_id = req.params.site_id || req.query.site_id;
+    if (!site_id) {
+      return res.status(200).json(null);
+    }
+    const cleanId = String(site_id).trim().toLowerCase();
+    const siteMatrix = jsonDb.getTable('tbl_site_matrix') || [];
+    const match = siteMatrix.find(m => 
+      m.technical_site_id && String(m.technical_site_id).trim().toLowerCase().startsWith(cleanId)
+    );
+    res.status(200).json(match || null);
+  } catch (err) {
+    console.error('Error in getSiteMatrixData:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
