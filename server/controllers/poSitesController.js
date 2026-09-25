@@ -186,11 +186,115 @@ exports.updateAllocatedSiteStatus = async (req, res) => {
 exports.deleteAllocatedSite = async (req, res) => {
   try {
     const { id } = req.params;
-    const updated = jsonDb.update('tbl_site_allocation', id, { is_deleted: '1' });
+    const allocations = jsonDb.getTable('tbl_site_allocation') || [];
+    const target = allocations.find(a => String(a.id || a._id) === String(id));
 
-    res.json({ success: true, message: 'Allocated site deleted successfully' });
+    const updated = jsonDb.update('tbl_site_allocation', id, { is_deleted: '1', status: '0' });
+
+    // Mark site available again in tbl_po_sites
+    const po_no = req.body?.po_number || req.query?.po_number || target?.po_no;
+    const site_id = req.body?.site_id || req.query?.site_id || target?.site_id;
+    if (po_no && site_id) {
+      const poSites = jsonDb.getTable('tbl_po_sites') || [];
+      const siteRec = poSites.find(s => String(s.po_no).trim() === String(po_no).trim() && String(s.site_id).trim() === String(site_id).trim());
+      if (siteRec) {
+        jsonDb.update('tbl_po_sites', siteRec._id || siteRec.id, { status: '0' });
+      }
+    }
+
+    res.json({ success: true, message: 'Site allocation has been deleted successfully.' });
   } catch(e) {
     console.error('Error deleting allocated site:', e);
+    res.status(500).json({ success: false, message: e.message });
+  }
+};
+
+/**
+ * Get Allocated Site Details (matches PHP view-allocated-site-details.phtml)
+ */
+exports.getAllocatedSiteDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const allocations = jsonDb.getTable('tbl_site_allocation') || [];
+    const target = allocations.find(a => String(a.id || a._id) === String(id));
+    if (!target) {
+      return res.status(404).json({ success: false, message: 'Site allocation record not found' });
+    }
+
+    const works = jsonDb.getTable('tbl_site_nature_of_work') || [];
+    const vendors = jsonDb.getTable('tbl_company_vendor_master') || jsonDb.getTable('tbl_vendor') || [];
+    const users = jsonDb.getTable('tbl_user') || [];
+    const manpower = jsonDb.getTable('tbl_vendor_manpower') || [];
+
+    const siteWorks = works.filter(w =>
+      (String(w.site_allocation_id) === String(target.id || target._id) || String(w.site_id) === String(target.site_id)) &&
+      String(w.is_deleted) !== '1'
+    );
+
+    const enrichedWorks = siteWorks.map(w => {
+      const v = vendors.find(vend => String(vend.id || vend._id) === String(w.vendor_id));
+      const u = users.find(usr => String(usr.id || usr._id) === String(w.supervisor_id));
+      const m = manpower.find(mp => String(mp.id || mp._id) === String(w.supervisor_id));
+      return {
+        nature_of_work: w.nature_of_work || w.nature_of_work_id || '-',
+        allocation_type: w.allocation_type || '-',
+        vendor_name: v ? (v.vendor_company_name || v.vendor_name) : '-',
+        supervisor_name: u ? u.name : (m ? (m.manpower_name || m.name) : (v ? (v.contact_person || v.vendor_name) : '-')),
+        due_date: w.work_completion_date ? String(w.work_completion_date).substring(0, 10) : (target.due_date ? String(target.due_date).substring(0, 10) : '-')
+      };
+    });
+
+    res.json({
+      success: true,
+      data: {
+        po_no: target.po_no || '-',
+        po_date: target.po_date ? String(target.po_date).substring(0, 10) : '-',
+        site_id: target.site_id || '-',
+        due_date: target.due_date ? String(target.due_date).substring(0, 10) : '-',
+        infratel_id: target.infratel_id || '-',
+        zone: target.zone || '-',
+        district: target.district || '-',
+        cluster: target.cluster || '-',
+        tech_name: target.tech_name || '-',
+        tech_mobile: target.tech_mobile || '-',
+        works: enrichedWorks.length > 0 ? enrichedWorks : [{
+          nature_of_work: target.work_type || 'Civil & Electrical Work',
+          allocation_type: 'Staff',
+          vendor_name: '-',
+          supervisor_name: target.tech_name || 'Supervisor',
+          due_date: target.due_date ? String(target.due_date).substring(0, 10) : '-'
+        }]
+      }
+    });
+  } catch (e) {
+    console.error('Error fetching allocated site details:', e);
+    res.status(500).json({ success: false, message: e.message });
+  }
+};
+
+/**
+ * Site Close Status (matches PHP siteCloseStatusAction)
+ */
+exports.siteCloseStatus = async (req, res) => {
+  try {
+    const { allocation_id, close_status, remark } = req.body;
+    if (!allocation_id) {
+      return res.status(400).json({ success: false, message: 'Site Allocation Id Missing!' });
+    }
+
+    const updated = jsonDb.update('tbl_site_allocation', allocation_id, {
+      close_status: String(close_status || '1'),
+      status: String(close_status) === '1' ? 'Closed' : '1',
+      remark: remark || ''
+    });
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Allocation record not found' });
+    }
+
+    res.json({ success: true, message: 'Closed has been set successfully.', data: updated });
+  } catch (e) {
+    console.error('Error updating site close status:', e);
     res.status(500).json({ success: false, message: e.message });
   }
 };
@@ -366,6 +470,25 @@ exports.allocateSite = async (req, res) => {
       close_status: '0',
       created_at: now
     });
+
+    // Insert nature of work items into tbl_site_nature_of_work
+    if (Array.isArray(allocations)) {
+      allocations.forEach(item => {
+        if (item.nature_of_work || item.resource_type || item.supervisor_id) {
+          jsonDb.insert('tbl_site_nature_of_work', {
+            site_id: String(siteId).trim(),
+            site_allocation_id: String(newAlloc.id || newAlloc._id),
+            nature_of_work_id: item.nature_of_work_id || item.nature_of_work,
+            nature_of_work: item.nature_of_work || '',
+            allocation_type: item.resource_type || '',
+            vendor_id: item.vendor_id || '',
+            supervisor_id: item.supervisor_id || '',
+            work_completion_date: item.completion_date || site_completion_date || '',
+            created_at: now
+          });
+        }
+      });
+    }
 
     // Update status in tbl_po_sites
     const poSites = jsonDb.getTable('tbl_po_sites');

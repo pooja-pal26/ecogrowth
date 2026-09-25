@@ -106,12 +106,12 @@ const AddNewPOSites = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Header */}
         <div 
-          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex justify-between items-center shadow-xs"
+          className="text-white px-4 py-2.5 flex justify-between items-center shadow-xs min-h-[44px]"
           style={{
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
-          <h2 className="text-base sm:text-lg font-bold tracking-tight">Add PO Sites</h2>
+          <h2 className="text-base font-bold tracking-tight">Add PO Sites</h2>
         </div>
 
         {/* Panel Body */}

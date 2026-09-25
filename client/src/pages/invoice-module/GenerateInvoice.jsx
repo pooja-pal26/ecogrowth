@@ -220,46 +220,22 @@ const GenerateInvoice = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
-      {/* Header */}
-      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <FileText className="text-blue-600" size={26} />
-            Generate Invoice
-          </h1>
-          <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
-            <span className="hover:text-blue-600 cursor-pointer" onClick={() => navigate('/')}>Dashboard</span>
-            <span>/</span>
-            <span className="hover:text-blue-600 cursor-pointer" onClick={() => navigate('/invoice-module/punched-invoices')}>Invoice Module</span>
-            <span>/</span>
-            <span className="text-gray-700">Generate Invoice</span>
-          </nav>
-        </div>
-        <button
-          onClick={() => navigate('/invoice-module/punched-invoices')}
-          className="flex items-center gap-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors"
-        >
-          <ArrowLeft size={16} />
-          View Invoices List
-        </button>
-      </div> */}
-
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
       {/* Main Container */}
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-3">
         {/* Step 1: Base Parameters */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div 
-            className="text-white px-6 py-4 shadow-xs"
+            className="text-white px-4 py-2.5 sm:px-5 sm:py-3 shadow-xs"
             style={{
               background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
             }}
           >
-            <h2 className="text-lg font-semibold tracking-wide">Invoice Generation Form</h2>
-            <p className="text-xs text-white/80 mt-0.5"><span className="text-rose-300 font-bold">*</span> Fields are mandatory</p>
+            <h2 className="text-base sm:text-lg font-bold tracking-tight">Invoice Generation Form</h2>
+            <p className="text-[11px] text-white/80 mt-0.5"><span className="text-rose-300 font-bold">*</span> Fields are mandatory</p>
           </div>
 
-          <div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="p-3.5 sm:p-5 grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
             {/* State */}
             <div>
               <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
@@ -402,12 +378,12 @@ const GenerateInvoice = () => {
         </div>
 
         {/* Step 2: Billing & Shipping Party Details */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 className="text-md font-bold text-gray-800 uppercase tracking-wider text-center border-b pb-3 mb-4">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3.5 sm:p-5">
+          <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider text-center border-b pb-2 mb-3">
             Billing And Shipping Details
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {/* Bill To Party */}
             <div className="border border-gray-200 rounded-xl p-4 bg-gray-50/50 space-y-2">
               <div className="flex items-center gap-2 text-blue-700 font-semibold border-b pb-2">
@@ -440,18 +416,18 @@ const GenerateInvoice = () => {
 
         {/* Step 3: Products / Services Line Items */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="bg-slate-800 text-white px-6 py-3 flex justify-between items-center">
-            <h3 className="font-semibold text-sm uppercase tracking-wider">Products & Services Line Items</h3>
+          <div className="bg-slate-800 text-white px-4 py-2.5 sm:px-5 sm:py-3 flex justify-between items-center">
+            <h3 className="font-semibold text-xs sm:text-sm uppercase tracking-wider">Products & Services Line Items</h3>
             <button
               type="button"
               onClick={addLineItem}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-colors"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs font-semibold flex items-center gap-1 transition-colors cursor-pointer"
             >
               <Plus size={14} /> Add Product/Service
             </button>
           </div>
 
-          <div className="overflow-x-auto p-4">
+          <div className="overflow-x-auto p-2.5 sm:p-3">
             <table className="w-full text-left text-sm border-collapse">
               <thead>
                 <tr className="bg-gray-100 text-gray-700 text-xs uppercase font-semibold border-b">

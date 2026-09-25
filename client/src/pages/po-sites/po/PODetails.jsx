@@ -160,13 +160,13 @@ const PODetails = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Heading with Action Buttons matching PHP layout */}
         <div 
-          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-wrap justify-between items-center gap-3 shadow-xs"
+          className="text-white px-4 py-2.5 flex flex-wrap justify-between items-center gap-2 shadow-xs min-h-[44px]"
           style={{
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
           <div className="flex items-center gap-2">
-            <h2 className="text-base sm:text-lg font-bold tracking-tight">PO Details</h2>
+            <h2 className="text-base font-bold tracking-tight">PO Details</h2>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem, patchItem } from '../../../services/masterDataApi';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import { X, Pencil, Ban, LogIn, Trash2 } from 'lucide-react';
@@ -252,7 +252,7 @@ const WorkDescription = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <MasterDataTable
         title="Work Description List"
         columns={columns}
@@ -315,12 +315,12 @@ const WorkDescription = () => {
           <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xl w-full max-w-lg overflow-hidden border border-slate-200 dark:border-slate-800">
             {/* Header with gradient */}
             <div
-              className="px-6 py-4 flex items-center justify-between text-white"
+              className="px-4 py-2.5 flex items-center justify-between text-white min-h-[44px]"
               style={{
                 background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
               }}
             >
-              <h3 className="text-lg font-bold">
+              <h3 className="text-base font-bold tracking-tight">
                 {isEditing ? 'Edit Work Description' : 'Add Work Description'}
               </h3>
               <button

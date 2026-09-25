@@ -409,108 +409,55 @@ const PunchedInvoices = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/60 p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1700px] mx-auto">
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
       {/* Toast Feedback */}
       {feedback.message && (
         <div
-          className={`p-4 rounded-xl flex items-start justify-between shadow-sm border ${
+          className={`p-3 rounded-lg flex items-start justify-between shadow-sm border text-xs sm:text-sm ${
             feedback.type === 'success'
               ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
               : 'bg-rose-50 text-rose-900 border-rose-200'
           }`}
         >
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2.5">
             {feedback.type === 'success' ? (
-              <CheckCircle2 className="text-emerald-600 flex-shrink-0 mt-0.5" size={18} />
+              <CheckCircle2 className="text-emerald-600 flex-shrink-0 mt-0.5" size={16} />
             ) : (
-              <AlertTriangle className="text-rose-600 flex-shrink-0 mt-0.5" size={18} />
+              <AlertTriangle className="text-rose-600 flex-shrink-0 mt-0.5" size={16} />
             )}
             <div>
-              <p className="font-bold text-sm">{feedback.title}</p>
+              <p className="font-bold">{feedback.title}</p>
               <p className="text-xs mt-0.5">{feedback.message}</p>
             </div>
           </div>
           <button
             onClick={() => setFeedback({ type: '', title: '', message: '' })}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-gray-400 hover:text-gray-600 cursor-pointer"
           >
-            <X size={16} />
+            <X size={15} />
           </button>
         </div>
       )}
 
-      {/* KPI Stats Cards */}
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div className="bg-white p-4 rounded-xl shadow-xs border border-gray-200 flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
-            <FileText size={20} />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Total Invoices</p>
-            <h4 className="text-xl font-bold text-gray-900">{stats.totalInvoices}</h4>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl shadow-xs border border-gray-200 flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
-            <DollarSign size={20} />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Total Value</p>
-            <h4 className="text-xl font-bold text-emerald-600 truncate">{formatINR(stats.totalInvoiceAmount)}</h4>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl shadow-xs border border-gray-200 flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-full bg-cyan-50 text-cyan-600 flex items-center justify-center flex-shrink-0">
-            <CheckCircle2 size={20} />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Received</p>
-            <h4 className="text-xl font-bold text-cyan-700 truncate">{formatINR(stats.totalReceivedAmount)}</h4>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl shadow-xs border border-gray-200 flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
-            <Clock size={20} />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Pending</p>
-            <h4 className="text-xl font-bold text-amber-600 truncate">{formatINR(stats.totalPendingAmount)}</h4>
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl shadow-xs border border-gray-200 flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
-            <Eye size={20} />
-          </div>
-          <div className="min-w-0">
-            <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Marked Review</p>
-            <h4 className="text-xl font-bold text-purple-700">{stats.markedForReviewCount}</h4>
-          </div>
-        </div>
-      </div> */}
-
       {/* Main Table Panel */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Header */}
         <div 
-          className="text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs"
+          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-wrap items-center justify-between gap-3 shadow-xs"
           style={{
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
-          <div className="flex items-center gap-2.5">
-            <Receipt className="text-teal-200" size={22} />
-            <h2 className="text-lg sm:text-xl font-bold tracking-tight">Invoice(s) Details</h2>
+          <div className="flex items-center gap-2">
+            <Receipt className="text-teal-200" size={18} />
+            <h2 className="text-base sm:text-lg font-bold tracking-tight">Invoice(s) Details</h2>
           </div>
 
-          <div className="flex items-center gap-3 self-end sm:self-auto">
+          <div className="flex items-center gap-2">
             {/* Punch Invoice Green Button */}
             <Link
               to="/invoice-module/punch-invoice"
-              className="px-4 py-2 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg shadow-sm transition-all backdrop-blur-md active:scale-95 flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-1.5 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg shadow-sm transition-all backdrop-blur-md active:scale-95 flex items-center gap-1.5 cursor-pointer"
             >
               Punch Invoice
             </Link>
@@ -519,24 +466,24 @@ const PunchedInvoices = () => {
             <button
               onClick={handleExportExcel}
               title="Export to Excel / CSV"
-              className="p-2 bg-white text-emerald-700 hover:bg-gray-100 rounded-lg shadow-sm transition-colors cursor-pointer border border-gray-300"
+              className="p-1.5 bg-white text-emerald-700 hover:bg-gray-100 rounded-md shadow-sm transition-colors cursor-pointer border border-gray-300"
             >
-              <FileSpreadsheet size={18} className="text-emerald-600" />
+              <FileSpreadsheet size={16} className="text-emerald-600" />
             </button>
 
             {/* Refresh */}
             <button
               onClick={fetchInvoices}
               title="Refresh Data"
-              className="p-2 bg-white/10 text-white hover:bg-white/20 rounded-lg transition-colors cursor-pointer"
+              className="p-1.5 bg-white/10 text-white hover:bg-white/20 rounded-md transition-colors cursor-pointer"
             >
-              <RefreshCw size={17} className={loading ? 'animate-spin' : ''} />
+              <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
             </button>
           </div>
         </div>
 
         {/* Filter Toolbar */}
-        <div className="p-4 bg-gray-50/80 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
+        <div className="p-2.5 sm:p-3 bg-gray-50/80 border-b border-gray-200 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
             {/* Search Input */}
             <div className="relative flex-1 min-w-[220px] max-w-sm">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem, patchItem } from '../../../services/masterDataApi';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import { X, Pencil, Ban, LogIn, Trash2 } from 'lucide-react';
@@ -236,20 +236,20 @@ const ExpenseIn = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
             <div
-              className="text-white px-5 py-3.5 flex justify-between items-center shadow-xs"
+              className="text-white px-4 py-2.5 flex justify-between items-center shadow-xs min-h-[44px]"
               style={{
                 background:
                   'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
               }}
             >
-              <h3 className="font-bold text-base sm:text-lg tracking-tight">
+              <h3 className="font-bold text-base tracking-tight">
                 {isEditing ? 'Edit Expense In Type' : 'Add Expense In Type'}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
               >
-                <X size={20} />
+                <X size={16} />
               </button>
             </div>
 

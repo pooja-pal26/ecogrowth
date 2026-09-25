@@ -1,36 +1,182 @@
-import React, { useState, useEffect } from 'react';
-import { Save, ArrowLeft, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Save, X, ChevronDown, Check, Search } from 'lucide-react';
 import axios from 'axios';
+import { showSuccessToast, showErrorToast } from '../../../utils/toast';
+
+// Helper to format names to Title Case matching PHP ucwords(strtolower($user['name']))
+const formatName = (str) => {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+// Select2-like Multi-Select for Employee
+const EmployeeMultiSelect = ({ users = [], selected = [], onChange }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filteredUsers = users.filter(u =>
+    (u.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const toggleUser = (userId) => {
+    const idStr = String(userId);
+    if (selected.includes(idStr)) {
+      onChange(selected.filter(id => id !== idStr));
+    } else {
+      onChange([...selected, idStr]);
+    }
+  };
+
+  const removeUser = (e, userId) => {
+    e.stopPropagation();
+    onChange(selected.filter(id => id !== String(userId)));
+  };
+
+  return (
+    <div className="relative w-full" ref={wrapperRef}>
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="min-h-[34px] w-full px-2 py-1 text-xs border border-gray-300 rounded bg-white flex flex-wrap items-center gap-1 cursor-pointer focus-within:ring-1 focus-within:ring-teal-500 focus-within:border-teal-500"
+      >
+        {selected.length === 0 ? (
+          <span className="text-gray-400 select-none">Select Employee</span>
+        ) : (
+          selected.map(id => {
+            const user = users.find(u => String(u.id) === String(id));
+            const name = user ? formatName(user.name) : `User #${id}`;
+            return (
+              <span
+                key={id}
+                className="inline-flex items-center gap-1 bg-teal-50 text-teal-800 border border-teal-200 text-[11px] px-1.5 py-0.5 rounded font-medium"
+              >
+                {name}
+                <button
+                  type="button"
+                  onClick={(e) => removeUser(e, id)}
+                  className="text-teal-600 hover:text-teal-900 focus:outline-none"
+                >
+                  <X size={11} />
+                </button>
+              </span>
+            );
+          })
+        )}
+        <div className="ml-auto pl-1 self-center text-gray-400">
+          <ChevronDown size={14} className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="absolute left-0 right-0 z-50 mt-1 max-h-60 overflow-y-auto bg-white border border-gray-300 rounded shadow-lg text-xs">
+          <div className="p-1.5 border-b border-gray-100 bg-gray-50 flex items-center gap-1 sticky top-0">
+            <Search size={12} className="text-gray-400 ml-1" />
+            <input
+              type="text"
+              placeholder="Search employee..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full px-2 py-1 text-xs bg-transparent border-0 focus:outline-none focus:ring-0 text-gray-800"
+              autoFocus
+            />
+            {selected.length > 0 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onChange([]);
+                }}
+                className="text-[10px] text-red-600 hover:underline px-1 whitespace-nowrap"
+              >
+                Clear all
+              </button>
+            )}
+          </div>
+          <div className="py-1">
+            {filteredUsers.length === 0 ? (
+              <div className="px-3 py-2 text-gray-400 text-center">No employees found</div>
+            ) : (
+              filteredUsers.map(user => {
+                const isSelected = selected.includes(String(user.id));
+                return (
+                  <div
+                    key={user.id}
+                    onClick={() => toggleUser(user.id)}
+                    className={`px-3 py-1.5 flex items-center justify-between cursor-pointer hover:bg-teal-50 transition-colors ${
+                      isSelected ? 'bg-teal-50/70 font-semibold text-teal-900' : 'text-gray-700'
+                    }`}
+                  >
+                    <span>{formatName(user.name)}</span>
+                    {isSelected && <Check size={13} className="text-teal-600" />}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ReportNewIncident = () => {
+  const navigate = useNavigate();
+
+  // Top Incident Type selector matching PHP: "" (Please Select), "1" (Office Incident), "2" (Site Incident)
+  const [incidentType, setIncidentType] = useState('');
+
+  // Initial masters from backend
   const [initData, setInitData] = useState({
     poList: [],
     sitesList: [],
     vendors: [],
-    users: [],
-    types: [
-      { id: '1', label: 'Office Incident' },
-      { id: '2', label: 'Site Incident' }
-    ]
+    users: []
   });
 
-  const [formData, setFormData] = useState({
-    type: '2', // Default to Site Incident matching PHP
-    poNumber: '',
-    siteId: '',
-    incidentDate: new Date().toISOString().substring(0, 10),
-    vendorId: '',
-    employeeIds: [],
-    description: '',
-    consequence: ''
+  const getTodayISO = () => new Date().toISOString().substring(0, 10);
+
+  // Site Incident Form State matching PHP site-incident-form.phtml
+  const [siteForm, setSiteForm] = useState({
+    incident_date: getTodayISO(),
+    po_no: '',
+    site_id: '',
+    employee_id: [],
+    vendor_id: '',
+    incident_report: '',
+    incident_effect: ''
   });
 
-  const [loading, setLoading] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState({ type: '', text: '' });
+  // Office Incident Form State matching PHP office-incident-form.phtml
+  const [officeForm, setOfficeForm] = useState({
+    incident_date: getTodayISO(),
+    employee_id: [],
+    incident_report: '',
+    incident_effect: ''
+  });
+
+  const [submitting, setSubmitting] = useState(false);
+  const [loadingInit, setLoadingInit] = useState(true);
 
   useEffect(() => {
     const fetchInit = async () => {
       try {
+        setLoadingInit(true);
         const res = await axios.get('http://localhost:5000/api/po-sites/incidents-init', { withCredentials: true });
         if (res.data && res.data.success) {
           const d = res.data.data;
@@ -38,366 +184,427 @@ const ReportNewIncident = () => {
             poList: Array.isArray(d.poList) ? d.poList : [],
             sitesList: Array.isArray(d.sitesList) ? d.sitesList : [],
             vendors: Array.isArray(d.vendors) ? d.vendors : [],
-            users: Array.isArray(d.users) ? d.users : [],
-            types: [
-              { id: '1', label: 'Office Incident' },
-              { id: '2', label: 'Site Incident' }
-            ]
+            users: Array.isArray(d.users) ? d.users : []
           });
         }
       } catch (err) {
         console.error('Error fetching incident init data:', err);
+      } finally {
+        setLoadingInit(false);
       }
     };
     fetchInit();
   }, []);
 
-  // Filter sites according to selected PO
-  const filteredSites = (initData?.sitesList || []).filter(s => {
-    if (!formData.poNumber) return true;
-    return String(s.po_no || '').trim() === String(formData.poNumber || '').trim();
+  // Filter sites based on selected PO in Site Incident form
+  const availableSites = (initData.sitesList || []).filter(s => {
+    if (!siteForm.po_no) return false;
+    return String(s.po_no || '').trim() === String(siteForm.po_no).trim();
   });
 
-  const handlePOChange = (e) => {
-    const po = e.target.value;
-    setFormData(prev => ({
+  // Handle PO selection change in Site Incident form
+  const handleSitePoChange = (e) => {
+    const selectedPo = e.target.value;
+    setSiteForm(prev => ({
       ...prev,
-      poNumber: po,
-      siteId: ''
+      po_no: selectedPo,
+      site_id: '' // reset site_id when PO changes, matching PHP
     }));
   };
 
-  const handleEmployeeToggle = (userId) => {
-    setFormData(prev => {
-      const current = prev.employeeIds || [];
-      const idStr = String(userId);
-      if (current.includes(idStr)) {
-        return { ...prev, employeeIds: current.filter(id => id !== idStr) };
-      } else {
-        return { ...prev, employeeIds: [...current, idStr] };
-      }
-    });
-  };
-
-  const removeEmployee = (userId) => {
-    setFormData(prev => ({
-      ...prev,
-      employeeIds: (prev.employeeIds || []).filter(id => id !== String(userId))
-    }));
-  };
-
-  const handleSubmit = async (e) => {
+  // Submit Site Incident matching PHP site-incident-form.phtml
+  const handleSubmitSiteIncident = async (e) => {
     e.preventDefault();
-    setSubmitMessage({ type: '', text: '' });
 
-    if (!formData.type) {
-      alert('Please select Incident Type.');
+    if (!siteForm.incident_date) {
+      showErrorToast('Please select incident date.', 'Incident Date Missing!');
       return;
     }
-
-    if (formData.type === '2') {
-      if (!formData.poNumber) {
-        alert('Please select PO Number.');
-        return;
-      }
-      if (!formData.siteId) {
-        alert('Please select Site ID.');
-        return;
-      }
-    }
-
-    if (!formData.employeeIds || formData.employeeIds.length === 0) {
-      alert('Please select at least one Employee.');
+    if (!siteForm.po_no) {
+      showErrorToast('Please select PO number.', 'PO Number Missing!');
       return;
     }
-
-    if (!formData.description || !formData.description.trim()) {
-      alert('Please enter Incident Report description.');
+    if (!siteForm.site_id) {
+      showErrorToast('Please select site ID.', 'Site ID Missing!');
+      return;
+    }
+    if (!siteForm.employee_id || siteForm.employee_id.length === 0) {
+      showErrorToast('Please select employee.', 'Employee Missing!');
+      return;
+    }
+    if (!siteForm.incident_report || !siteForm.incident_report.trim()) {
+      showErrorToast('Please enter incident report.', 'Incident Report Missing!');
       return;
     }
 
     try {
-      setLoading(true);
+      setSubmitting(true);
       const payload = {
-        type: formData.type,
-        incident_type: formData.type,
-        po_no: formData.poNumber,
-        poNumber: formData.poNumber,
-        site_id: formData.siteId,
-        siteId: formData.siteId,
-        incident_date: formData.incidentDate,
-        incidentDate: formData.incidentDate,
-        employee_id: formData.employeeIds,
-        employee_ids: formData.employeeIds.join(','),
-        vendor_id: formData.vendorId,
-        vendorId: formData.vendorId,
-        incident_report: formData.description,
-        incident: formData.description,
-        description: formData.description,
-        incident_effect: formData.consequence,
-        incident_consequence: formData.consequence,
-        consequence: formData.consequence
+        type: '2',
+        incident_type: '2',
+        incident_date: siteForm.incident_date,
+        po_no: siteForm.po_no,
+        site_id: siteForm.site_id,
+        employee_id: siteForm.employee_id,
+        vendor_id: siteForm.vendor_id || '',
+        incident_report: siteForm.incident_report,
+        incident_effect: siteForm.incident_effect || ''
       };
 
       const res = await axios.post('http://localhost:5000/api/po-sites/incidents', payload, { withCredentials: true });
       if (res.data && res.data.success) {
-        setSubmitMessage({ type: 'success', text: res.data.message || 'Incident report has been saved successfully.' });
-        setTimeout(() => {
-          window.location.href = '/po-sites/incidents-reporting/incidents-report';
-        }, 1200);
+        showSuccessToast(res.data.message || 'Incident report has been saved successfully.', 'Success !');
+        navigate('/po-sites/incidents-reporting/incidents-report');
       } else {
-        setSubmitMessage({ type: 'error', text: res.data?.message || 'Failed to submit incident' });
+        showErrorToast(res.data?.message || 'Failed to save incident report.', 'Error !');
       }
     } catch (err) {
-      console.error('Error submitting incident:', err);
-      setSubmitMessage({
-        type: 'error',
-        text: err.response?.data?.message || 'Error submitting incident report'
-      });
+      console.error('Error submitting site incident:', err);
+      showErrorToast(err.response?.data?.message || 'Failed to save incident report.', 'Error !');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
+    }
+  };
+
+  // Submit Office Incident matching PHP office-incident-form.phtml
+  const handleSubmitOfficeIncident = async (e) => {
+    e.preventDefault();
+
+    if (!officeForm.incident_date) {
+      showErrorToast('Please select incident date.', 'Incident Date Missing!');
+      return;
+    }
+    if (!officeForm.employee_id || officeForm.employee_id.length === 0) {
+      showErrorToast('Please select employee.', 'Employee Missing!');
+      return;
+    }
+    if (!officeForm.incident_report || !officeForm.incident_report.trim()) {
+      showErrorToast('Please enter incident report.', 'Incident Report Missing!');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      const payload = {
+        type: '1',
+        incident_type: '1',
+        incident_date: officeForm.incident_date,
+        employee_id: officeForm.employee_id,
+        incident_report: officeForm.incident_report,
+        incident_effect: officeForm.incident_effect || ''
+      };
+
+      const res = await axios.post('http://localhost:5000/api/po-sites/incidents', payload, { withCredentials: true });
+      if (res.data && res.data.success) {
+        showSuccessToast(res.data.message || 'Incident report has been saved successfully.', 'Success !');
+        navigate('/po-sites/incidents-reporting/incidents-report');
+      } else {
+        showErrorToast(res.data?.message || 'Failed to save incident report.', 'Error !');
+      }
+    } catch (err) {
+      console.error('Error submitting office incident:', err);
+      showErrorToast(err.response?.data?.message || 'Failed to save incident report.', 'Error !');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 w-full max-w-7xl mx-auto space-y-6">
-      {/* Header matching PHP page-wrapper layout */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-gray-200 gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Report New Incident</h1>
-          <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
-            <span>Dashboard</span>
-            <span>/</span>
-            <span>PO & Sites</span>
-            <span>/</span>
-            <span>Incidents Reporting</span>
-            <span>/</span>
-            <span className="text-gray-700">Report New Incident</span>
-          </nav>
-        </div>
-        <a 
-          href="/po-sites/incidents-reporting/incidents-report" 
-          className="inline-flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm font-medium shadow-sm"
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
+      {/* Main Panel matching PHP report-new-incident.phtml panel-primary */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {/* Panel Heading with exact gradient header */}
+        <div 
+          className="text-white px-4 py-2.5 flex flex-wrap justify-between items-center gap-2 shadow-xs min-h-[44px]"
+          style={{
+            background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+          }}
         >
-          <ArrowLeft size={16} />
-          <span>Back to Incidents Report</span>
-        </a>
-      </div>
-
-      {submitMessage.text && (
-        <div className={`p-4 rounded-lg text-sm font-medium border ${
-          submitMessage.type === 'success' 
-            ? 'bg-green-50 text-green-800 border-green-200' 
-            : 'bg-red-50 text-red-800 border-red-200'
-        }`}>
-          {submitMessage.text}
-        </div>
-      )}
-
-      {/* Main Form container matching PHP mainDiv */}
-      <div className="bg-[#DCF2FE] border border-[#b0d5ea] rounded-xl p-6 shadow-sm">
-        <div className="mb-4">
-          <span className="font-bold text-sm text-[#D60019]">* Fields are mandatory.</span>
+          <h2 className="text-base font-bold tracking-tight">Report New Incident</h2>
+          <Link
+            to="/po-sites/incidents-reporting/incidents-report"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-all active:scale-95 cursor-pointer"
+          >
+            <ArrowLeft size={14} />
+            <span>Back</span>
+          </Link>
         </div>
 
-        {/* Top Type Selector */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        {/* Panel Body - Normal White Background */}
+        <div className="p-4 sm:p-5 bg-white space-y-4">
+          {/* Mandatory notice */}
           <div>
-            <label className="block text-sm font-semibold text-gray-800 mb-1">
-              Incident Type <span className="text-red-500">*</span>
-            </label>
-            <select
-              value={formData.type}
-              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white text-sm"
-            >
-              <option value="">Please Select</option>
-              <option value="1">Office Incident</option>
-              <option value="2">Site Incident</option>
-            </select>
+            <span className="font-bold text-xs sm:text-sm text-[#D60019]">
+              * Fields are mandatory.
+            </span>
           </div>
-        </div>
 
-        {/* Dynamic Form matching PHP site-incident-form / office-incident-form */}
-        {formData.type ? (
-          <form onSubmit={handleSubmit} className="bg-white border-2 border-[#b0d5ea] rounded-xl p-6 space-y-6 shadow-xs">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
-              {formData.type === '1' ? 'Office Incident Details' : 'Site Incident Details'}
-            </h3>
+          {/* Incident Type Select Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            <div>
+              <label htmlFor="incidentTypeSelect" className="block text-xs font-bold text-gray-700 mb-1">
+                Incident Type <span className="text-[#D60019] font-bold">*</span>
+              </label>
+              <select
+                id="incidentTypeSelect"
+                value={incidentType}
+                onChange={(e) => setIncidentType(e.target.value)}
+                className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+              >
+                <option value="">Please Select</option>
+                <option value="1">Office Incident</option>
+                <option value="2">Site Incident</option>
+              </select>
+            </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Date of Incident */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Date of Incident <span className="text-red-500">*</span>
-                </label>
-                <input 
-                  type="date" 
-                  value={formData.incidentDate}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm bg-white"
-                  onChange={(e) => setFormData({ ...formData, incidentDate: e.target.value })}
-                  required
-                />
-              </div>
+          {/* If no type selected, show prompt matching PHP hidden formDiv */}
+          {!incidentType && (
+            <div className="py-8 px-4 text-center text-xs text-gray-500 border border-dashed border-gray-200 rounded-lg bg-gray-50/50">
+              Please select an Incident Type above to display the form.
+            </div>
+          )}
 
-              {/* Site Incident Fields */}
-              {formData.type === '2' && (
-                <>
+          {/* SITE INCIDENT FORM matching PHP site-incident-form.phtml */}
+          {incidentType === '2' && (
+            <div className="border-t border-gray-100 pt-4">
+              <form onSubmit={handleSubmitSiteIncident} className="space-y-4">
+                <div>
+                  <span className="font-bold text-xs sm:text-sm text-[#D60019]">
+                    * Fields are mandatory.
+                  </span>
+                </div>
+
+                {/* Row 1: Date of Incident, PO Number, Site ID, Employee */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-start">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      PO Number <span className="text-red-500">*</span>
+                    <label htmlFor="incident_date" className="block text-xs font-bold text-gray-700 mb-1">
+                      Date of Incident <span className="text-[#D60019] font-bold">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="incident_date"
+                      name="incident_date"
+                      value={siteForm.incident_date}
+                      onChange={(e) => setSiteForm({ ...siteForm, incident_date: e.target.value })}
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="po_no" className="block text-xs font-bold text-gray-700 mb-1">
+                      PO Number <span className="text-[#D60019] font-bold">*</span>
                     </label>
                     <select
-                      value={formData.poNumber}
-                      onChange={handlePOChange}
-                      required={formData.type === '2'}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white text-sm"
+                      id="po_no"
+                      name="po_no"
+                      value={siteForm.po_no}
+                      onChange={handleSitePoChange}
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+                      required
                     >
                       <option value="">Select PO Number</option>
-                      {(initData.poList || []).map(p => (
-                        <option key={p.id || p.po_no} value={p.po_no}>{p.po_no}</option>
+                      {initData.poList.map((po) => (
+                        <option key={po.id || po.po_no} value={po.po_no}>
+                          {po.po_no}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Site ID <span className="text-red-500">*</span>
+                    <label htmlFor="site_id" className="block text-xs font-bold text-gray-700 mb-1">
+                      Site ID <span className="text-[#D60019] font-bold">*</span>
                     </label>
                     <select
-                      value={formData.siteId}
-                      onChange={(e) => setFormData({ ...formData, siteId: e.target.value })}
-                      required={formData.type === '2'}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white text-sm"
+                      id="site_id"
+                      name="site_id"
+                      value={siteForm.site_id}
+                      onChange={(e) => setSiteForm({ ...siteForm, site_id: e.target.value })}
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+                      required
                     >
                       <option value="">Select Site ID</option>
-                      {filteredSites.map(s => (
-                        <option key={s.id || s.site_id} value={s.site_id}>{s.site_id}</option>
+                      {availableSites.map((site) => (
+                        <option key={site.id || site.site_id} value={site.site_id}>
+                          {site.site_id}
+                        </option>
                       ))}
                     </select>
                   </div>
-                </>
-              )}
 
-              {/* Vendor (Site Incident Only) */}
-              {formData.type === '2' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Vendor
-                  </label>
-                  <select
-                    value={formData.vendorId}
-                    onChange={(e) => setFormData({ ...formData, vendorId: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white text-sm"
-                  >
-                    <option value="">Please Select Vendor</option>
-                    {(initData.vendors || []).map(v => (
-                      <option key={v.id} value={v.id}>
-                        {v.label || `${v.vendor_name || v.vendor_company_name}${v.contact_person ? ` (${v.contact_person})` : ''}`}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              {/* Employee Selection (Multi-select) */}
-              <div className={formData.type === '1' ? 'md:col-span-3' : 'md:col-span-4'}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Responsible Employee(s) <span className="text-red-500">*</span>
-                </label>
-                
-                {/* Selected chips */}
-                {formData.employeeIds && formData.employeeIds.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {formData.employeeIds.map(empId => {
-                      const user = (initData.users || []).find(u => String(u.id) === String(empId));
-                      return (
-                        <span 
-                          key={empId} 
-                          className="inline-flex items-center bg-green-100 text-green-800 text-xs px-2.5 py-1 rounded-full font-medium"
-                        >
-                          {user ? user.name : `User #${empId}`}
-                          <button
-                            type="button"
-                            onClick={() => removeEmployee(empId)}
-                            className="ml-1.5 text-green-700 hover:text-green-900 focus:outline-none"
-                          >
-                            <X size={12} />
-                          </button>
-                        </span>
-                      );
-                    })}
+                  <div>
+                    <label htmlFor="employee_id" className="block text-xs font-bold text-gray-700 mb-1">
+                      Employee <span className="text-[#D60019] font-bold">*</span>
+                    </label>
+                    <EmployeeMultiSelect
+                      users={initData.users}
+                      selected={siteForm.employee_id}
+                      onChange={(newEmpIds) => setSiteForm({ ...siteForm, employee_id: newEmpIds })}
+                    />
                   </div>
-                )}
+                </div>
 
-                <select
-                  value=""
-                  onChange={(e) => {
-                    if (e.target.value) handleEmployeeToggle(e.target.value);
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none bg-white text-sm"
-                >
-                  <option value="">-- Click to add an Employee --</option>
-                  {(initData.users || []).map(u => (
-                    <option 
-                      key={u.id} 
-                      value={u.id}
-                      disabled={(formData.employeeIds || []).includes(String(u.id))}
+                {/* Row 2: Vendor, Incident Report, Incident Consequence */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                  <div>
+                    <label htmlFor="vendor_id" className="block text-xs font-bold text-gray-700 mb-1">
+                      Vendor
+                    </label>
+                    <select
+                      id="vendor_id"
+                      name="vendor_id"
+                      value={siteForm.vendor_id}
+                      onChange={(e) => setSiteForm({ ...siteForm, vendor_id: e.target.value })}
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
                     >
-                      {u.name} {(formData.employeeIds || []).includes(String(u.id)) ? '(Selected)' : ''}
-                    </option>
-                  ))}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">Select one or multiple employees responsible for or involved in this incident.</p>
-              </div>
+                      <option value="">Please Select</option>
+                      {initData.vendors.map((v) => (
+                        <option key={v.id} value={v.id}>
+                          {v.vendor_name} ({v.contact_person || 'N/A'})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              {/* Incident Report */}
-              <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Incident Report <span className="text-red-500">*</span>
-                </label>
-                <textarea 
-                  rows="4"
-                  value={formData.description}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm"
-                  placeholder="Enter detailed incident report description..."
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  required
-                />
-              </div>
+                  <div>
+                    <label htmlFor="incident_report" className="block text-xs font-bold text-gray-700 mb-1">
+                      Incident Report <span className="text-[#D60019] font-bold">*</span>
+                    </label>
+                    <textarea
+                      id="incident_report"
+                      name="incident_report"
+                      rows="3"
+                      value={siteForm.incident_report}
+                      onChange={(e) => setSiteForm({ ...siteForm, incident_report: e.target.value })}
+                      placeholder="Enter incident report..."
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+                      required
+                    />
+                  </div>
 
-              {/* Incident Consequence */}
-              <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Incident Consequence / Effect
-                </label>
-                <textarea 
-                  rows="4"
-                  value={formData.consequence}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-sm"
-                  placeholder="Enter consequences, actions taken, or outcomes..."
-                  onChange={(e) => setFormData({ ...formData, consequence: e.target.value })}
-                />
-              </div>
+                  <div>
+                    <label htmlFor="incident_effect" className="block text-xs font-bold text-gray-700 mb-1">
+                      Incident Consequence
+                    </label>
+                    <textarea
+                      id="incident_effect"
+                      name="incident_effect"
+                      rows="3"
+                      value={siteForm.incident_effect}
+                      onChange={(e) => setSiteForm({ ...siteForm, incident_effect: e.target.value })}
+                      placeholder="Enter incident consequence..."
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+                    />
+                  </div>
+                </div>
+
+                {/* Row 3: Save Report Button matching PHP id="saveIncidentReport" */}
+                <div className="flex justify-end pt-2">
+                  <button
+                    type="submit"
+                    id="saveIncidentReport"
+                    disabled={submitting}
+                    className="inline-flex items-center space-x-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold px-6 py-2.5 rounded shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    <Save size={14} />
+                    <span>{submitting ? 'Saving Report...' : 'Save Report'}</span>
+                  </button>
+                </div>
+              </form>
             </div>
+          )}
 
-            {/* Submit Button */}
-            <div className="flex justify-end pt-4 border-t border-gray-100">
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex items-center space-x-2 bg-green-600 text-white px-6 py-2.5 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 font-medium shadow-sm"
-              >
-                <Save size={18} />
-                <span>{loading ? 'Saving Report...' : 'Save Report'}</span>
-              </button>
+          {/* OFFICE INCIDENT FORM matching PHP office-incident-form.phtml */}
+          {incidentType === '1' && (
+            <div className="border-t border-gray-100 pt-4">
+              <form onSubmit={handleSubmitOfficeIncident} className="space-y-4">
+                <div>
+                  <span className="font-bold text-xs sm:text-sm text-[#D60019]">
+                    * Fields are mandatory.
+                  </span>
+                </div>
+
+                {/* Row 1: Date of Incident, Employee */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-start">
+                  <div>
+                    <label htmlFor="incident_date_office" className="block text-xs font-bold text-gray-700 mb-1">
+                      Date of Incident <span className="text-[#D60019] font-bold">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      id="incident_date_office"
+                      name="incident_date"
+                      value={officeForm.incident_date}
+                      onChange={(e) => setOfficeForm({ ...officeForm, incident_date: e.target.value })}
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="employee_id_office" className="block text-xs font-bold text-gray-700 mb-1">
+                      Employee <span className="text-[#D60019] font-bold">*</span>
+                    </label>
+                    <EmployeeMultiSelect
+                      users={initData.users}
+                      selected={officeForm.employee_id}
+                      onChange={(newEmpIds) => setOfficeForm({ ...officeForm, employee_id: newEmpIds })}
+                    />
+                  </div>
+                </div>
+
+                {/* Row 2: Incident Report, Incident Consequence */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="col-span-1 sm:col-span-1 md:col-span-2">
+                    <label htmlFor="incident_report_office" className="block text-xs font-bold text-gray-700 mb-1">
+                      Incident Report <span className="text-[#D60019] font-bold">*</span>
+                    </label>
+                    <textarea
+                      id="incident_report_office"
+                      name="incident_report"
+                      rows="3"
+                      value={officeForm.incident_report}
+                      onChange={(e) => setOfficeForm({ ...officeForm, incident_report: e.target.value })}
+                      placeholder="Enter incident report..."
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+                      required
+                    />
+                  </div>
+
+                  <div className="col-span-1 sm:col-span-1 md:col-span-2">
+                    <label htmlFor="incident_effect_office" className="block text-xs font-bold text-gray-700 mb-1">
+                      Incident Consequence
+                    </label>
+                    <textarea
+                      id="incident_effect_office"
+                      name="incident_effect"
+                      rows="3"
+                      value={officeForm.incident_effect}
+                      onChange={(e) => setOfficeForm({ ...officeForm, incident_effect: e.target.value })}
+                      placeholder="Enter incident consequence..."
+                      className="w-full px-2.5 py-1.5 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white text-gray-800"
+                    />
+                  </div>
+                </div>
+
+                {/* Row 3: Save Report Button matching PHP id="saveIncidentReport" */}
+                <div className="flex justify-end pt-2">
+                  <button
+                    type="submit"
+                    id="saveIncidentReportOffice"
+                    disabled={submitting}
+                    className="inline-flex items-center space-x-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold px-6 py-2.5 rounded shadow-sm transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    <Save size={14} />
+                    <span>{submitting ? 'Saving Report...' : 'Save Report'}</span>
+                  </button>
+                </div>
+              </form>
             </div>
-          </form>
-        ) : (
-          <div className="bg-white border-2 border-dashed border-[#b0d5ea] rounded-xl p-8 text-center text-gray-500">
-            Please select an Incident Type above to display the report form.
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

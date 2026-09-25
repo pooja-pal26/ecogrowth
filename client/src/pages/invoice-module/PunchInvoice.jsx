@@ -273,60 +273,60 @@ const PunchInvoice = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50/60 p-4 sm:p-6 lg:p-8 max-w-[1400px] mx-auto space-y-6">
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 max-w-6xl mx-auto space-y-3">
       {/* Alert Notification */}
       {feedback.message && (
-        <div className={`p-4 rounded-xl flex items-start gap-3 shadow-sm border ${
+        <div className={`p-3 rounded-lg flex items-start gap-2.5 shadow-sm border text-xs sm:text-sm ${
           feedback.type === 'success'
             ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
             : 'bg-rose-50 text-rose-900 border-rose-200'
         }`}>
           {feedback.type === 'success' ? (
-            <CheckCircle className="text-emerald-600 flex-shrink-0 mt-0.5" size={20} />
+            <CheckCircle className="text-emerald-600 flex-shrink-0 mt-0.5" size={18} />
           ) : (
-            <AlertCircle className="text-rose-600 flex-shrink-0 mt-0.5" size={20} />
+            <AlertCircle className="text-rose-600 flex-shrink-0 mt-0.5" size={18} />
           )}
-          <div className="text-sm">
+          <div>
             <strong className="font-bold">{feedback.title}</strong>&nbsp; {feedback.message}
           </div>
         </div>
       )}
 
       {/* Main Form Panel matching PHP punch-invoice.phtml panel-primary */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Header */}
         <div 
-          className="text-white px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs"
+          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-wrap justify-between items-center gap-2 shadow-xs"
           style={{
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
           <div>
-            <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
-              <Receipt className="text-teal-200" size={22} />
+            <h2 className="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2">
+              <Receipt className="text-teal-200" size={18} />
               Invoice Punching Form
             </h2>
-            <p className="text-xs text-white/80 mt-0.5">Punch customer billed invoices and corresponding vendor costs</p>
+            <p className="text-[11px] text-white/80">Punch customer billed invoices and corresponding vendor costs</p>
           </div>
           <Link
             to="/invoice-module/punched-invoices"
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg shadow-sm transition-all backdrop-blur-md active:scale-95 self-start sm:self-auto cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg shadow-sm transition-all backdrop-blur-md active:scale-95 cursor-pointer"
           >
-            <FileSpreadsheet size={15} />
+            <FileSpreadsheet size={14} />
             View Invoice List
           </Link>
         </div>
 
-        {/* Form Container (matching PHP mainDiv background #DCF2FE) */}
-        <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+        {/* Form Container */}
+        <form onSubmit={handleSubmit} className="p-3.5 sm:p-5 space-y-3.5">
+          <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
             <span className="text-xs font-bold text-rose-600 uppercase tracking-wider">
               * Field is mandatory.
             </span>
             {calculatedMargin !== null && (
-              <div className="flex items-center gap-2 px-3 py-1 bg-purple-50 border border-purple-200 rounded-lg text-xs font-bold text-purple-800">
+              <div className="flex items-center gap-2 px-2.5 py-1 bg-purple-50 border border-purple-200 rounded-md text-xs font-bold text-purple-800">
                 <span>Calculated Margin:</span>
-                <span className="text-sm">₹ {Number(calculatedMargin).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                <span className="text-xs sm:text-sm">₹ {Number(calculatedMargin).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
               </div>
             )}
           </div>
@@ -338,7 +338,7 @@ const PunchInvoice = () => {
               Primary Site & Invoice Details
             </h3> */}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5">
               {/* State For */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
@@ -348,7 +348,7 @@ const PunchInvoice = () => {
                   name="state_id"
                   value={formData.state_id}
                   onChange={handleStateChange}
-                  className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 >
                   <option value="">Select State</option>
@@ -367,7 +367,7 @@ const PunchInvoice = () => {
                   name="client_id"
                   value={formData.client_id}
                   onChange={handleInputChange}
-                  className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 >
                   <option value="">Select Client</option>
@@ -386,7 +386,7 @@ const PunchInvoice = () => {
                   name="po_number"
                   value={formData.po_number}
                   onChange={handlePoChange}
-                  className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">Select PO Number</option>
                   {poList.map((p, idx) => (
@@ -404,7 +404,7 @@ const PunchInvoice = () => {
                   name="site_id"
                   value={formData.site_id}
                   onChange={handleInputChange}
-                  className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">Select Site ID</option>
                   {filteredSites.map((s, idx) => (
@@ -424,7 +424,7 @@ const PunchInvoice = () => {
                   value={formData.invoice_number}
                   onChange={handleInputChange}
                   placeholder="e.g. LTS/2425/001"
-                  className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -439,7 +439,7 @@ const PunchInvoice = () => {
                   name="invoice_date"
                   value={formData.invoice_date}
                   onChange={handleInputChange}
-                  className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -450,7 +450,7 @@ const PunchInvoice = () => {
                   Invoice Amount <span className="text-rose-600">*</span> :
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 font-semibold text-sm">
+                  <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-gray-500 font-semibold text-xs sm:text-sm">
                     ₹
                   </span>
                   <input
@@ -460,7 +460,7 @@ const PunchInvoice = () => {
                     value={formData.invoice_amount}
                     onChange={handleInputChange}
                     placeholder="0.00"
-                    className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md pl-6 pr-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     required
                   />
                 </div>
@@ -476,7 +476,7 @@ const PunchInvoice = () => {
                   name="received_amount_date"
                   value={formData.received_amount_date}
                   onChange={handleInputChange}
-                  className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -486,7 +486,7 @@ const PunchInvoice = () => {
                   Received Amount :
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 font-semibold text-sm">
+                  <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-gray-500 font-semibold text-xs sm:text-sm">
                     ₹
                   </span>
                   <input
@@ -496,7 +496,7 @@ const PunchInvoice = () => {
                     value={formData.received_amount}
                     onChange={handleInputChange}
                     placeholder="0.00"
-                    className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md pl-6 pr-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -512,7 +512,7 @@ const PunchInvoice = () => {
                   value={formData.remark}
                   onChange={handleInputChange}
                   placeholder="Enter remarks, description, or project scope..."
-                  className="w-full text-sm bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-gray-50 border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -526,7 +526,7 @@ const PunchInvoice = () => {
                     type="file"
                     accept=".jpg,.jpeg,.png,.pdf"
                     onChange={(e) => handleFileChange(e, 'invoice_doc')}
-                    className="w-full text-xs text-gray-600 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer"
+                    className="w-full text-[11px] text-gray-600 file:mr-2.5 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 bg-gray-50 border border-gray-300 rounded-md cursor-pointer"
                   />
                 </div>
               </div>
@@ -534,16 +534,16 @@ const PunchInvoice = () => {
           </div>
 
           {/* Sub-section: Vendor Invoice Details (PHP lines 118-148) */}
-          <div className="pt-6 border-t border-gray-200 space-y-4">
+          <div className="pt-3 border-t border-gray-200 space-y-2.5">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                <Building size={16} className="text-indigo-600" />
+              <h3 className="text-xs sm:text-sm font-bold text-gray-800 uppercase tracking-wider flex items-center gap-1.5">
+                <Building size={15} className="text-indigo-600" />
                 Vendor Invoice Details
               </h3>
-              <span className="text-xs text-gray-400 font-medium">For profit margin & cost tracking</span>
+              <span className="text-[11px] text-gray-400 font-medium">For profit margin & cost tracking</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 bg-slate-50/70 p-5 rounded-xl border border-slate-200/80">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 bg-slate-50/70 p-3 sm:p-3.5 rounded-lg border border-slate-200/80">
               {/* Company Vendor */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
@@ -553,7 +553,7 @@ const PunchInvoice = () => {
                   name="company_vendor"
                   value={formData.company_vendor}
                   onChange={handleInputChange}
-                  className="w-full text-sm bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-white border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">Select Company Vendor</option>
                   {companyVendors.map(v => (
@@ -572,7 +572,7 @@ const PunchInvoice = () => {
                   name="vendor_invoice_date"
                   value={formData.vendor_invoice_date}
                   onChange={handleInputChange}
-                  className="w-full text-sm bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-white border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -587,7 +587,7 @@ const PunchInvoice = () => {
                   value={formData.vendor_invoice_number}
                   onChange={handleInputChange}
                   placeholder="Enter Vendor Invoice Number"
-                  className="w-full text-sm bg-white border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full text-xs sm:text-sm bg-white border border-gray-300 rounded-md px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
 
@@ -597,7 +597,7 @@ const PunchInvoice = () => {
                   Vendor Invoice Amount :
                 </label>
                 <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 font-semibold text-sm">
+                  <span className="absolute inset-y-0 left-0 pl-2.5 flex items-center text-gray-500 font-semibold text-xs sm:text-sm">
                     ₹
                   </span>
                   <input
@@ -607,7 +607,7 @@ const PunchInvoice = () => {
                     value={formData.vendor_invoice_amount}
                     onChange={handleInputChange}
                     placeholder="0.00"
-                    className="w-full text-sm bg-white border border-gray-300 rounded-lg pl-7 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-xs sm:text-sm bg-white border border-gray-300 rounded-md pl-6 pr-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -621,34 +621,34 @@ const PunchInvoice = () => {
                   type="file"
                   accept=".jpg,.jpeg,.png,.pdf"
                   onChange={(e) => handleFileChange(e, 'vendor_invoice_doc')}
-                  className="w-full text-xs text-gray-600 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 bg-white border border-gray-300 rounded-lg cursor-pointer"
+                  className="w-full text-[11px] text-gray-600 file:mr-2.5 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 bg-white border border-gray-300 rounded-md cursor-pointer"
                 />
               </div>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="pt-6 border-t border-gray-200 flex items-center justify-end gap-3">
+          <div className="pt-3 border-t border-gray-200 flex items-center justify-end gap-2.5">
             <button
               type="button"
               onClick={handleReset}
-              className="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors cursor-pointer"
+              className="px-4 py-1.5 text-xs sm:text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors cursor-pointer"
             >
               Reset
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-6 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-2"
+              className="px-5 py-1.5 text-xs sm:text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm transition-colors cursor-pointer disabled:opacity-50 flex items-center gap-1.5"
             >
               {submitting ? (
                 <>
-                  <RefreshCw className="animate-spin" size={16} />
+                  <RefreshCw className="animate-spin" size={15} />
                   Saving Invoice...
                 </>
               ) : (
                 <>
-                  <CheckCircle size={16} />
+                  <CheckCircle size={15} />
                   Submit Invoice
                 </>
               )}

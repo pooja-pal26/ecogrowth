@@ -164,17 +164,11 @@ const AddGeoLocation = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
-      {/* Breadcrumb / Title */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-800">Add Location</h1>
-        <p className="text-sm text-gray-500 mt-1">Dashboard / Master Data / Add Location</p>
-      </div>
-
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
       {/* Alert Banner */}
       {alertInfo.show && (
         <div
-          className={`flex items-center justify-between p-4 rounded-md border text-sm transition-all duration-300 ${
+          className={`flex items-center justify-between p-3 rounded-md border text-xs transition-all duration-300 ${
             alertInfo.type === 'success'
               ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
               : 'bg-red-50 border-red-200 text-red-800'
@@ -182,9 +176,9 @@ const AddGeoLocation = () => {
         >
           <div className="flex items-center gap-2">
             {alertInfo.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-emerald-600" />
+              <CheckCircle className="w-4 h-4 text-emerald-600" />
             ) : (
-              <AlertTriangle className="w-5 h-5 text-red-600" />
+              <AlertTriangle className="w-4 h-4 text-red-600" />
             )}
             <span className="font-semibold">{alertInfo.type === 'success' ? 'Success !' : 'Error !'}</span>
             <span>{alertInfo.message}</span>
@@ -194,21 +188,21 @@ const AddGeoLocation = () => {
             onClick={() => setAlertInfo({ show: false, type: '', message: '' })}
             className="text-gray-400 hover:text-gray-600"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
 
-      {/* Main Form Card Matching PHP Screenshot */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      {/* Main Form Card Matching po-sites */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Header */}
         <div 
-          className="text-white px-5 py-3.5 flex items-center justify-between shadow-xs"
+          className="text-white px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 shadow-xs min-h-[44px]"
           style={{
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
-          <h2 className="text-base font-semibold tracking-wide">
+          <h2 className="text-base font-bold tracking-tight">
             {editId ? 'Edit Location' : 'Add Location'}
           </h2>
           {editId && (
@@ -218,27 +212,24 @@ const AddGeoLocation = () => {
           )}
         </div>
 
-        <div className="p-5">
+        <div className="p-3.5 sm:p-4 bg-white">
           {/* Top Right "View Site map" Link */}
-          <div className="flex justify-end mb-3">
+          <div className="flex justify-end mb-2">
             <button
               type="button"
               onClick={() => {
                 setSelectedMapSite(locations[0] || null);
                 setIsMapModalOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 text-sky-600 hover:text-sky-700 font-medium text-sm transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-teal-600 hover:text-teal-700 font-semibold text-xs transition-colors cursor-pointer"
             >
-              <Map className="w-4 h-4 text-sky-600" />
+              <Map className="w-3.5 h-3.5 text-teal-600" />
               <span>View Site map</span>
             </button>
           </div>
 
-          {/* Light Blue Styled Form Container Matching PHP (#DCF2FE) */}
-          <div
-            className="p-5 rounded-md border"
-            style={{ backgroundColor: '#DCF2FE', borderColor: '#bae6fd' }}
-          >
+          {/* Form Container */}
+          <div className="p-4 rounded-lg border border-gray-200 bg-white">
             <form onSubmit={handleSubmit}>
               {/* Mandatory Note */}
               <div className="mb-4">
@@ -350,19 +341,19 @@ const AddGeoLocation = () => {
       </div>
 
       {/* Dynamic Data Table of Saved Site Locations */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Table Header with Search & Controls */}
-        <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-3.5 sm:p-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-semibold text-gray-800">Saved Site Locations</h3>
-            <span className="text-xs bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full font-medium">
+            <h3 className="text-base font-bold text-gray-800 tracking-tight">Saved Site Locations</h3>
+            <span className="text-xs bg-teal-50 text-teal-800 border border-teal-200 px-2 py-0.5 rounded-full font-medium">
               {filteredLocations.length} {filteredLocations.length === 1 ? 'entry' : 'entries'}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Show per page */}
-            <div className="flex items-center gap-1 text-sm text-gray-600">
+            <div className="flex items-center gap-1 text-xs text-gray-600">
               <span>Show</span>
               <select
                 value={itemsPerPage}
@@ -370,7 +361,7 @@ const AddGeoLocation = () => {
                   setItemsPerPage(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="border border-gray-300 rounded px-2 py-1 text-sm bg-white outline-none focus:border-sky-500"
+                className="border border-gray-300 rounded px-2 py-1 text-xs bg-white outline-none focus:border-teal-500"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -389,25 +380,25 @@ const AddGeoLocation = () => {
                   setSearchTerm(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="pl-8 pr-3 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none w-44 sm:w-56"
+                className="pl-7 pr-2.5 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 outline-none w-44 sm:w-56"
               />
-              <Search className="w-4 h-4 text-gray-400 absolute left-2.5 top-2" />
+              <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2 top-1.5" />
             </div>
           </div>
         </div>
 
         {/* Table View */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-700">
-            <thead className="bg-gray-50 text-gray-600 uppercase text-xs border-b border-gray-200">
+          <table className="w-full text-left text-xs text-gray-700">
+            <thead className="bg-gray-50/80 text-gray-700 uppercase text-xs border-b border-gray-200">
               <tr>
-                <th className="px-4 py-3 font-semibold w-12 text-center">#</th>
-                <th className="px-4 py-3 font-semibold">Site ID</th>
-                <th className="px-4 py-3 font-semibold">Site Name</th>
-                <th className="px-4 py-3 font-semibold">Latitude</th>
-                <th className="px-4 py-3 font-semibold">Longitude</th>
-                <th className="px-4 py-3 font-semibold text-center">Map</th>
-                <th className="px-4 py-3 font-semibold text-center">Action</th>
+                <th className="px-3.5 py-2 font-bold w-12 text-center">#</th>
+                <th className="px-3.5 py-2 font-bold">Site ID</th>
+                <th className="px-3.5 py-2 font-bold">Site Name</th>
+                <th className="px-3.5 py-2 font-bold">Latitude</th>
+                <th className="px-3.5 py-2 font-bold">Longitude</th>
+                <th className="px-3.5 py-2 font-bold text-center">Map</th>
+                <th className="px-3.5 py-2 font-bold text-center">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">

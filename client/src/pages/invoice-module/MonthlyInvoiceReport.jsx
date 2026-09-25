@@ -172,51 +172,34 @@ const MonthlyInvoiceReport = () => {
   const yearOptions = Array.from({ length: 8 }, (_, i) => currentYear - i);
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
-      {/* Page Header */}
-      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <Calendar className="text-blue-600" size={26} />
-            Monthly Invoice Report
-          </h1>
-          <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
-            <span className="hover:text-blue-600 cursor-pointer">Dashboard</span>
-            <span>/</span>
-            <span className="hover:text-blue-600 cursor-pointer">Invoice Module</span>
-            <span>/</span>
-            <span className="text-gray-700">Monthly Invoice Report</span>
-          </nav>
-        </div>
-      </div> */}
-
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
       {/* Main Container */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Header */}
         <div 
-          className="text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs"
+          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-wrap justify-between items-center gap-3 shadow-xs"
           style={{
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
           <div>
-            <h2 className="text-lg font-semibold tracking-wide">Monthly Invoice Report</h2>
-            <p className="text-xs text-white/80 mt-0.5">Track monthly client billings, LTS margins, and vendor payouts</p>
+            <h2 className="text-base sm:text-lg font-bold tracking-tight">Monthly Invoice Report</h2>
+            <p className="text-[11px] text-white/80">Track monthly client billings, LTS margins, and vendor payouts</p>
           </div>
           <button
             onClick={() => {
               setFormData(initialForm);
               setIsAddModalOpen(true);
             }}
-            className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-2 shadow-sm active:scale-95 cursor-pointer"
+            className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
           >
-            <Plus size={18} />
+            <Plus size={16} />
             Add Monthly Invoice
           </button>
         </div>
 
         {/* Filter Bar (Matching PHP month & year controls) */}
-        <form onSubmit={handleFilterSubmit} className="p-4 border-b border-gray-200 bg-gray-50/70 flex flex-wrap items-center gap-3">
+        <form onSubmit={handleFilterSubmit} className="p-2.5 sm:p-3 border-b border-gray-200 bg-gray-50/70 flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
             <label className="text-xs font-semibold text-gray-600 uppercase">Month:</label>
             <select

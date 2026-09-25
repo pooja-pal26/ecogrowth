@@ -2,68 +2,72 @@ import React, { useState } from 'react';
 import { Edit, Trash2, Plus, Download } from 'lucide-react';
 
 const MasterDataTable = ({ 
-  title, 
-  data, 
-  columns, 
+  title = '', 
+  data = [], 
+  columns = [], 
   onAdd, 
   onEdit, 
   onDelete, 
   onExport,
   addButtonText,
   renderActions,
-  extraButtons
+  extraButtons,
+  loading = false
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [entries, setEntries] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Search logic
-  const filteredData = data.filter(item => 
-    Object.values(item).some(val => 
+  const filteredData = (data || []).filter(item => 
+    Object.values(item || {}).some(val => 
       String(val).toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredData.length / entries);
+  const totalPages = Math.ceil(filteredData.length / entries) || 1;
   const paginatedData = filteredData.slice((currentPage - 1) * entries, currentPage * entries);
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {/* Header banner matching po-sites exact height, width, padding and text size */}
         <div 
-          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex justify-between items-center shadow-xs"
+          className="text-white px-4 py-2.5 flex flex-wrap justify-between items-center gap-2 shadow-xs min-h-[44px]"
           style={{
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
-          <h2 className="text-base sm:text-lg font-bold tracking-tight">
+          <h2 className="text-base font-bold tracking-tight">
             {title.endsWith('List') ? title : `${title} List`}
           </h2>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {extraButtons}
             {onExport && (
               <button 
                 onClick={onExport}
-                className="bg-white/15 hover:bg-white/25 text-white border border-white/20 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all backdrop-blur-sm flex items-center gap-1 shadow-xs"
+                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg shadow-sm transition-all active:scale-95 cursor-pointer"
               >
-                <Download size={15} /> Excel
+                <Download size={13} />
+                <span>Excel</span>
               </button>
             )}
             {onAdd && (
               <button 
                 onClick={onAdd}
-                className="bg-white/20 hover:bg-white/30 text-white border border-white/30 hover:border-white/50 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-1.5 shadow-sm active:scale-95"
+                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-white/20 hover:bg-white/30 border border-white/30 rounded-lg shadow-sm transition-all active:scale-95 cursor-pointer"
               >
-                <Plus size={16} /> {addButtonText || 'Add New'}
+                <Plus size={13} />
+                <span>{addButtonText || 'Add New'}</span>
               </button>
             )}
           </div>
         </div>
 
-        <div className="p-4 sm:p-5">
+        <div className="p-3.5 sm:p-4 bg-white">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 w-full">
-            <div className="flex items-center text-xs sm:text-sm text-gray-600">
+            <div className="flex items-center text-xs text-gray-600">
               <span>Show</span>
               <select 
                 value={entries}
@@ -71,7 +75,7 @@ const MasterDataTable = ({
                   setEntries(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="mx-1.5 border border-gray-300 rounded px-1.5 py-1 text-xs sm:text-sm bg-white focus:ring-1 focus:ring-teal-500 focus:outline-none"
+                className="mx-1.5 border border-gray-300 rounded px-2 py-1 text-xs bg-white focus:ring-1 focus:ring-teal-500 focus:outline-none"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -80,7 +84,7 @@ const MasterDataTable = ({
               <span>entries</span>
             </div>
             <div className="flex items-center w-full sm:w-auto">
-              <label className="text-xs sm:text-sm font-semibold text-gray-700 mr-2 shrink-0">Search:</label>
+              <label className="text-xs font-semibold text-gray-700 mr-2 shrink-0">Search:</label>
               <input 
                 type="text" 
                 value={searchTerm}
@@ -89,47 +93,53 @@ const MasterDataTable = ({
                   setCurrentPage(1);
                 }}
                 placeholder="Search..."
-                className="border border-gray-300 rounded-lg px-2.5 py-1 text-xs sm:text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 w-full sm:w-56 focus:outline-none" 
+                className="border border-gray-300 rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-teal-500 focus:border-teal-500 w-full sm:w-56 focus:outline-none bg-white text-gray-800" 
               />
             </div>
           </div>
 
           <div className="overflow-x-auto border border-gray-200 rounded-lg">
-            <table className="w-full text-left border-collapse text-xs sm:text-sm">
+            <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-gray-50/80 text-gray-700 text-xs sm:text-sm uppercase tracking-wider border-b border-gray-200">
-                  <th className="px-4 py-2.5 font-bold w-12">#</th>
+                <tr className="bg-gray-50/80 text-gray-700 text-xs uppercase tracking-wider border-b border-gray-200">
+                  <th className="px-3.5 py-2 font-bold w-12">#</th>
                   {columns.map((col, idx) => (
-                    <th key={idx} className="px-4 py-2.5 font-bold">{col.label}</th>
+                    <th key={idx} className="px-3.5 py-2 font-bold">{col.label}</th>
                   ))}
-                  {(renderActions || onEdit || onDelete) && <th className="px-4 py-2.5 font-bold text-center">Action</th>}
+                  {(renderActions || onEdit || onDelete) && <th className="px-3.5 py-2 font-bold text-center">Action</th>}
                 </tr>
               </thead>
               <tbody>
-                {paginatedData.length > 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan={columns.length + 2} className="px-4 py-8 text-center text-gray-400 bg-gray-50/50">
+                      Loading data...
+                    </td>
+                  </tr>
+                ) : paginatedData.length > 0 ? (
                   paginatedData.map((row, index) => (
-                    <tr key={row._id || index} className="border-b border-gray-100 hover:bg-teal-50/25 transition-colors">
-                      <td className="px-4 py-2.5 text-gray-500 font-medium">{(currentPage - 1) * entries + index + 1}</td>
+                    <tr key={row._id || row.id || index} className="border-b border-gray-100 hover:bg-teal-50/25 transition-colors">
+                      <td className="px-3.5 py-2 text-gray-500 font-medium">{(currentPage - 1) * entries + index + 1}</td>
                       {columns.map((col, colIdx) => (
-                        <td key={colIdx} className="px-4 py-2.5 font-medium text-gray-800">
+                        <td key={colIdx} className="px-3.5 py-2 font-medium text-gray-800">
                           {col.render ? col.render(row) : row[col.key]}
                         </td>
                       ))}
                       {renderActions ? (
-                        <td className="px-4 py-2.5 text-center">
+                        <td className="px-3.5 py-2 text-center">
                           {renderActions(row)}
                         </td>
                       ) : (onEdit || onDelete) ? (
-                        <td className="px-4 py-2.5 text-center">
+                        <td className="px-3.5 py-2 text-center">
                           <div className="flex items-center justify-center space-x-2">
                             {onEdit && (
-                              <button onClick={() => onEdit(row)} className="text-teal-600 hover:text-teal-800 transition-colors p-1" title="Edit">
-                                <Edit size={16} />
+                              <button onClick={() => onEdit(row)} className="text-teal-600 hover:text-teal-800 transition-colors p-1 cursor-pointer" title="Edit">
+                                <Edit size={14} />
                               </button>
                             )}
                             {onDelete && (
-                              <button onClick={() => onDelete(row._id)} className="text-rose-500 hover:text-rose-700 transition-colors p-1" title="Delete">
-                                <Trash2 size={16} />
+                              <button onClick={() => onDelete(row._id || row.id)} className="text-rose-500 hover:text-rose-700 transition-colors p-1 cursor-pointer" title="Delete">
+                                <Trash2 size={14} />
                               </button>
                             )}
                           </div>
@@ -148,7 +158,7 @@ const MasterDataTable = ({
             </table>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center justify-between mt-3 gap-3 text-xs sm:text-sm text-gray-500 w-full pt-2 border-t border-gray-100">
+          <div className="flex flex-col sm:flex-row items-center justify-between mt-3 gap-3 text-xs text-gray-500 w-full pt-2 border-t border-gray-100">
             <div>
               Showing {filteredData.length > 0 ? (currentPage - 1) * entries + 1 : 0} to {Math.min(currentPage * entries, filteredData.length)} of {filteredData.length} entries
             </div>
@@ -156,7 +166,7 @@ const MasterDataTable = ({
               <button 
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="px-2.5 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm"
+                className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs cursor-pointer"
               >
                 Previous
               </button>
@@ -164,7 +174,7 @@ const MasterDataTable = ({
                 <button 
                   key={i} 
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`px-2.5 py-1 border rounded-md text-xs sm:text-sm transition-colors ${
+                  className={`px-2.5 py-1 border rounded text-xs transition-colors cursor-pointer ${
                     currentPage === i + 1 
                       ? 'border-transparent bg-gradient-to-r from-teal-500 to-purple-600 text-white font-semibold shadow-xs' 
                       : 'border-gray-300 hover:bg-gray-50 text-gray-700'
@@ -176,7 +186,7 @@ const MasterDataTable = ({
               <button 
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages || totalPages === 0}
-                className="px-2.5 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs sm:text-sm"
+                className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed text-xs cursor-pointer"
               >
                 Next
               </button>

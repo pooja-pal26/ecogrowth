@@ -182,57 +182,40 @@ const ServicesProducts = () => {
   }, [filteredServices, currentPage, entriesCount]);
 
   return (
-    <div className="p-4 sm:p-6 max-w-7xl mx-auto space-y-6">
-      {/* Header & Breadcrumbs */}
-      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-            <Layers className="text-blue-600" size={26} />
-            Services / Products for Invoice
-          </h1>
-          <nav className="text-sm font-medium text-gray-500 mt-1 flex space-x-2">
-            <span className="hover:text-blue-600 cursor-pointer">Dashboard</span>
-            <span>/</span>
-            <span className="hover:text-blue-600 cursor-pointer">Invoice Module</span>
-            <span>/</span>
-            <span className="text-gray-700">Services & Products</span>
-          </nav>
-        </div>
-      </div> */}
-
+    <div className="px-2 pt-1 pb-3 sm:px-4 sm:pt-1 sm:pb-4 w-full max-w-7xl mx-auto space-y-3">
       {/* Main Panel */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         {/* Panel Header */}
         <div 
-          className="text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xs"
+          className="text-white px-4 py-2.5 sm:px-5 sm:py-3 flex flex-wrap justify-between items-center gap-3 shadow-xs"
           style={{
             background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
           }}
         >
           <div>
-            <h2 className="text-lg font-semibold tracking-wide">Services/Products List</h2>
-            <p className="text-xs text-white/80 mt-0.5">Manage billable services, products, HSN/SAC codes and tax rates</p>
+            <h2 className="text-base sm:text-lg font-bold tracking-tight">Services/Products List</h2>
+            <p className="text-[11px] text-white/80">Manage billable services, products, HSN/SAC codes and tax rates</p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={loadData}
               title="Refresh List"
-              className="bg-white/15 hover:bg-white/25 text-white border border-white/20 p-2 rounded-lg text-sm transition-colors flex items-center justify-center backdrop-blur-xs"
+              className="bg-white/15 hover:bg-white/25 text-white border border-white/20 p-1.5 rounded-md text-xs sm:text-sm transition-colors flex items-center justify-center backdrop-blur-xs cursor-pointer"
             >
-              <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+              <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
             </button>
             <button
               onClick={handleOpenAdd}
-              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-2 shadow-sm active:scale-95 cursor-pointer"
+              className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all backdrop-blur-md flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer"
             >
-              <Plus size={18} />
+              <Plus size={16} />
               Add Service/Product
             </button>
           </div>
         </div>
 
         {/* Filters and Controls */}
-        <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50/50">
+        <div className="p-2.5 sm:p-3 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3 bg-gray-50/50">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <span>Show</span>
             <select
