@@ -2,9 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Plus, Search, RefreshCw, Eye, Download, 
-  Calendar, ChevronLeft, ChevronRight, X, Pencil
+  ChevronLeft, ChevronRight, X, Pencil
 } from 'lucide-react';
-import { fetchStockInReport, fetchStockInDetails, fetchReportFilters } from '../../services/reportApi';
+import { fetchStockInReport, fetchStockInDetails, fetchReportFilters } from '../../../services/reportApi';
 
 const StockInReport = () => {
   const [reportData, setReportData] = useState([]);

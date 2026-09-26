@@ -108,9 +108,9 @@ import StockIn from './pages/material-stock/StockIn';
 import StockOut from './pages/material-stock/StockOut';
 
 // Reports
-import StockInReport from './pages/reports/StockInReport';
-import StockOutReport from './pages/reports/StockOutReport';
-import SummaryReport from './pages/reports/SummaryReport';
+import StockInReport from './pages/reports/stock-report/StockInReport';
+import StockOutReport from './pages/reports/stock-report/StockOutReport';
+import SummaryReport from './pages/reports/summary-report/SummaryReport';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/layout/Layout';
@@ -276,8 +276,11 @@ function App() {
 
           {/* Reports routes */}
           <Route path="/reports/stock-in-report" element={<ProtectedRoute allowedRoles={['admin', 'management', 'project_manager', 'accountant']}><Layout><StockInReport /></Layout></ProtectedRoute>} />
+          <Route path="/reports/stock-report/stock-in" element={<ProtectedRoute allowedRoles={['admin', 'management', 'project_manager', 'accountant']}><Layout><StockInReport /></Layout></ProtectedRoute>} />
           <Route path="/reports/stock-out-report" element={<ProtectedRoute allowedRoles={['admin', 'management', 'project_manager', 'accountant']}><Layout><StockOutReport /></Layout></ProtectedRoute>} />
+          <Route path="/reports/stock-report/stock-out" element={<ProtectedRoute allowedRoles={['admin', 'management', 'project_manager', 'accountant']}><Layout><StockOutReport /></Layout></ProtectedRoute>} />
           <Route path="/reports/summary-report" element={<ProtectedRoute allowedRoles={['admin', 'management', 'project_manager', 'accountant']}><Layout><SummaryReport /></Layout></ProtectedRoute>} />
+          <Route path="/reports/summary-report/summary-report" element={<ProtectedRoute allowedRoles={['admin', 'management', 'project_manager', 'accountant']}><Layout><SummaryReport /></Layout></ProtectedRoute>} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
 

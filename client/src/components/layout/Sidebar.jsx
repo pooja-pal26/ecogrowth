@@ -249,8 +249,15 @@ const navItems = [
     hasSubmenu: true,
     allowedRoles: ['admin', 'management', 'project_manager', 'accountant'],
     subItems: [
-      { name: 'Stock In Report', path: '/reports/stock-in-report' },
-      { name: 'Stock Out Report', path: '/reports/stock-out-report' },
+      {
+        name: 'Stock Report',
+        hasSubmenu: true,
+        allowedRoles: ['admin', 'management', 'project_manager', 'accountant'],
+        subItems: [
+          { name: 'Stock In', path: '/reports/stock-in-report' },
+          { name: 'Stock Out', path: '/reports/stock-out-report' }
+        ]
+      },
       { name: 'Summary Report', path: '/reports/summary-report' }
     ]
   }

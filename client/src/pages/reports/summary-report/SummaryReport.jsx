@@ -3,7 +3,7 @@ import {
   Download, Search, RefreshCw, ChevronLeft, ChevronRight, 
   Calendar, Layers, FileSpreadsheet
 } from 'lucide-react';
-import { fetchStockSummary, fetchSiteFinancialSummary } from '../../services/reportApi';
+import { fetchStockSummary, fetchSiteFinancialSummary } from '../../../services/reportApi';
 
 const SummaryReport = () => {
   // Default to PHP Summary Report (Site Financial Summary)

@@ -4,7 +4,7 @@ import {
   Plus, Search, RefreshCw, Eye, Download, 
   ChevronLeft, ChevronRight, X, Pencil
 } from 'lucide-react';
-import { fetchStockOutReport, fetchStockOutDetails, fetchReportFilters } from '../../services/reportApi';
+import { fetchStockOutReport, fetchStockOutDetails, fetchReportFilters } from '../../../services/reportApi';
 
 const StockOutReport = () => {
   const [reportData, setReportData] = useState([]);
