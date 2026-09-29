@@ -25,41 +25,24 @@ const PaymentModes = () => {
   const [isEditing, setIsEditing] = useState(false);
   
   const initialForm = {
-    payment_mode: '',
-    status: true
+    payment_mode: ''
   };
   
   const [formData, setFormData] = useState(initialForm);
   const [editId, setEditId] = useState(null);
 
   const columns = [
-    { key: 'payment_mode', label: 'Payment Mode' },
-    { key: 'status', label: 'Status', render: (row) => row.status ? 'Active' : 'Deactive' }
+    { key: 'payment_mode', label: 'Payment Mode' }
   ];
 
   const formFields = [
     {
-        key: "payment_mode",
-        label: "Payment Mode",
-        type: "text",
-        required: true
-    },
-    {
-        key: "status",
-        label: "Status",
-        type: "select",
-        options: [
-            {
-                value: true,
-                label: "Active"
-            },
-            {
-                value: false,
-                label: "Deactive"
-            }
-        ]
+      key: "payment_mode",
+      label: "Payment Mode",
+      type: "text",
+      required: true
     }
-];
+  ];
 
   const handleAdd = () => {
     setFormData(initialForm);
@@ -69,8 +52,7 @@ const PaymentModes = () => {
 
   const handleEdit = (row) => {
     setFormData({
-      payment_mode: row.payment_mode,
-      status: row.status
+      payment_mode: row.payment_mode
     });
     setEditId(row._id);
     setIsEditing(true);

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { fetchList, createItem, updateItem, deleteItem, patchItem } from '../../../services/masterDataApi';
 import MasterDataTable from '../../../components/master-data/MasterDataTable';
 import { X, Pencil, Ban, LogIn, Trash2 } from 'lucide-react';
@@ -192,21 +192,21 @@ const SiteType = () => {
           const isActive = row.is_active === '1' || row.is_active === 1 || row.is_active === true;
 
           return (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-center space-x-3">
               {/* Edit Icon */}
               <button
                 onClick={() => handleEdit(row)}
-                className="text-blue-600 hover:text-blue-800 transition-colors"
+                className="text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
                 title="Edit Site Type"
               >
                 <Pencil size={18} />
               </button>
 
-              {/* Status Toggle Icon */}
+              {/* Status Toggle / Delete Icon */}
               {isActive ? (
                 <button
                   onClick={() => handleAction(rowId, 'deactivate')}
-                  className="transition-transform hover:scale-110"
+                  className="transition-transform hover:scale-110 cursor-pointer"
                   style={{ color: '#D66F00' }}
                   title="Deactivate Work Type"
                 >
@@ -216,7 +216,7 @@ const SiteType = () => {
                 <>
                   <button
                     onClick={() => handleAction(rowId, 'activate')}
-                    className="transition-transform hover:scale-110"
+                    className="transition-transform hover:scale-110 cursor-pointer"
                     style={{ color: '#1DAA29' }}
                     title="Activate Work Type"
                   >
@@ -224,7 +224,7 @@ const SiteType = () => {
                   </button>
                   <button
                     onClick={() => handleAction(rowId, 'delete')}
-                    className="text-red-500 hover:text-red-700 transition-transform hover:scale-110"
+                    className="text-red-500 hover:text-red-700 transition-transform hover:scale-110 cursor-pointer"
                     title="Delete Work Type"
                   >
                     <Trash2 size={18} />

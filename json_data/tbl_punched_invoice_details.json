@@ -466,7 +466,7 @@
   {
     "_id": "6aa3f1283c200cb6cc5ca488",
     "id": "935",
-    "marked_for_review": "1",
+    "marked_for_review": "0",
     "client_id": "49",
     "state_for_id": "1",
     "po_no": "S&PPO23240045",
@@ -474,8 +474,8 @@
     "invoice_no": "LTS/2526/0148",
     "invoice_value": "14916594.00",
     "invoice_date": "2026-01-21",
-    "received_amount": "0",
-    "amount_received_date": null,
+    "received_amount": "1",
+    "amount_received_date": "2026-09-23",
     "invoice_remark": "Civil, Structural, Water supply, Sanitary, Roadwork, Internal Electrification and Miscellaneous works (Package 1)",
     "invoice_doc_path": null,
     "bill_doc_path": null,
@@ -490,7 +490,7 @@
     "created_by": "7",
     "created_at": "2026-01-22 17:02:23",
     "updated_by": null,
-    "updated_at": null
+    "updated_at": "2026-09-29 12:28:08"
   },
   {
     "_id": "6aa3f1283c200cb6cc5ca489",

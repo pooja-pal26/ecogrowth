@@ -384,7 +384,7 @@
     "id": "20",
     "state_id": "1",
     "client_id": "49",
-    "name_of_service": "Excavation in all types of soil, including murrum, for foundations of wall, columns, plinth beams, basement, raft,  ducts,  trenches,  underground sumps, septic tanks, soak well, manhole chambers,  gully  chambers, including  shoring, strutting, bailing  ",
+    "name_of_service": "Excavation in all types of soil, including murrum, for foundations of wall, columns, plinth beams, basement, raft,  ducts,  trenches,  underground sumps, septic tanks, soak well, manhole chambers,  gully  chambers, including  shoring, strutting, bailing",
     "hsn_sac_code": "12",
     "unit_of_measurement": "Cum",
     "gst_slab": "18",
@@ -397,6 +397,6 @@
     "created_by": "37",
     "created_at": "2024-09-25 18:57:36",
     "updated_by": "0",
-    "updated_at": "2026-09-24 07:04:51"
+    "updated_at": "2026-09-29 12:27:03"
   }
 ]
