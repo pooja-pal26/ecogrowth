@@ -91,3 +91,8 @@ export const getSitesDetailList = async (type = 'all') => {
   const response = await axios.get(`${API_URL}/sites-detail-list`, { params: { type } });
   return response.data;
 };
+
+export const getDailyUpdateData = async (params = {}) => {
+  const response = await axios.get(`${API_URL}/daily-update`, { params });
+  return response.data;
+};

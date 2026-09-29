@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useContext } from 'react';
 import {
   Building2,
   AlertCircle,
@@ -25,7 +25,8 @@ import {
   CreditCard,
   Building,
   Activity,
-  ListOrdered
+  ListOrdered,
+  ListChecks
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -41,6 +42,7 @@ import {
   Legend
 } from 'recharts';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import DashboardCard from '../components/DashboardCard';
 import {
   getTotalSites,
@@ -71,6 +73,11 @@ const PROFIT_LOSS_COLORS = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  const roleId = String(user?.role || '');
+  const roleKey = (user?.role_key || '').toLowerCase();
+  const isAdmin = roleId === '1' || roleKey === 'admin' || !user;
+  const isAllowedDailyUpdate = isAdmin || ['management', 'project_manager', 'accountant', 'supervisor', 'hr'].includes(roleKey);
 
   // Primary stats (5 KPI metric cards)
   const [stats, setStats] = useState({
@@ -496,6 +503,21 @@ const Dashboard = () => {
           />
         </div>
       </div>
+
+      {/* Daily Update Dashboard Action Icon (From PHP home/index.phtml line 601) */}
+      {(isAdmin || isAllowedDailyUpdate) && (
+        <div className="flex justify-end -mt-1 sm:-mt-2">
+          <Link
+            to="/home/daily-update-dashboard"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+            style={{
+              background: 'linear-gradient(135deg, #0d9488 0%, #0891b2 35%, #4f46e5 70%, #7c3aed 100%)'
+            }}
+          >
+            <ListChecks size={22} />
+          </Link>
+        </div>
+      )}
 
       {/* Row 1: Site Expense & Office Expense 3D Charts (From PHP home/index.phtml line 607) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

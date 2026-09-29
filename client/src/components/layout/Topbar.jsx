@@ -27,7 +27,7 @@ const Topbar = ({ toggleSidebar }) => {
           <Menu size={20} />
         </button>
 
-        <div className="hidden md:flex items-center space-x-3">
+        {/* <div className="hidden md:flex items-center space-x-3">
           <button className="p-2 rounded-full bg-gradient-to-tr from-teal-500 to-cyan-600 text-white relative hover:opacity-90 shadow-sm transition-all">
             <Mail size={18} />
             <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white">4</span>
@@ -42,7 +42,7 @@ const Topbar = ({ toggleSidebar }) => {
             <MessageSquare size={18} />
             <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-bold text-white">8</span>
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex items-center space-x-4 relative">

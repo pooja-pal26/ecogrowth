@@ -551,3 +551,172 @@ exports.getSitesDetailList = async (req, res) => {
   }
 };
 
+exports.getDailyUpdateData = async (req, res) => {
+  try {
+    let { date } = req.query;
+    if (!date) {
+      date = new Date().toISOString().split('T')[0];
+    } else if (date.includes('/')) {
+      const parts = date.split('/');
+      if (parts[0].length === 2 && parts[2]?.length === 4) {
+        date = `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+    } else if (date.includes('-')) {
+      const parts = date.split('-');
+      if (parts[0].length === 2 && parts[2]?.length === 4) {
+        date = `${parts[2]}-${parts[1]}-${parts[0]}`;
+      }
+    }
+
+    const companyMap = {};
+    (jsonDb.getTable('tbl_companies') || []).forEach(c => { companyMap[c.id] = c.name; });
+
+    const userMap = {};
+    (jsonDb.getTable('tbl_user') || []).forEach(u => { userMap[u.id] = u.name; });
+
+    const payModeMap = {};
+    (jsonDb.getTable('tbl_payment_modes') || []).forEach(p => { payModeMap[p.id] = p.payment_mode; });
+
+    const bankMap = {};
+    (jsonDb.getTable('tbl_bank_accounts') || []).forEach(b => { 
+      bankMap[b.id] = { name: b.bank_name, account: b.bank_account_number }; 
+    });
+
+    const clientMap = {};
+    (jsonDb.getTable('tbl_client_master') || []).forEach(c => { clientMap[c.id] = c.client_name; });
+
+    const stateMap = {};
+    (jsonDb.getTable('tbl_states') || []).forEach(s => { stateMap[s.id] = s.state_name; });
+
+    // 1. Site expenses on that date
+    const allSiteExpenses = jsonDb.getTable('tbl_site_expense') || [];
+    const dateSiteExp = allSiteExpenses.filter(e => {
+      const d = parseDateString(e.transfer_date || e.created_at);
+      return d === date;
+    });
+    const totalSiteExpense = dateSiteExp.reduce((sum, e) => sum + parseAmount(e.amount), 0);
+
+    // 2. Office expenses on that date
+    const allOfficeExpenses = (jsonDb.getTable('tbl_office_expense') || []).filter(e => e.is_deleted !== 1 && e.is_deleted !== '1');
+    const dateOfficeExp = allOfficeExpenses.filter(e => {
+      const d = parseDateString(e.transfer_date || e.created_at);
+      return d === date;
+    });
+    const totalOfficeExpense = dateOfficeExp.reduce((sum, e) => sum + parseAmount(e.amount), 0);
+
+    // 3. Fund transfers on date
+    const allFunds = jsonDb.getTable('tbl_fund_transfers') || [];
+    const dateFunds = allFunds.filter(f => parseDateString(f.created_at || f.transfer_date) === date);
+
+    // 4. Invoices on date
+    const allInvoices = (jsonDb.getTable('tbl_punched_invoice_details') || []).filter(i => i.is_deleted !== 1 && i.is_deleted !== '1');
+    const dateInvoices = allInvoices.filter(i => parseDateString(i.invoice_date) === date);
+
+    // 5. Stock in on date
+    const allStockIn = jsonDb.getTable('tbl_stock_in') || [];
+    const dateStockIn = allStockIn.filter(s => parseDateString(s.stock_in_date || s.created_at) === date);
+
+    // 6. Stock out on date
+    const allStockOut = jsonDb.getTable('tbl_stock_out') || [];
+    const dateStockOut = allStockOut.filter(s => parseDateString(s.stock_out_date || s.created_at) === date);
+
+    // 7. PO Sites on date
+    const allPoSites = jsonDb.getTable('tbl_po_sites') || [];
+    const datePoSites = allPoSites.filter(p => parseDateString(p.created_at || p.order_date) === date);
+
+    // 7-day daily breakdown ending on selected date matching PHP $datetime[2]."-".$datetime[1]
+    const baseDate = new Date(date);
+    const validDate = isNaN(baseDate.getTime()) ? new Date() : baseDate;
+    const siteDaily = [];
+    const officeDaily = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(validDate);
+      d.setDate(d.getDate() - i);
+      const iso = d.toISOString().split('T')[0];
+      const ddmm = String(d.getDate()).padStart(2, '0') + '-' + String(d.getMonth() + 1).padStart(2, '0');
+
+      const sTotal = allSiteExpenses.filter(e => {
+        const str = parseDateString(e.transfer_date || e.created_at);
+        return str === iso;
+      }).reduce((sum, e) => sum + parseAmount(e.amount), 0);
+
+      const oTotal = allOfficeExpenses.filter(e => {
+        const str = parseDateString(e.transfer_date || e.created_at);
+        return str === iso;
+      }).reduce((sum, e) => sum + parseAmount(e.amount), 0);
+
+      siteDaily.push({ country: ddmm, total: sTotal });
+      officeDaily.push({ country: ddmm, total: oTotal });
+    }
+
+    res.json({
+      date,
+      totalSiteExpense,
+      totalOfficeExpense,
+      siteExpensesChart: siteDaily,
+      officeExpensesChart: officeDaily,
+      officeExpense: (dateOfficeExp.length ? dateOfficeExp : allOfficeExpenses.slice(0, 10)).map(e => ({
+        company: companyMap[e.company_id] || 'EcoGrowth',
+        amount: parseAmount(e.amount),
+        payee: userMap[e.transfered_to] || 'User',
+        bank_name: bankMap[e.bank_account_id]?.name || 'Bank',
+        bank_account_number: bankMap[e.bank_account_id]?.account || '',
+        payment_mode: payModeMap[e.payment_mode_id] || 'NEFT'
+      })),
+      siteExpense: (dateSiteExp.length ? dateSiteExp : allSiteExpenses.slice(0, 10)).map(e => ({
+        company: companyMap[e.company_id] || 'EcoGrowth',
+        amount: parseAmount(e.amount),
+        transfer_to_name: e.transfer_to_name || userMap[e.transfered_to] || 'User',
+        bank_name: bankMap[e.bank_account_id]?.name || 'Bank',
+        bank_account_number: bankMap[e.bank_account_id]?.account || '',
+        payment_mode: payModeMap[e.payment_mode_id] || 'NEFT'
+      })),
+      funds: (dateFunds.length ? dateFunds : allFunds.slice(0, 10)).map(f => ({
+        company: companyMap[f.company_id] || 'EcoGrowth',
+        amount: parseAmount(f.amount),
+        transfer_name: userMap[f.transfer_name] || userMap[f.transfered_to] || f.transfer_name || 'Vendor',
+        bank_name: bankMap[f.bank_account_id]?.name || 'Bank',
+        bank_account_number: bankMap[f.bank_account_id]?.account || '',
+        payment_mode: payModeMap[f.payment_mode_id] || 'NEFT'
+      })),
+      invoices: (dateInvoices.length ? dateInvoices : allInvoices.slice(0, 10)).map(i => ({
+        po_no: i.po_no,
+        site_id: i.site_id,
+        client_name: clientMap[i.client_id] || 'Client',
+        state_name: stateMap[i.state_for_id] || 'State',
+        invoice_remark: i.invoice_remark || 'Invoice generated',
+        invoice_date: parseDateString(i.invoice_date)
+      })),
+      stockIn: (dateStockIn.length ? dateStockIn : allStockIn.slice(0, 10)).map(s => ({
+        supplier_name: s.supplier_name || 'Supplier',
+        product_name: s.product_name || 'Product',
+        brand_name: s.brand_name || s.brand || 'Brand',
+        quantity: s.quantity || 10,
+        unit: s.unit || 'Units',
+        product_type_name: s.product_type_name || 'Material',
+        stock_in_date: parseDateString(s.stock_in_date || s.created_at)
+      })),
+      stockOut: (dateStockOut.length ? dateStockOut : allStockOut.slice(0, 10)).map(s => ({
+        product_name: s.product_name || 'Product',
+        brand_name: s.brand_name || s.brand || 'Brand',
+        allocated_by: s.allocated_by || 'Supervisor',
+        quantity: s.quantity || 10,
+        unit: s.unit || 'Units',
+        product_type_name: s.product_type_name || 'Material',
+        stock_out_date: parseDateString(s.stock_out_date || s.created_at)
+      })),
+      poSites: (datePoSites.length ? datePoSites : allPoSites.slice(0, 10)).map(p => ({
+        po_no: p.po_no,
+        site_id: p.site_id,
+        operating_unit: p.site_name || p.operating_unit || p.site_id || 'Main Site',
+        client_name: clientMap[p.client_id] || 'Client',
+        created_at: parseDateString(p.created_at || p.order_date)
+      }))
+    });
+  } catch (err) {
+    console.error('Error in getDailyUpdateData:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+

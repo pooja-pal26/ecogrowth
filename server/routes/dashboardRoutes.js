@@ -27,6 +27,7 @@ router.get('/charts/po-amounts', dashboardController.getPoAmountsChart);
 router.get('/charts/po-site-profit-loss', dashboardController.getPoSiteProfitLoss);
 router.get('/recent-activity', dashboardController.getRecentActivity);
 router.get('/sites-detail-list', dashboardController.getSitesDetailList);
+router.get('/daily-update', dashboardController.getDailyUpdateData);
 
 module.exports = router;
 
