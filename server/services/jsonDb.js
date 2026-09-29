@@ -392,8 +392,8 @@ class JsonDbService {
    * Ensure default admin user is available in tbl_user for testing/login
    */
   ensureAdminUser() {
-    const adminEmail = (process.env.ADMIN_EMAIL || 'pooja55@gmail.com').trim().toLowerCase();
-    const adminPassword = process.env.ADMIN_PASSWORD || 'password123';
+    const adminEmail = (process.env.ADMIN_EMAIL || 'admin@logimetrix.co.in').trim().toLowerCase();
+    const adminPassword = process.env.ADMIN_PASSWORD || 'cropnet@123';
     const users = this.getTable('tbl_user');
 
     const existing = users.find(u => (u.email_id || u.email || '').trim().toLowerCase() === adminEmail);

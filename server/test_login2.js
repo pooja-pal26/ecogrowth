@@ -4,8 +4,8 @@ async function test() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: 'pooja55@gmail.com',
-        password: 'password123'
+        email: 'admin@logimetrix.co.in',
+        password: 'cropnet@123'
       })
     });
     const data = await res.json();

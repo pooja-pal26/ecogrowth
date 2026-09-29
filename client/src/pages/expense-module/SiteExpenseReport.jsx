@@ -248,7 +248,7 @@ const SiteExpenseReport = () => {
         >
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-bold tracking-wide flex items-center">
-              Site Expense Details
+              Site Expense Report
             </h2>
             <span className="bg-white/20 text-white border border-white/30 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide backdrop-blur-xs">
               Total: {formatINR(totalAmount)}

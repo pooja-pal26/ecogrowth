@@ -34,6 +34,29 @@ const AddNewPOSites = () => {
     fetchPOs();
   }, []);
 
+  // Auto-fetch site matrix data matching PHP getInfratelId(count, site_id)
+  const lookupSiteMatrix = async (rowId, siteIdVal) => {
+    if (!siteIdVal || !siteIdVal.trim()) return;
+    try {
+      const res = await axios.get(`http://localhost:5000/api/po-sites/get-site-matrix-data/${encodeURIComponent(siteIdVal.trim())}`, { withCredentials: true });
+      if (res.data && res.data.infratel_id) {
+        setSites(prev => prev.map(site => {
+          if (site.id === rowId) {
+            return {
+              ...site,
+              infratel_id: res.data.infratel_id || site.infratel_id,
+              site_name: site.site_name || res.data.zone || '',
+              location: site.location || res.data.zone || ''
+            };
+          }
+          return site;
+        }));
+      }
+    } catch (err) {
+      console.error('Error looking up site matrix:', err);
+    }
+  };
+
   const handleSiteChange = (id, field, value) => {
     setSites(sites.map(site => site.id === id ? { ...site, [field]: value } : site));
   };
@@ -172,6 +195,7 @@ const AddNewPOSites = () => {
                               type="text" 
                               value={site.site_id} 
                               onChange={(e) => handleSiteChange(site.id, 'site_id', e.target.value)} 
+                              onBlur={(e) => lookupSiteMatrix(site.id, e.target.value)}
                               required 
                               placeholder="Site ID"
                               className="w-full border border-gray-300 rounded p-1.5 text-xs bg-white focus:ring-1 focus:ring-blue-500 outline-none" 

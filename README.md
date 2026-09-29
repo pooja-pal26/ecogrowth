@@ -57,9 +57,8 @@ EcoGrowth enterprise management system built on React, Vite, Node.js, and Expres
 
 ## Default Login Credentials
 
-- **Email**: `pooja55@gmail.com`
-- **Password**: `password123`
-- *(Alternative Administrator: `admin@logimetrix.co.in` / legacy credentials)*
+- **Email**: `admin@logimetrix.co.in`
+- **Password**: `cropnet@123`
 
 ---
 

@@ -6,7 +6,6 @@ import {
   CheckCircle,
   BarChart3,
   TrendingUp,
-  LineChart as LineChartIcon,
   RefreshCw,
   Search,
   Filter,
@@ -32,8 +31,6 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  LineChart,
-  Line,
   PieChart,
   Pie,
   Cell,
@@ -52,7 +49,6 @@ import {
   getCompletedSites,
   getSiteExpensesChart,
   getOfficeExpensesChart,
-  getScurveData,
   getMaterialStockChart,
   getInvoiceDataChart,
   getPoAmountsChart,
@@ -87,7 +83,6 @@ const Dashboard = () => {
   // Chart data states
   const [siteExpenses, setSiteExpenses] = useState([]);
   const [officeExpenses, setOfficeExpenses] = useState([]);
-  const [sCurveData, setSCurveData] = useState([]);
   const [materialStock, setMaterialStock] = useState([]);
   const [invoiceData, setInvoiceData] = useState([]);
   const [poAmountsData, setPoAmountsData] = useState([]);
@@ -133,11 +128,6 @@ const Dashboard = () => {
   const [toDate, setToDate] = useState('');
   const [siteType, setSiteType] = useState('');
 
-  // S-Curve filters
-  const [scurveProject, setScurveProject] = useState('All');
-  const [scurveLine, setScurveLine] = useState('All');
-  const [scurveActivity, setScurveActivity] = useState('Overall');
-
   const [loading, setLoading] = useState(true);
 
   // Fetch all dashboard data
@@ -152,7 +142,7 @@ const Dashboard = () => {
 
       const [
         total, pending, allocated, completed,
-        siteExp, officeExp, scurve,
+        siteExp, officeExp,
         matStock, invChart, poChart, recent, plResp
       ] = await Promise.all([
         getTotalSites(filterParams).catch(() => 0),
@@ -161,7 +151,6 @@ const Dashboard = () => {
         getCompletedSites(filterParams).catch(() => 0),
         getSiteExpensesChart().catch(() => []),
         getOfficeExpensesChart().catch(() => []),
-        getScurveData().catch(() => []),
         getMaterialStockChart(filterParams).catch(() => []),
         getInvoiceDataChart({ year: invYear }).catch(() => []),
         getPoAmountsChart({ year: poYear }).catch(() => []),
@@ -181,7 +170,6 @@ const Dashboard = () => {
 
       setSiteExpenses(siteExp || []);
       setOfficeExpenses(officeExp || []);
-      setSCurveData(scurve || []);
       setMaterialStock(matStock || []);
       setInvoiceData(invChart || []);
       setPoAmountsData(poChart || []);
@@ -1222,75 +1210,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Row 6: S-Curve [Cumulative] Project Tracking (From PHP dashboard/index.phtml) */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4 border-b border-gray-100 pb-4">
-          <div className="flex items-center">
-            <LineChartIcon className="text-emerald-600 mr-2" size={22} />
-            <div>
-              <h3 className="text-lg font-bold text-gray-900">S-Curve [Cumulative]</h3>
-              <p className="text-xs text-gray-500">Project progress percentage comparison vs Planned and Catch-up curves</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            <select
-              value={scurveProject}
-              onChange={(e) => setScurveProject(e.target.value)}
-              className="bg-gray-50 border border-gray-300 rounded px-2.5 py-1.5 font-medium"
-            >
-              <option value="All">Project: All</option>
-              <option value="Transmission">Transmission Line 765kV</option>
-              <option value="Substation">Substation 400kV</option>
-            </select>
-            <select
-              value={scurveLine}
-              onChange={(e) => setScurveLine(e.target.value)}
-              className="bg-gray-50 border border-gray-300 rounded px-2.5 py-1.5 font-medium"
-            >
-              <option value="All">Line: All</option>
-              <option value="Line 1">Line 1 (Package A)</option>
-              <option value="Line 2">Line 2 (Package B)</option>
-            </select>
-            <select
-              value={scurveActivity}
-              onChange={(e) => setScurveActivity(e.target.value)}
-              className="bg-gray-50 border border-gray-300 rounded px-2.5 py-1.5 font-medium"
-            >
-              <option value="Overall">Activity: Overall</option>
-              <option value="Check Survey">Check Survey</option>
-              <option value="Material Delivery">Material Delivery</option>
-              <option value="Foundation">Foundation</option>
-              <option value="Erection">Tower Erection</option>
-              <option value="Stringing">Stringing</option>
-            </select>
-          </div>
-        </div>
 
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={sCurveData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: '#64748b', fontSize: 12 }}
-                tickFormatter={(val) => `${val}%`}
-              />
-              <Tooltip
-                formatter={(val, name) => [`${val}%`, name]}
-                contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
-              />
-              <Legend wrapperStyle={{ paddingTop: '15px' }} />
-              <Line type="monotone" dataKey="plan" name="Plan" stroke="#3b82f6" strokeWidth={3} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="cup1" name="CUP-1" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="cup2" name="CUP-2" stroke="#ec4899" strokeWidth={2} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="cup3" name="CUP-3" stroke="#f59e0b" strokeWidth={2} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="actual" name="Actual" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
 
       {/* Modal matching PHP #basic_modal2 (get-totalsite.phtml, allocated-site.phtml, etc.) */}
       {modalOpen && (

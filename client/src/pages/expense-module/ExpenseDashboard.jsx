@@ -25,7 +25,7 @@ import {
   ResponsiveContainer,
   ReferenceLine
 } from 'recharts';
-import { getExpenseOverview, getExpenseBreakdown } from '../../services/expenseDashboardService';
+import { getExpenseOverview } from '../../services/expenseDashboardService';
 
 // Format currency in Indian format
 const formatINR = (val) => {
@@ -85,10 +85,7 @@ const ExpenseDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Breakdown tables
-  const [activeTab, setActiveTab] = useState('summary'); // 'summary' | 'site_details' | 'office_details'
-  const [breakdownData, setBreakdownData] = useState([]);
-  const [breakdownLoading, setBreakdownLoading] = useState(false);
+
 
   const fetchData = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -111,32 +108,9 @@ const ExpenseDashboard = () => {
     }
   };
 
-  const loadBreakdownList = async (tabType) => {
-    if (tabType === 'summary') return;
-    setBreakdownLoading(true);
-    try {
-      const res = await getExpenseBreakdown({
-        type: tabType === 'office_details' ? 'office' : 'site',
-        year: selectedYear,
-        limit: 25
-      });
-      if (res.success) {
-        setBreakdownData(res.data);
-      }
-    } catch (err) {
-      console.error('Failed to load breakdown list:', err);
-    } finally {
-      setBreakdownLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchData();
   }, [selectedYear, selectedZone]);
-
-  useEffect(() => {
-    loadBreakdownList(activeTab);
-  }, [activeTab, selectedYear]);
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
@@ -435,180 +409,7 @@ const ExpenseDashboard = () => {
         </div>
       </div>
 
-      {/* Breakdown Data Section */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        {/* Tab Headers */}
-        <div className="border-b border-gray-200 px-6 pt-4 flex flex-wrap gap-4 items-center justify-between">
-          <div className="flex space-x-1">
-            <button
-              onClick={() => setActiveTab('summary')}
-              className={`py-3 px-4 text-sm font-semibold border-b-2 transition ${
-                activeTab === 'summary'
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Monthly Summary ({selectedYear})
-            </button>
-            <button
-              onClick={() => setActiveTab('site_details')}
-              className={`py-3 px-4 text-sm font-semibold border-b-2 transition ${
-                activeTab === 'site_details'
-                  ? 'border-emerald-600 text-emerald-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Recent Site Expenses
-            </button>
-            <button
-              onClick={() => setActiveTab('office_details')}
-              className={`py-3 px-4 text-sm font-semibold border-b-2 transition ${
-                activeTab === 'office_details'
-                  ? 'border-cyan-600 text-cyan-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Recent Office Expenses
-            </button>
-          </div>
-        </div>
 
-        {/* Tab Content */}
-        <div className="p-4 sm:p-6">
-          {activeTab === 'summary' && (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left text-gray-600">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-4 py-3">Month</th>
-                    <th className="px-4 py-3 text-right">Site Expense</th>
-                    <th className="px-4 py-3 text-right">Office Expense</th>
-                    <th className="px-4 py-3 text-right">Total Expense</th>
-                    <th className="px-4 py-3 text-right">Invoiced Amount</th>
-                    <th className="px-4 py-3 text-right">Net Profit / Loss</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {monthlyData.map((m) => (
-                    <tr key={m.monthKey} className="hover:bg-gray-50/80 transition">
-                      <td className="px-4 py-3 font-semibold text-slate-800">{m.monthYear}</td>
-                      <td className="px-4 py-3 text-right font-mono text-emerald-600">
-                        {formatINR(m.siteExpense)}
-                      </td>
-                      <td className="px-4 py-3 text-right font-mono text-cyan-600">
-                        {formatINR(m.officeExpense)}
-                      </td>
-                      <td className="px-4 py-3 text-right font-mono font-medium text-slate-800">
-                        {formatINR(m.totalExpense)}
-                      </td>
-                      <td className="px-4 py-3 text-right font-mono font-medium text-rose-600">
-                        {formatINR(m.invoiceAmount)}
-                      </td>
-                      <td className={`px-4 py-3 text-right font-mono font-bold ${
-                        m.profitOrLoss >= 0 ? 'text-emerald-700' : 'text-red-600'
-                      }`}>
-                        {m.profitOrLoss >= 0 ? '+' : ''}{formatINR(m.profitOrLoss)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot className="bg-slate-50 font-bold border-t-2 border-slate-300">
-                  <tr>
-                    <td className="px-4 py-3.5 text-slate-800 uppercase">Annual Total</td>
-                    <td className="px-4 py-3.5 text-right font-mono text-emerald-700">
-                      {formatINR(kpi.totalSiteExpense)}
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-mono text-cyan-700">
-                      {formatINR(kpi.totalOfficeExpense)}
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-mono text-slate-900">
-                      {formatINR(kpi.totalExpenses)}
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-mono text-rose-700">
-                      {formatINR(kpi.totalInvoiced)}
-                    </td>
-                    <td className={`px-4 py-3.5 text-right font-mono text-base ${
-                      kpi.netBalance >= 0 ? 'text-emerald-700' : 'text-red-600'
-                    }`}>
-                      {kpi.netBalance >= 0 ? '+' : ''}{formatINR(kpi.netBalance)}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          )}
-
-          {activeTab === 'site_details' && (
-            <div className="overflow-x-auto">
-              {breakdownLoading ? (
-                <div className="p-8 text-center text-gray-500">Loading site expenses...</div>
-              ) : breakdownData.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">No site expense records found for {selectedYear}.</div>
-              ) : (
-                <table className="w-full text-sm text-left text-gray-600 whitespace-nowrap">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      <th className="px-4 py-3">PO No</th>
-                      <th className="px-4 py-3">Site ID</th>
-                      <th className="px-4 py-3">Transfer Date</th>
-                      <th className="px-4 py-3">Payee / Transferred To</th>
-                      <th className="px-4 py-3">Voucher #</th>
-                      <th className="px-4 py-3 text-right">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {breakdownData.map((row) => (
-                      <tr key={row._id} className="hover:bg-gray-50 transition">
-                        <td className="px-4 py-2.5 font-medium text-slate-800">{row.po_no || '-'}</td>
-                        <td className="px-4 py-2.5">{row.site_id || '-'}</td>
-                        <td className="px-4 py-2.5 text-gray-500">{row.transfer_date ? String(row.transfer_date).substring(0, 10) : '-'}</td>
-                        <td className="px-4 py-2.5">{row.transfer_to_name || row.transfered_to || '-'}</td>
-                        <td className="px-4 py-2.5 font-mono text-xs">{row.voucher_number || '-'}</td>
-                        <td className="px-4 py-2.5 text-right font-mono font-semibold text-emerald-700">
-                          {formatINR(row.amount)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'office_details' && (
-            <div className="overflow-x-auto">
-              {breakdownLoading ? (
-                <div className="p-8 text-center text-gray-500">Loading office expenses...</div>
-              ) : breakdownData.length === 0 ? (
-                <div className="p-8 text-center text-gray-500">No office expense records found for {selectedYear}.</div>
-              ) : (
-                <table className="w-full text-sm text-left text-gray-600 whitespace-nowrap">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
-                    <tr>
-                      <th className="px-4 py-3">#</th>
-                      <th className="px-4 py-3">Transfer Date</th>
-                      <th className="px-4 py-3">Remark</th>
-                      <th className="px-4 py-3 text-right">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {breakdownData.map((row, idx) => (
-                      <tr key={row._id} className="hover:bg-gray-50 transition">
-                        <td className="px-4 py-2.5 text-gray-400">{idx + 1}</td>
-                        <td className="px-4 py-2.5 text-gray-700">{row.transfer_date ? String(row.transfer_date).substring(0, 10) : '-'}</td>
-                        <td className="px-4 py-2.5">{row.remark || 'Office Expense'}</td>
-                        <td className="px-4 py-2.5 text-right font-mono font-semibold text-cyan-700">
-                          {formatINR(row.amount)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 };

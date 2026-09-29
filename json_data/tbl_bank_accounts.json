@@ -7,8 +7,11 @@
     "bank_branch": "Vwefv",
     "bank_ifsc_code": "Wefvwef",
     "account_holder_name": "Vfwevvvvvvvvvvvvvvvvvvv",
-    "is_active": "0",
-    "created_at": "2019-09-28 10:34:24"
+    "is_active": false,
+    "created_at": "2019-09-28 10:34:24",
+    "is_deleted": true,
+    "status": false,
+    "updatedAt": "2026-09-28T07:15:31.330Z"
   },
   {
     "_id": "6aa3f1273c200cb6cc5c992c",

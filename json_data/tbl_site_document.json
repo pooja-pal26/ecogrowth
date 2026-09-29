@@ -298,14 +298,20 @@
     "id": "80",
     "document_name": "Site Welfare",
     "is_required": "0",
-    "status": "0"
+    "status": false,
+    "is_deleted": true,
+    "is_active": false,
+    "updatedAt": "2026-09-28T07:10:18.265Z"
   },
   {
     "_id": "6aa3f1283c200cb6cc5ca4f7",
     "id": "81",
     "document_name": "Staff Welfare",
     "is_required": "0",
-    "status": "1"
+    "status": false,
+    "is_deleted": true,
+    "is_active": false,
+    "updatedAt": "2026-09-28T07:10:25.881Z"
   },
   {
     "_id": "6aa3f1283c200cb6cc5ca4f8",
