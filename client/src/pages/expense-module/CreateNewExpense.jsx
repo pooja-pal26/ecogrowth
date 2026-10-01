@@ -22,6 +22,7 @@ import {
   getExpenseForList, 
   createExpense 
 } from '../../services/expenseService';
+import { showSuccessToast, showErrorToast } from '../../utils/toast';
 
 const CreateNewExpense = () => {
   const navigate = useNavigate();
@@ -323,6 +324,17 @@ const CreateNewExpense = () => {
         }
       }
 
+      // Also serialize row items as JSON for seamless fallback parsing
+      const detailsList = rows.map((r, idx) => ({
+        expense_in_id: r.expense_in_id,
+        expense_for_id: r.expense_for_id || '',
+        spent_amount: r.spent_amount,
+        spent_remark: r.spent_remark || '',
+        expense_remark: r.expense_remark || '',
+        date: r.date || formData.date_of_transfer
+      }));
+      postData.append('details', JSON.stringify(detailsList));
+
       // Serialize row arrays matching PHP parameters
       rows.forEach((r, idx) => {
         postData.append('expense_in_id[]', r.expense_in_id);
@@ -338,46 +350,35 @@ const CreateNewExpense = () => {
 
       const res = await createExpense(postData);
       if (res && res.success) {
+        showSuccessToast(
+          res.message || `Expense saved successfully! Voucher: ${res.voucher_number || ''}`,
+          'Expense Saved'
+        );
         setSuccessInfo({
           message: res.message || 'Expense has been saved successfully.',
-          voucher: res.voucher_number
+          voucher: res.voucher_number,
+          isSite
         });
-        // Reset form
-        setFormData({
-          company_id: '',
-          date_of_transfer: new Date().toISOString().split('T')[0],
-          po_number: '',
-          site_id: '',
-          transfer_amount: '',
-          bill_number: '',
-          transfer_to: '',
-          remark: '',
-          bank_account_id: '',
-          payment_mode_id: '',
-          debit_account_id: '',
-          office_attachment: null
-        });
-        setRows([
-          {
-            id: 1,
-            expense_in_id: '',
-            expense_for_id: '',
-            spent_amount: '',
-            spent_remark: '',
-            expense_remark: '',
-            bill_attachment: null,
-            date: new Date().toISOString().split('T')[0],
-            forOptions: [],
-            loadingFor: false
-          }
-        ]);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Match PHP EcoGrowth behavior:
+        // Automatically redirect to the respective expense report so the user sees the output!
+        setTimeout(() => {
+          if (isSite) {
+            navigate('/expense-module/site-expense-report');
+          } else {
+            navigate('/expense-module/office-expense-report');
+          }
+        }, 1200);
       } else {
+        showErrorToast(res?.message || 'Failed to save expense. Please try again.', 'Error');
         setErrorMsg(res?.message || 'Failed to save expense. Please try again.');
       }
     } catch (err) {
       console.error('Error saving expense:', err);
-      setErrorMsg(err.response?.data?.message || err.message || 'Server error occurred while saving expense.');
+      const errMsg = err.response?.data?.message || err.message || 'Server error occurred while saving expense.';
+      showErrorToast(errMsg, 'Server Error');
+      setErrorMsg(errMsg);
     } finally {
       setSubmitting(false);
     }
@@ -409,16 +410,28 @@ const CreateNewExpense = () => {
 
       {/* Success Alert */}
       {successInfo && (
-        <div className="mb-6 p-5 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-start gap-3 shadow-sm animate-in fade-in slide-in-from-top-2">
-          <CheckCircle className="text-emerald-600 mt-0.5 flex-shrink-0" size={22} />
-          <div>
-            <h4 className="font-bold text-emerald-900 text-base">Expense Saved Successfully!</h4>
-            <p className="text-emerald-700 text-sm mt-0.5">{successInfo.message}</p>
-            {successInfo.voucher && (
-              <p className="text-xs font-semibold text-emerald-800 uppercase tracking-wide mt-2 inline-block px-3 py-1 bg-emerald-100/70 rounded-md border border-emerald-200">
-                Generated Voucher: {successInfo.voucher}
-              </p>
-            )}
+        <div className="mb-6 p-5 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-start gap-3">
+            <CheckCircle className="text-emerald-600 mt-0.5 flex-shrink-0" size={24} />
+            <div>
+              <h4 className="font-bold text-emerald-900 text-base">Expense Saved Successfully!</h4>
+              <p className="text-emerald-700 text-sm mt-0.5">{successInfo.message}</p>
+              {successInfo.voucher && (
+                <p className="text-xs font-semibold text-emerald-800 uppercase tracking-wide mt-2 inline-block px-3 py-1 bg-emerald-100/70 rounded-md border border-emerald-200">
+                  Generated Voucher: {successInfo.voucher}
+                </p>
+              )}
+              <p className="text-xs text-emerald-600 mt-1.5 font-medium">Redirecting to Expense Report in a moment...</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-end sm:self-center">
+            <button
+              type="button"
+              onClick={() => navigate(successInfo.isSite ? '/expense-module/site-expense-report' : '/expense-module/office-expense-report')}
+              className="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 shadow-sm transition-all cursor-pointer whitespace-nowrap"
+            >
+              View in Report Now
+            </button>
           </div>
         </div>
       )}

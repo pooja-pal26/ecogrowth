@@ -312,22 +312,26 @@ exports.createExpense = async (req, res) => {
       } catch (e) {
         detailsRows = [];
       }
-    } else if (Array.isArray(body['expense_in_id[]']) || Array.isArray(body.expense_in_id)) {
-      const inIds = Array.isArray(body.expense_in_id) ? body.expense_in_id : body['expense_in_id[]'];
-      const forIds = Array.isArray(body.expense_for_id) ? body.expense_for_id : (body['expense_for_id[]'] || []);
-      const amounts = Array.isArray(body.spentAmount) ? body.spentAmount : (body['spentAmount[]'] || []);
-      const remarks = Array.isArray(body.spentRemark) ? body.spentRemark : (body['spentRemark[]'] || []);
-      const docRemarks = Array.isArray(body.expense_remark) ? body.expense_remark : (body['expense_remark[]'] || []);
-      const dates = Array.isArray(body.date) ? body.date : (body['date[]'] || []);
+    } else {
+      const toArray = (v) => (v === undefined || v === null ? [] : Array.isArray(v) ? v : [v]);
+      const rawInIds = body.expense_in_id !== undefined ? body.expense_in_id : body['expense_in_id[]'];
+      if (rawInIds !== undefined && rawInIds !== null) {
+        const inIds = toArray(rawInIds);
+        const forIds = toArray(body.expense_for_id !== undefined ? body.expense_for_id : body['expense_for_id[]']);
+        const amounts = toArray(body.spentAmount !== undefined ? body.spentAmount : body['spentAmount[]']);
+        const remarks = toArray(body.spentRemark !== undefined ? body.spentRemark : body['spentRemark[]']);
+        const docRemarks = toArray(body.expense_remark !== undefined ? body.expense_remark : body['expense_remark[]']);
+        const dates = toArray(body.date !== undefined ? body.date : body['date[]']);
 
-      detailsRows = inIds.map((val, idx) => ({
-        expense_in_id: val,
-        expense_for_id: forIds[idx] || '',
-        spent_amount: amounts[idx] || '0',
-        spent_remark: remarks[idx] || '',
-        expense_remark: docRemarks[idx] || '',
-        date: dates[idx] || formatDate()
-      }));
+        detailsRows = inIds.map((val, idx) => ({
+          expense_in_id: val,
+          expense_for_id: forIds[idx] || '',
+          spent_amount: amounts[idx] || '0',
+          spent_remark: remarks[idx] || '',
+          expense_remark: docRemarks[idx] || '',
+          date: dates[idx] || formatDate()
+        }));
+      }
     }
 
     // Process file attachments if any
@@ -380,7 +384,8 @@ exports.createExpense = async (req, res) => {
         payment_mode_id: String(body.payment_mode_id),
         bank_account_id: String(body.bank_account_id),
         debit_account_id: String(body.debit_account_id),
-        status: '0',
+        status: '1',
+        is_deleted: '0',
         created_at: new Date().toISOString().replace('T', ' ').slice(0, 19),
         created_by: userId
       };
@@ -528,10 +533,19 @@ exports.getSiteExpenseReport = async (req, res) => {
         startDate = `${year + 1}-01-01`;
         endDate = `${year + 1}-03-31`;
       }
+    } else if (session && session.includes('-')) {
+      const parts = session.split('-');
+      const startYear = parseInt(parts[0], 10);
+      const endYear = parseInt(parts[1], 10);
+      if (startYear) {
+        startDate = `${startYear}-04-01`;
+        endDate = `${endYear || (startYear + 1)}-03-31`;
+      }
     }
 
-    // Filter site expenses by date
+    // Filter site expenses by date and active status
     const filteredExpenses = allSiteExpenses.filter(e => {
+      if (e.is_deleted === 1 || e.is_deleted === '1') return false;
       if (startDate && endDate) {
         const transferDate = (e.transfer_date || '').split('T')[0];
         if (!transferDate) return false;
@@ -626,8 +640,17 @@ exports.getSiteExpenseReport = async (req, res) => {
       );
     }
 
-    // Sort by transferred_amount descending
-    reportRows.sort((a, b) => parseFloat(b.transferred_amount) - parseFloat(a.transferred_amount));
+    // Sort by last_fund_transfer_date descending, matching PHP EcoGrowth indexAction
+    reportRows.sort((a, b) => {
+      const timeA = a.last_fund_transfer_date && a.last_fund_transfer_date !== '-' 
+        ? new Date(a.last_fund_transfer_date).getTime() 
+        : 0;
+      const timeB = b.last_fund_transfer_date && b.last_fund_transfer_date !== '-' 
+        ? new Date(b.last_fund_transfer_date).getTime() 
+        : 0;
+      if (timeB !== timeA) return timeB - timeA;
+      return parseFloat(b.transferred_amount) - parseFloat(a.transferred_amount);
+    });
 
     const totalEntries = reportRows.length;
     const totalPages = Math.ceil(totalEntries / limit) || 1;

@@ -49,8 +49,9 @@ exports.getOverview = async (req, res) => {
     const availableYears = Array.from(yearSet).sort((a, b) => Number(b) - Number(a));
     if (availableYears.length === 0) availableYears.push(new Date().getFullYear().toString());
 
-    // Selected year (defaults to requested year, or 2025/2026/latest available)
-    const currentYear = req.query.year || (availableYears.includes('2025') ? '2025' : availableYears[0]);
+    // Selected year (defaults to requested year, or current calendar year / latest available)
+    const thisYear = new Date().getFullYear().toString();
+    const currentYear = req.query.year || (availableYears.includes(thisYear) ? thisYear : availableYears[0]);
     const selectedZone = req.query.zone || '';
 
     // Filter site expenses by zone if specified

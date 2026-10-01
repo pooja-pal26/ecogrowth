@@ -13,6 +13,8 @@ const AllocateSite = () => {
     sites: [],
     natureOfWork: [],
     vendors: [],
+    staffSupervisors: [],
+    vendorSupervisors: [],
     supervisors: []
   });
   const [loadingInit, setLoadingInit] = useState(true);
@@ -66,6 +68,8 @@ const AllocateSite = () => {
             sites: Array.isArray(payload.sites) ? payload.sites : (Array.isArray(payload.sitesList) ? payload.sitesList : []),
             natureOfWork: Array.isArray(payload.natureOfWork) ? payload.natureOfWork : [],
             vendors: Array.isArray(payload.vendors) ? payload.vendors : [],
+            staffSupervisors: Array.isArray(payload.staffSupervisors) ? payload.staffSupervisors : [],
+            vendorSupervisors: Array.isArray(payload.vendorSupervisors) ? payload.vendorSupervisors : [],
             supervisors: Array.isArray(payload.supervisors) ? payload.supervisors : []
           });
         }
@@ -162,11 +166,58 @@ const AllocateSite = () => {
     setAllocations(allocations.map(alloc => {
       if (alloc.id !== id) return alloc;
       const updated = { ...alloc, [field]: value };
-      if (field === 'resource_type' && value !== 'Vendor') {
-        updated.vendor_id = '';
+      if (field === 'resource_type') {
+        if (value !== 'Vendor') {
+          updated.vendor_id = '';
+        }
+        updated.supervisor_id = '';
+      }
+      if (field === 'vendor_id') {
+        updated.supervisor_id = '';
+        if (value) {
+          const vSups = (initData?.vendorSupervisors || []).filter(s => String(s.vendor_id) === String(value));
+          if (vSups.length === 1) {
+            updated.supervisor_id = vSups[0].id;
+          }
+        }
       }
       return updated;
     }));
+  };
+
+  // Helper to get supervisors options for a row matching PHP logic
+  const getSupervisorsForRow = (alloc) => {
+    const resourceType = alloc.resource_type;
+    if (resourceType === 'Staff' || resourceType === 'Direct') {
+      if (initData?.staffSupervisors && initData.staffSupervisors.length > 0) {
+        return initData.staffSupervisors;
+      }
+      return (initData?.supervisors || []).filter(s => s.type === 'Staff' || !s.vendor_id);
+    }
+    if (resourceType === 'Vendor') {
+      if (!alloc.vendor_id) return [];
+      const vSups = (initData?.vendorSupervisors || []).filter(
+        s => String(s.vendor_id) === String(alloc.vendor_id)
+      );
+      if (vSups.length > 0) return vSups;
+
+      const fallbackSups = (initData?.supervisors || []).filter(
+        s => String(s.vendor_id || s.company_vendor_id) === String(alloc.vendor_id)
+      );
+      if (fallbackSups.length > 0) return fallbackSups;
+
+      const matchedVendor = (initData?.vendors || []).find(v => String(v.id) === String(alloc.vendor_id));
+      if (matchedVendor && matchedVendor.contact_person) {
+        return [{ id: matchedVendor.id, name: matchedVendor.contact_person }];
+      }
+      return [];
+    }
+
+    // Default when resource type is not selected yet
+    if (initData?.staffSupervisors && initData.staffSupervisors.length > 0) {
+      return initData.staffSupervisors;
+    }
+    return (initData?.supervisors || []).filter(s => s.type === 'Staff' || !s.vendor_id);
   };
 
   const addAllocationRow = () => {
@@ -209,6 +260,26 @@ const AllocateSite = () => {
     if (!formData.site_completion_date) {
       showErrorToast('Please select Site Completion Date.', 'Date Missing');
       return;
+    }
+
+    for (let i = 0; i < allocations.length; i++) {
+      const row = allocations[i];
+      if (!row.nature_of_work) {
+        showErrorToast(`Please select Nature of Work for row ${i + 1}.`, 'Nature of Work Missing');
+        return;
+      }
+      if (!row.resource_type) {
+        showErrorToast(`Please select Allocate Resource Type for row ${i + 1}.`, 'Resource Type Missing');
+        return;
+      }
+      if (row.resource_type === 'Vendor' && !row.vendor_id) {
+        showErrorToast(`Please select Vendor Name for row ${i + 1}.`, 'Vendor Name Missing');
+        return;
+      }
+      if (!row.supervisor_id) {
+        showErrorToast(`Please select Supervisor Name for row ${i + 1}.`, 'Supervisor Name Missing');
+        return;
+      }
     }
 
     try {
@@ -540,12 +611,13 @@ const AllocateSite = () => {
                             <select
                               value={alloc.vendor_id}
                               onChange={(e) => handleAllocationChange(alloc.id, 'vendor_id', e.target.value)}
+                              required={alloc.resource_type === 'Vendor'}
                               className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 bg-white text-gray-800"
                             >
                               <option value="">Please Select</option>
                               {(initData?.vendors || []).map(v => (
                                 <option key={v.id} value={v.id}>
-                                  {v.vendor_company_name}
+                                  {v.vendor_name || v.vendor_company_name}
                                 </option>
                               ))}
                             </select>
@@ -554,7 +626,8 @@ const AllocateSite = () => {
                               type="text"
                               readOnly
                               disabled
-                              className="w-full px-2 py-1 text-xs border border-gray-200 rounded bg-gray-100 text-gray-400 cursor-not-allowed"
+                              placeholder="-"
+                              className="w-full px-2 py-1 text-xs border border-gray-200 rounded bg-gray-100 text-gray-400 cursor-not-allowed text-center"
                             />
                           )}
                         </td>
@@ -562,18 +635,26 @@ const AllocateSite = () => {
                         <td className="p-2 border-r border-gray-200 min-w-[160px]">
                           <select
                             value={alloc.supervisor_id}
-                            onChange={(e) => handleAllocationChange(alloc.id, 'supervisor_id', e.target.value)}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              handleAllocationChange(alloc.id, 'supervisor_id', val);
+                              if (!alloc.resource_type && val) {
+                                handleAllocationChange(alloc.id, 'resource_type', 'Staff');
+                              }
+                            }}
                             required
                             className="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 bg-white text-gray-800"
                           >
-                            <option value="">Please Select</option>
-                            {(initData?.supervisors || [])
-                              .filter(s => !alloc.vendor_id || String(s.company_vendor_id || s.vendor_id) === String(alloc.vendor_id))
-                              .map(s => (
-                                <option key={s.id} value={s.id}>
-                                  {s.manpower_name || s.name}
-                                </option>
-                              ))}
+                            <option value="">
+                              {alloc.resource_type === 'Vendor' && !alloc.vendor_id
+                                ? 'Select Vendor First'
+                                : 'Please Select'}
+                            </option>
+                            {getSupervisorsForRow(alloc).map((s, sIdx) => (
+                              <option key={`${s.id}-${s.vendor_id || sIdx}`} value={s.id}>
+                                {s.name || s.manpower_name}
+                              </option>
+                            ))}
                           </select>
                         </td>
 

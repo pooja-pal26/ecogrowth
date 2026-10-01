@@ -13,7 +13,7 @@ const SiteExpenseReport = () => {
   // Filters
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
-  const [session, setSession] = useState('2023-2024');
+  const [session, setSession] = useState('');
   const [quarter, setQuarter] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -68,7 +68,7 @@ const SiteExpenseReport = () => {
   const handleReset = () => {
     setFromDate('');
     setToDate('');
-    setSession('2023-2024');
+    setSession('');
     setQuarter('');
     setSearchTerm('');
     setCurrentPage(1);
@@ -294,10 +294,11 @@ const SiteExpenseReport = () => {
                 onChange={(e) => setSession(e.target.value)}
                 className="w-full border border-slate-300 rounded-xl px-3 py-2 bg-white text-xs font-medium focus:ring-2 focus:ring-teal-500 outline-none"
               >
-                <option value="2023-2024">2023-2024</option>
-                <option value="2024-2025">2024-2025</option>
-                <option value="2025-2026">2025-2026</option>
+                <option value="">All Sessions</option>
                 <option value="2026-2027">2026-2027</option>
+                <option value="2025-2026">2025-2026</option>
+                <option value="2024-2025">2024-2025</option>
+                <option value="2023-2024">2023-2024</option>
               </select>
             </div>
             <div className="flex-1 min-w-[150px]">

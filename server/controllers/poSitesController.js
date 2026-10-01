@@ -222,7 +222,8 @@ exports.getAllocatedSiteDetails = async (req, res) => {
     }
 
     const works = jsonDb.getTable('tbl_site_nature_of_work') || [];
-    const vendors = jsonDb.getTable('tbl_company_vendor_master') || jsonDb.getTable('tbl_vendor') || [];
+    const tblVendors = jsonDb.getTable('tbl_vendor') || [];
+    const companyVendors = jsonDb.getTable('tbl_company_vendor_master') || [];
     const users = jsonDb.getTable('tbl_user') || [];
     const manpower = jsonDb.getTable('tbl_vendor_manpower') || [];
 
@@ -232,14 +233,24 @@ exports.getAllocatedSiteDetails = async (req, res) => {
     );
 
     const enrichedWorks = siteWorks.map(w => {
-      const v = vendors.find(vend => String(vend.id || vend._id) === String(w.vendor_id));
+      const v = tblVendors.find(vend => String(vend.id || vend._id) === String(w.vendor_id)) ||
+                companyVendors.find(vend => String(vend.id || vend._id) === String(w.vendor_id));
       const u = users.find(usr => String(usr.id || usr._id) === String(w.supervisor_id));
       const m = manpower.find(mp => String(mp.id || mp._id) === String(w.supervisor_id));
+      const vendSup = tblVendors.find(vend => String(vend.id || vend._id) === String(w.supervisor_id));
+
+      let supervisorName = '-';
+      if (w.allocation_type === 'Vendor') {
+        supervisorName = m ? (m.name || m.manpower_name) : (vendSup ? (vendSup.contact_person || vendSup.vendor_name) : (v ? (v.contact_person || v.vendor_name) : (u ? u.name : '-')));
+      } else {
+        supervisorName = u ? u.name : (m ? (m.name || m.manpower_name) : '-');
+      }
+
       return {
         nature_of_work: w.nature_of_work || w.nature_of_work_id || '-',
         allocation_type: w.allocation_type || '-',
-        vendor_name: v ? (v.vendor_company_name || v.vendor_name) : '-',
-        supervisor_name: u ? u.name : (m ? (m.manpower_name || m.name) : (v ? (v.contact_person || v.vendor_name) : '-')),
+        vendor_name: v ? (v.vendor_name || v.vendor_company_name) : '-',
+        supervisor_name: supervisorName,
         due_date: w.work_completion_date ? String(w.work_completion_date).substring(0, 10) : (target.due_date ? String(target.due_date).substring(0, 10) : '-')
       };
     });
@@ -310,8 +321,10 @@ exports.getAllocationInitData = async (req, res) => {
     const poDetails = jsonDb.getTable('tbl_po_details') || [];
     const poSites = jsonDb.getTable('tbl_po_sites') || [];
     const natureOfWork = jsonDb.getTable('tbl_nature_of_work') || [];
-    const vendors = jsonDb.getTable('tbl_company_vendor_master') || [];
+    const tblVendors = jsonDb.getTable('tbl_vendor') || [];
+    const companyVendors = jsonDb.getTable('tbl_company_vendor_master') || [];
     const manpower = jsonDb.getTable('tbl_vendor_manpower') || [];
+    const allUsers = jsonDb.getTable('tbl_user') || [];
 
     // Distinct states
     const stateMap = new Map();
@@ -341,6 +354,82 @@ exports.getAllocationInitData = async (req, res) => {
       client_id: String(s.client_id || '')
     }));
 
+    // Active vendors matching PHP VendorController (tbl_vendor where status=1 and is_active=1)
+    const vendorMap = new Map();
+    tblVendors.forEach(v => {
+      const id = String(v.id || v._id);
+      if (id && String(v.status) !== '0' && String(v.is_active) !== '0') {
+        vendorMap.set(id, {
+          id,
+          vendor_name: v.vendor_name || v.vendor_company_name,
+          vendor_company_name: v.vendor_name || v.vendor_company_name,
+          contact_person: v.contact_person || v.contact_person_name || ''
+        });
+      }
+    });
+    companyVendors.forEach(v => {
+      const id = String(v.id || v._id);
+      if (id && !vendorMap.has(id) && String(v.is_deleted) !== '1' && String(v.is_active) !== '0') {
+        vendorMap.set(id, {
+          id,
+          vendor_name: v.vendor_company_name || v.vendor_name,
+          vendor_company_name: v.vendor_company_name || v.vendor_name,
+          contact_person: v.contact_person_name || v.contact_person || v.proprietor_name || ''
+        });
+      }
+    });
+    const vendorList = Array.from(vendorMap.values()).sort((a, b) => (a.vendor_name || '').localeCompare(b.vendor_name || ''));
+
+    // Staff Supervisors matching PHP UserController (role_type=3, role=15, status=1)
+    const staffSupervisors = allUsers
+      .filter(u => String(u.status) === '1' && (String(u.role_type) === '3' || !u.role_type) && String(u.role) === '15')
+      .map(u => ({
+        id: String(u.id || u._id),
+        name: u.name || `${u.first_name || ''} ${u.last_name || ''}`.trim(),
+        manpower_name: u.name || `${u.first_name || ''} ${u.last_name || ''}`.trim(),
+        type: 'Staff',
+        is_staff: true,
+        role_type: String(u.role_type || '3'),
+        role: String(u.role || '15')
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    // Vendor Supervisors matching PHP getVendorSupervisorListByVendorIdAction
+    const vendorSupervisors = [];
+    vendorList.forEach(v => {
+      if (v.contact_person) {
+        vendorSupervisors.push({
+          id: String(v.id),
+          vendor_id: String(v.id),
+          company_vendor_id: String(v.id),
+          name: v.contact_person,
+          manpower_name: v.contact_person,
+          type: 'Vendor',
+          is_vendor_contact: true
+        });
+      }
+    });
+    manpower.forEach(m => {
+      if (String(m.status) !== '0' && m.name) {
+        const vId = String(m.vendor_id || m.company_vendor_id || '');
+        vendorSupervisors.push({
+          id: String(m.id || m._id),
+          vendor_id: vId,
+          company_vendor_id: vId,
+          name: m.name || m.manpower_name,
+          manpower_name: m.name || m.manpower_name,
+          type: 'Vendor',
+          is_manpower: true
+        });
+      }
+    });
+
+    // Unified supervisors list for backward compatibility
+    const allSupervisors = [
+      ...staffSupervisors,
+      ...vendorSupervisors
+    ];
+
     const payload = {
       states: Array.from(stateMap.values()),
       clients: clients.map(c => ({ id: String(c.id || c._id), state_id: String(c.state_id || ''), client_name: c.client_name })),
@@ -349,14 +438,10 @@ exports.getAllocationInitData = async (req, res) => {
       sites: sitesList,
       sitesList,
       natureOfWork: natureOfWork.map(n => ({ id: String(n.id || n._id), nature_of_work: n.nature_of_work })),
-      vendors: vendors.map(v => ({ id: String(v.id || v._id), vendor_company_name: v.vendor_company_name })),
-      supervisors: manpower.map(m => ({ 
-        id: String(m.id || m._id), 
-        vendor_id: String(m.company_vendor_id || ''), 
-        company_vendor_id: String(m.company_vendor_id || ''),
-        name: m.manpower_name,
-        manpower_name: m.manpower_name
-      }))
+      vendors: vendorList,
+      staffSupervisors,
+      vendorSupervisors,
+      supervisors: allSupervisors
     };
 
     res.json({
@@ -367,6 +452,51 @@ exports.getAllocationInitData = async (req, res) => {
   } catch(e) {
     console.error('Error fetching allocation init data:', e);
     res.status(500).json({ success: false, message: e.message });
+  }
+};
+
+/**
+ * Get Staff Supervisors (matches PHP UserController /user/get-supervisor-list)
+ */
+exports.getSupervisors = async (req, res) => {
+  try {
+    const allUsers = jsonDb.getTable('tbl_user') || [];
+    const supervisors = allUsers
+      .filter(u => String(u.status) === '1' && (String(u.role_type) === '3' || !u.role_type) && String(u.role) === '15')
+      .map(u => ({
+        id: String(u.id || u._id),
+        name: u.name || `${u.first_name || ''} ${u.last_name || ''}`.trim()
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    res.json({ success: true, flag: true, data: supervisors, supervisors });
+  } catch(e) {
+    res.status(500).json({ success: false, flag: false, message: e.message });
+  }
+};
+
+/**
+ * Get Vendor Supervisors (matches PHP VendorController /vendor/get-vendor-supervisor-list-by-vendor-id)
+ */
+exports.getVendorSupervisors = async (req, res) => {
+  try {
+    const vendor_id = req.params.vendor_id || req.query.vendor_id || req.body?.vendor_id;
+    const tblVendors = jsonDb.getTable('tbl_vendor') || [];
+    const manpower = jsonDb.getTable('tbl_vendor_manpower') || [];
+
+    const sups = [];
+    const vendor = tblVendors.find(v => String(v.id || v._id) === String(vendor_id));
+    if (vendor && vendor.contact_person) {
+      sups.push({ id: String(vendor.id || vendor._id), name: vendor.contact_person, vendor_id: String(vendor.id || vendor._id) });
+    }
+    manpower.filter(m => String(m.vendor_id || m.company_vendor_id) === String(vendor_id) && String(m.status) !== '0')
+      .forEach(m => {
+        sups.push({ id: String(m.id || m._id), name: m.name || m.manpower_name, vendor_id: String(vendor_id) });
+      });
+
+    res.json({ success: true, flag: true, data: sups, supervisors: sups });
+  } catch(e) {
+    res.status(500).json({ success: false, flag: false, message: e.message });
   }
 };
 

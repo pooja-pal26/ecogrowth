@@ -1,5 +1,15 @@
 [
   {
+    "infratel_site_id": "as12",
+    "longitude": "",
+    "latitude": "",
+    "importation_datetime": "2026-10-01 05:00:09",
+    "_id": "11ecc274427e9f98d345760b",
+    "id": "2760",
+    "createdAt": "2026-10-01T05:00:09.973Z",
+    "updatedAt": "2026-10-01T05:00:09.973Z"
+  },
+  {
     "infratel_site_id": "kk88",
     "longitude": "l-1009",
     "latitude": "1002",
