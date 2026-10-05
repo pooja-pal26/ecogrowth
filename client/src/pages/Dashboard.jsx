@@ -685,51 +685,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Financial KPI Cards */}
-        {profitLossData && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="p-4 bg-emerald-50/70 rounded-xl border border-emerald-200 shadow-xs">
-              <p className="text-xs font-semibold text-emerald-800 uppercase tracking-wider">Invoice (Revenue)</p>
-              <h4 className="text-xl font-bold text-emerald-900 mt-1">{formatValue(profitLossData.invoice_total)}</h4>
-              <span className="text-[11px] text-emerald-700">Total billed amount</span>
-            </div>
-
-            <div className="p-4 bg-amber-50/70 rounded-xl border border-amber-200 shadow-xs">
-              <p className="text-xs font-semibold text-amber-800 uppercase tracking-wider">Site Expenses</p>
-              <h4 className="text-xl font-bold text-amber-900 mt-1">{formatValue(profitLossData.expense_amount)}</h4>
-              <span className="text-[11px] text-amber-700">Total incurred expenses</span>
-            </div>
-
-            <div className={`p-4 rounded-xl border shadow-xs ${
-              profitLossData.profit_or_loss >= 0
-                ? 'bg-purple-50/70 border-purple-200'
-                : 'bg-rose-50/70 border-rose-200'
-            }`}>
-              <p className={`text-xs font-semibold uppercase tracking-wider ${
-                profitLossData.profit_or_loss >= 0 ? 'text-purple-800' : 'text-rose-800'
-              }`}>
-                Profit Or Loss
-              </p>
-              <h4 className={`text-xl font-bold mt-1 ${
-                profitLossData.profit_or_loss >= 0 ? 'text-purple-900' : 'text-rose-900'
-              }`}>
-                {formatValue(profitLossData.profit_or_loss)}
-              </h4>
-              <span className={`text-[11px] ${
-                profitLossData.profit_or_loss >= 0 ? 'text-purple-700' : 'text-rose-700'
-              }`}>
-                Margin: {profitLossData.margin_percent}%
-              </span>
-            </div>
-
-            <div className="p-4 bg-blue-50/70 rounded-xl border border-blue-200 shadow-xs">
-              <p className="text-xs font-semibold text-blue-800 uppercase tracking-wider">Received Amount</p>
-              <h4 className="text-xl font-bold text-blue-900 mt-1">{formatValue(profitLossData.received_amount)}</h4>
-              <span className="text-[11px] text-blue-700">Customer payments settled</span>
-            </div>
-          </div>
-        )}
-
         {/* Multi-Bar Chart matching PHP get-data-po-site.phtml */}
         <div className="h-80 w-full pt-2">
           {profitLossData?.chart_data ? (
