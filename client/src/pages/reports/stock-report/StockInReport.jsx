@@ -1,20 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Plus, Search, RefreshCw, Eye, Download, 
+  Search, Eye, Download, 
   ChevronLeft, ChevronRight, X, Pencil
 } from 'lucide-react';
-import { fetchStockInReport, fetchStockInDetails, fetchReportFilters } from '../../../services/reportApi';
+import { fetchStockInReport, fetchStockInDetails } from '../../../services/reportApi';
 
 const StockInReport = () => {
   const [reportData, setReportData] = useState([]);
-  const [filters, setFilters] = useState({ productTypes: [], suppliers: [], brands: [] });
   const [loading, setLoading] = useState(true);
-
-  // Filter States
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-  const [selectedSupplier, setSelectedSupplier] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Pagination
@@ -26,26 +20,10 @@ const StockInReport = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Load Filters & Report Data
-  const loadFilters = async () => {
-    try {
-      const data = await fetchReportFilters();
-      setFilters(data);
-    } catch (err) {
-      console.error('Error loading filters:', err);
-    }
-  };
-
   const loadData = async () => {
     try {
       setLoading(true);
-      const params = {};
-      if (fromDate) params.from_date = fromDate;
-      if (toDate) params.to_date = toDate;
-      if (selectedSupplier && selectedSupplier !== 'all') params.supplier_id = selectedSupplier;
-      if (searchQuery.trim()) params.search = searchQuery.trim();
-
-      const res = await fetchStockInReport(params);
+      const res = await fetchStockInReport({});
       if (res.success) {
         setReportData(res.data || []);
       }
@@ -57,20 +35,25 @@ const StockInReport = () => {
   };
 
   useEffect(() => {
-    loadFilters();
+    loadData();
   }, []);
 
-  useEffect(() => {
-    loadData();
-    setCurrentPage(1);
-  }, [fromDate, toDate, selectedSupplier, searchQuery]);
-
-  const handleReset = () => {
-    setFromDate('');
-    setToDate('');
-    setSelectedSupplier('all');
-    setSearchQuery('');
-  };
+  // Filter list matching standard search
+  const filteredData = useMemo(() => {
+    let result = [...reportData];
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(item => 
+        (item.stock_in_date || '').toLowerCase().includes(q) ||
+        (item.supplier_name || '').toLowerCase().includes(q) ||
+        (item.receiver_name || '').toLowerCase().includes(q) ||
+        (item.bill_number || '').toLowerCase().includes(q) ||
+        (item.bill_date || '').toLowerCase().includes(q) ||
+        (item.remarks || '').toLowerCase().includes(q)
+      );
+    }
+    return result;
+  }, [reportData, searchQuery]);
 
   // View Modal Handler matching PHP view-stockin
   const handleViewDetails = async (id) => {
@@ -87,17 +70,17 @@ const StockInReport = () => {
   };
 
   // Pagination Calculations
-  const totalRecords = reportData.length;
+  const totalRecords = filteredData.length;
   const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
-    return reportData.slice(start, start + pageSize);
-  }, [reportData, currentPage, pageSize]);
+    return filteredData.slice(start, start + pageSize);
+  }, [filteredData, currentPage, pageSize]);
 
   // Export to CSV
   const handleExportCSV = () => {
     const headers = ['#', 'Stock In Date', 'Supplier', 'Received By', 'Bill Number', 'Bill Date', 'Remarks'];
-    const rows = reportData.map((item, idx) => [
+    const rows = filteredData.map((item, idx) => [
       idx + 1,
       item.stock_in_date || '',
       `"${item.supplier_name || ''}"`,
@@ -138,85 +121,12 @@ const StockInReport = () => {
             <Download size={13} />
             <span>Export CSV</span>
           </button>
-          <Link
-            to="/material-stock/stock-in"
-            className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-semibold shadow transition-colors"
-          >
-            <Plus size={14} />
-            <span>Add Stock In</span>
-          </Link>
         </div>
       </div>
 
       {/* Main Container with White Background */}
       <div className="bg-white rounded-b-lg border-x border-b border-gray-200 shadow-sm overflow-hidden p-3 sm:p-4 space-y-3">
-        {/* Filter Toolbar with Clean White Background */}
-        <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-end">
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">From Date</label>
-              <input
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                className="w-full text-xs sm:text-sm border border-gray-300 rounded px-2.5 py-1.5 text-gray-700 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">To Date</label>
-              <input
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className="w-full text-xs sm:text-sm border border-gray-300 rounded px-2.5 py-1.5 text-gray-700 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">Supplier</label>
-              <select
-                value={selectedSupplier}
-                onChange={(e) => setSelectedSupplier(e.target.value)}
-                className="w-full text-xs sm:text-sm border border-gray-300 rounded px-2.5 py-1.5 text-gray-700 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none bg-white"
-              >
-                <option value="all">All Suppliers</option>
-                {filters.suppliers.map((s) => (
-                  <option key={s.id} value={s.id}>{s.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">Search Keywords</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Bill #, receiver, remark..."
-                  className="w-full text-xs sm:text-sm border border-gray-300 rounded pl-8 pr-2.5 py-1.5 text-gray-700 focus:ring-1 focus:ring-teal-500 focus:border-teal-500 focus:outline-none"
-                />
-                <Search className="absolute left-2.5 top-2 text-gray-400" size={14} />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between pt-2 mt-2 border-t border-gray-100 text-xs text-gray-500">
-            <span>Showing {paginatedData.length} of {totalRecords} transactions</span>
-            {(fromDate || toDate || selectedSupplier !== 'all' || searchQuery) && (
-              <button
-                onClick={handleReset}
-                className="text-teal-600 hover:text-teal-800 font-medium flex items-center gap-1 transition-colors"
-              >
-                <RefreshCw size={12} />
-                Reset Filters
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Page size & search bar */}
+        {/* Controls: Page size & search bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-600 font-medium">Show</span>
@@ -234,6 +144,20 @@ const StockInReport = () => {
               <option value={100}>100</option>
             </select>
             <span className="text-xs text-gray-600 font-medium">entries</span>
+          </div>
+
+          <div className="relative w-full sm:w-64">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              placeholder="Search..."
+              className="w-full pl-8 pr-3 py-1.5 border border-gray-300 rounded text-xs focus:outline-none focus:border-teal-500"
+            />
           </div>
         </div>
 

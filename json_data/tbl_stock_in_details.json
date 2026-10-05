@@ -18,6 +18,17 @@
     "brand_name": "4",
     "unit": "Meter",
     "quantity": "50",
-    "created_at": "2026-09-17 12:53:14"
+    "created_at": "2026-09-17 12:53:14",
+    "_id": "2"
+  },
+  {
+    "id": "3",
+    "stock_in_id": "3",
+    "product_type": "8",
+    "product_name": "322",
+    "brand_name": "4",
+    "unit": "Meter",
+    "quantity": "5",
+    "created_at": "2026-10-05 07:06:03"
   }
 ]
