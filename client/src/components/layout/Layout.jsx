@@ -23,7 +23,7 @@ const Layout = ({ children }) => {
       <Sidebar isOpen={isSidebarOpen} />
       
       <div className="flex flex-col flex-1 w-full min-w-0 overflow-hidden">
-        <Topbar toggleSidebar={toggleSidebar} />
+        <Topbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 flex flex-col">
           <div className="flex-1">

@@ -115,67 +115,6 @@ const ExpenseDashboard = () => {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
-      {/* Top Header & Filters */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-        <div>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">
-              Expense Dashboard
-            </h1>
-            <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap">
-              Financial Intelligence
-            </span>
-          </div>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1">
-            Site Expenses, Office Expenses, and Invoice vs Expense comparison
-          </p>
-        </div>
-
-        {/* Filter Controls */}
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Year Filter */}
-          <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
-            <Calendar size={16} className="text-gray-500 mr-2" />
-            <span className="text-xs font-semibold text-gray-500 mr-2 uppercase">Year:</span>
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="bg-transparent text-sm font-bold text-slate-800 focus:outline-none cursor-pointer"
-            >
-              {availableYears.map(yr => (
-                <option key={yr} value={yr}>{yr}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Zone Filter */}
-          <div className="flex items-center bg-gray-50 border border-gray-200 rounded-xl px-3 py-1.5">
-            <Filter size={16} className="text-gray-500 mr-2" />
-            <span className="text-xs font-semibold text-gray-500 mr-2 uppercase">Zone:</span>
-            <select
-              value={selectedZone}
-              onChange={(e) => setSelectedZone(e.target.value)}
-              className="bg-transparent text-sm font-semibold text-slate-800 focus:outline-none cursor-pointer"
-            >
-              <option value="">All Zones</option>
-              {zones.map(z => (
-                <option key={z} value={z}>{z}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Refresh Button */}
-          <button
-            onClick={() => fetchData(true)}
-            disabled={refreshing}
-            className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-medium transition shadow-sm active:scale-95 disabled:opacity-50 cursor-pointer"
-            title="Refresh dashboard data"
-          >
-            <RefreshCw size={15} className={refreshing ? 'animate-spin' : ''} />
-            <span className="hidden sm:inline">Refresh</span>
-          </button>
-        </div>
-      </div>
 
       {/* KPI Cards Grid */}
       {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"> */}

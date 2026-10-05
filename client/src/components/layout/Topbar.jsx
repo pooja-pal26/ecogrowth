@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { Menu, Mail, Bell, MessageSquare, User, ChevronDown, LogOut } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const Topbar = ({ toggleSidebar }) => {
+const Topbar = ({ toggleSidebar, isSidebarOpen }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { logout, user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -20,6 +20,16 @@ const Topbar = ({ toggleSidebar }) => {
   return (
     <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sticky top-0 z-30">
       <div className="flex items-center space-x-4">
+        {!isSidebarOpen && (
+          <Link to="/" className="flex items-center focus:outline-none" title="Dashboard">
+            <img 
+              src="/assets/echo_growth.png" 
+              alt="GenstreeAi" 
+              className="h-9 w-auto max-w-[180px] object-contain cursor-pointer" 
+            />
+          </Link>
+        )}
+
         <button
           onClick={toggleSidebar}
           className="p-2 rounded-lg bg-gradient-to-r from-teal-500 to-cyan-600 text-white hover:from-teal-600 hover:to-cyan-700 shadow-sm focus:outline-none transition-all"
